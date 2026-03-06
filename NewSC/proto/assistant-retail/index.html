@@ -1181,6 +1181,85 @@ body { display: flex; flex-direction: column; }
   color: var(--text-muted);
   margin-bottom: 2px;
 }
+
+/* ── Action Card ── */
+.action-card {
+  background: rgba(45,140,78,0.06);
+  border: 1px solid rgba(45,140,78,0.28);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.action-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.action-icon { font-size: 18px; }
+.action-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.action-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.action-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.action-status.open { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.action-status.resolved { background: rgba(74,222,128,0.15); color: var(--accent-bright); border: 1px solid rgba(74,222,128,0.3); }
+.action-rows { display: flex; flex-direction: column; gap: 6px; }
+.action-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.action-lbl { color: var(--text-secondary); width: 72px; flex-shrink: 0; }
+.action-row span:last-child { color: var(--text-primary); }
+
+/* ── Inspection Card ── */
+.inspection-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; margin-top: 6px;
+}
+.inspection-hdr {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.insp-icon { font-size: 20px; }
+.insp-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.insp-sub { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+.insp-badge {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.insp-badge.active { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+.insp-badge.warn { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+.insp-badge.pass { background: rgba(74,222,128,0.15); color: var(--accent-bright); border: 1px solid rgba(74,222,128,0.3); }
+.insp-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.insp-item { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.insp-item span:nth-child(2) { flex: 1; color: var(--text-primary); }
+.insp-dot { font-size: 8px; }
+.insp-item.pass .insp-dot { color: var(--accent-bright); }
+.insp-item.warn .insp-dot { color: #fbbf24; }
+.insp-item.pending .insp-dot { color: var(--text-muted); }
+.insp-result { font-size: 10px; margin-left: auto; white-space: nowrap; }
+.insp-item.pass .insp-result { color: var(--accent-bright); }
+.insp-item.warn .insp-result { color: #fbbf24; }
+.insp-item.pending .insp-result { color: var(--text-muted); }
+.insp-note {
+  font-size: 11px; color: var(--text-secondary); line-height: 1.5;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+
+/* ── Incident Card ── */
+.incident-card {
+  background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 12px; padding: 14px; margin-top: 8px;
+}
+.incident-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.incident-icon { font-size: 20px; }
+.incident-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.incident-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.incident-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.incident-status.draft { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+.incident-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.incident-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.incident-lbl { color: var(--text-secondary); width: 80px; flex-shrink: 0; }
+.incident-row span:last-child { color: var(--text-primary); }
+.incident-actions-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.incident-actions-row .card-action { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -1380,6 +1459,37 @@ body { display: flex; flex-direction: column; }
           <div class="user-bubble">added, I'll grab it on my next run</div>
         </div>
 
+        <!-- 7:15 AM - Sensor alert -->
+        <div class="time-div"><span>7:15 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:15 AM</em></div>
+            <div class="alert-card urgent">
+              <div class="alert-label">🌡️ Sensor Alert · Dairy Case 3 (Aisle 7)</div>
+              Reading <strong>41.8°F</strong> — USDA cold hold limit is 41°F. Likely warming from restock activity. Compressor may need attention before we open.
+              <button class="card-action" onclick="inject('What should I do about the dairy case temperature alert?')">→ What do I do?</button>
+            </div>
+            <div class="action-card">
+              <div class="action-hdr">
+                <span class="action-icon">📋</span>
+                <div>
+                  <div class="action-title">Corrective Action Created</div>
+                  <div class="action-id">CA-1142 · Auto-generated 7:15 AM</div>
+                </div>
+                <span class="action-status open">Open</span>
+              </div>
+              <div class="action-rows">
+                <div class="action-row"><span class="action-lbl">Issue</span><span>Dairy Case 3 above temp threshold (41.8°F / limit 41°F)</span></div>
+                <div class="action-row"><span class="action-lbl">Assigned</span><span>Store Manager · Kim L.</span></div>
+                <div class="action-row"><span class="action-lbl">Due by</span><span>7:45 AM — before store opens at 9 AM</span></div>
+                <div class="action-row"><span class="action-lbl">Fallback</span><span>Consolidate dairy to Case 2, call facilities</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 7:30 AM -->
         <div class="time-div"><span>7:30 AM</span></div>
 
@@ -1433,6 +1543,70 @@ body { display: flex; flex-direction: column; }
               <div class="win-title">3 customers helped before the store opened!</div>
               <div class="win-quote">"The crew member who helped me find the collagen peptides AND knew which flavor to try — most helpful TJ's visit ever."</div>
               <div class="win-source">— Google review posted 7:58 AM · likely the guest from the cereal aisle</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8:22 AM - Opening inspection -->
+        <div class="time-div"><span>8:22 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:22 AM</em></div>
+            <div class="inspection-card">
+              <div class="inspection-hdr">
+                <span class="insp-icon">🔍</span>
+                <div>
+                  <div class="insp-title">Opening Inspection — 1 Item Outstanding</div>
+                  <div class="insp-sub">Daily store opening checklist</div>
+                </div>
+                <span class="insp-badge warn">1 Open</span>
+              </div>
+              <div class="insp-items">
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Spill kits stocked (Aisles 1–8)</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Emergency exits clear</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Dairy case temps logged (CA-1142 resolved 7:44 AM)</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item warn"><span class="insp-dot">●</span><span>Wet floor sign — main entrance mat</span><span class="insp-result">⚠ Missing</span></div>
+              </div>
+              <div class="insp-note">Entrance mat was mopped for opening — wet floor sign needs to be placed before 9 AM doors open.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8:51 AM - Incident -->
+        <div class="time-div"><span>8:51 AM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">customer slipped at the entrance right as we opened — they're ok but embarrassed</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:51 AM</em></div>
+            <div class="ai-bubble">
+              <p>Log this now — even if they're fine. Note the wet floor sign was flagged in this morning's inspection. I've started the report.</p>
+            </div>
+            <div class="incident-card">
+              <div class="incident-hdr">
+                <span class="incident-icon">🚨</span>
+                <div>
+                  <div class="incident-title">Incident Report — Draft Started</div>
+                  <div class="incident-id">INC-0104 · 8:51 AM</div>
+                </div>
+                <span class="incident-status draft">Draft</span>
+              </div>
+              <div class="incident-rows">
+                <div class="incident-row"><span class="incident-lbl">What happened</span><span>Customer slip at main entrance</span></div>
+                <div class="incident-row"><span class="incident-lbl">Location</span><span>Main entrance, near welcome mat</span></div>
+                <div class="incident-row"><span class="incident-lbl">Guest status</span><span>No injury reported, declined assistance</span></div>
+                <div class="incident-row"><span class="incident-lbl">Related flag</span><span>⚠ Wet floor sign missing — flagged 8:22 AM</span></div>
+              </div>
+              <div class="incident-actions-row">
+                <button class="card-action" onclick="inject('What do I say to the customer who slipped?')">→ What to say</button>
+                <button class="card-action" onclick="inject('How do I submit the incident report?')">→ Submit report</button>
+              </div>
             </div>
           </div>
         </div>
@@ -1960,6 +2134,27 @@ function reply(text) {
     return `<p><strong>Collagen Peptides</strong> — unflavored, grass-fed, dissolves in hot or cold liquid. Aisle 3, top shelf, right side near the protein powders.</p>
 <p>Common customer question: <em>"Does it taste like anything?"</em> — Answer: completely neutral. Add it to coffee, smoothies, or even water. No texture, no flavor change.</p>
 <p>We also carry a Collagen Beauty Blend (strawberry flavored, same aisle) if they want something more convenient for a morning drink.</p>`;
+  }
+
+  // Temperature / sensor / dairy case
+  if (t.includes('dairy case') || t.includes('temperature alert') || t.includes('sensor') || t.includes('ca-1142') || t.includes('41') || t.includes('compressor')) {
+    return `<p><strong>Right now:</strong> Dairy Case 3 is at 41.8°F — 0.8° above the USDA 41°F cold hold limit. CA-1142 is assigned to Kim L. with a 7:45 AM deadline.</p>
+<p>→ <strong>If temp drops below 41°F by 7:45</strong> — you're good, corrective action closes automatically<br>→ <strong>If not</strong> — consolidate affected dairy to Case 2 and Kim will call facilities for the compressor</p>
+<p>Keep restocking normally. The yogurt and milk you're adding is fine — it was already at proper temp in receiving.</p>`;
+  }
+
+  // Incident / slip / customer hurt
+  if (t.includes('slipped') || t.includes('slip') || t.includes('incident') || t.includes('fell') || t.includes('hurt') || t.includes('what to say') || t.includes('what do i say')) {
+    return `<p><strong>With the customer:</strong> "I'm so sorry that happened — are you okay? Can I get you a seat and some water?" Don't admit fault or discuss the wet floor sign.</p>
+<p><strong>Right now:</strong> Incident report INC-0104 is started. Get Kim L. (Store Manager) immediately — they need to sign off.</p>
+<p><strong>Note:</strong> The missing wet floor sign was flagged in this morning's opening inspection at 8:22 AM. That's already documented — it shows we had a process to catch it.</p>`;
+  }
+
+  // Submit report
+  if (t.includes('submit') || t.includes('how do i') || t.includes('complete the report') || t.includes('finish the report')) {
+    return `<p>INC-0104 is saved as a draft. Kim L. will complete and submit it — your job is just to give her the facts:</p>
+<p>→ <strong>Time:</strong> 8:51 AM<br>→ <strong>Location:</strong> Main entrance mat<br>→ <strong>What you saw:</strong> Customer slipped, said they were okay, declined help<br>→ <strong>What you did:</strong> Checked on them, offered assistance</p>
+<p>Kim will handle the formal submission and any follow-up with the customer.</p>`;
   }
 
   // Default

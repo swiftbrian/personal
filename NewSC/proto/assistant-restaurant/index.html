@@ -1332,6 +1332,85 @@ body { display: flex; flex-direction: column; }
   color: var(--text-muted);
   margin-bottom: 2px;
 }
+
+/* ── Action Card ── */
+.action-card {
+  background: rgba(232,151,90,0.06);
+  border: 1px solid rgba(232,151,90,0.25);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.action-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.action-icon { font-size: 18px; }
+.action-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.action-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.action-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.action-status.open { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.action-status.resolved { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.action-rows { display: flex; flex-direction: column; gap: 6px; }
+.action-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.action-lbl { color: var(--text-secondary); width: 72px; flex-shrink: 0; }
+.action-row span:last-child { color: var(--text-primary); }
+
+/* ── Inspection Card ── */
+.inspection-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; margin-top: 6px;
+}
+.inspection-hdr {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.insp-icon { font-size: 20px; }
+.insp-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.insp-sub { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+.insp-badge {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.insp-badge.active { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.insp-badge.warn { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.insp-badge.pass { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.insp-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.insp-item { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.insp-item span:nth-child(2) { flex: 1; color: var(--text-primary); }
+.insp-dot { font-size: 8px; }
+.insp-item.pass .insp-dot { color: var(--green); }
+.insp-item.warn .insp-dot { color: var(--yellow); }
+.insp-item.pending .insp-dot { color: var(--text-muted); }
+.insp-result { font-size: 10px; margin-left: auto; white-space: nowrap; }
+.insp-item.pass .insp-result { color: var(--green); }
+.insp-item.warn .insp-result { color: var(--yellow); }
+.insp-item.pending .insp-result { color: var(--text-muted); }
+.insp-note {
+  font-size: 11px; color: var(--text-secondary); line-height: 1.5;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+
+/* ── Incident Card ── */
+.incident-card {
+  background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 12px; padding: 14px; margin-top: 8px;
+}
+.incident-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.incident-icon { font-size: 20px; }
+.incident-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.incident-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.incident-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.incident-status.draft { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.incident-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.incident-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.incident-lbl { color: var(--text-secondary); width: 80px; flex-shrink: 0; }
+.incident-row span:last-child { color: var(--text-primary); }
+.incident-actions-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.incident-actions-row .card-action { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -1490,6 +1569,37 @@ body { display: flex; flex-direction: column; }
           </div>
         </div>
 
+        <!-- 4:10 PM - Sensor alert -->
+        <div class="time-div"><span>4:10 PM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 4:10 PM</em></div>
+            <div class="alert-card urgent">
+              <div class="alert-label">🌡️ Sensor Alert · Walk-In Cooler A</div>
+              Temperature reading <strong>43°F</strong> — safe limit is 40°F. Holding salmon, dairy, and tonight's desserts. I've created a corrective action and notified Chef Rodriguez.
+              <button class="card-action" onclick="inject('What food is at risk in walk-in A right now?')">→ What's at risk?</button>
+            </div>
+            <div class="action-card">
+              <div class="action-hdr">
+                <span class="action-icon">📋</span>
+                <div>
+                  <div class="action-title">Corrective Action Created</div>
+                  <div class="action-id">CA-2847 · Auto-generated 4:10 PM</div>
+                </div>
+                <span class="action-status open">Open</span>
+              </div>
+              <div class="action-rows">
+                <div class="action-row"><span class="action-lbl">Issue</span><span>Walk-In A above temp threshold (43°F / limit 40°F)</span></div>
+                <div class="action-row"><span class="action-lbl">Assigned</span><span>Chef Rodriguez · Kitchen Manager</span></div>
+                <div class="action-row"><span class="action-lbl">Due by</span><span>4:30 PM — before dinner service opens</span></div>
+                <div class="action-row"><span class="action-lbl">Fallback</span><span>Move affected items to Walk-In B</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- 4:42 PM -->
         <div class="time-div"><span>4:42 PM</span></div>
 
@@ -1608,6 +1718,72 @@ body { display: flex; flex-direction: column; }
               <p>You're authorized for this — no manager needed for 1 round of drinks.</p>
               <p>In Toast: table → tap the drink → <strong>Comp → Goodwill</strong> → add note "extended wait." Logs automatically.</p>
               <p>A quick <em>"on us tonight, really sorry for the wait"</em> when you drop them usually flips the whole table. 👍</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7:38 PM - Inspection -->
+        <div class="time-div"><span>7:38 PM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:38 PM</em></div>
+            <div class="inspection-card">
+              <div class="inspection-hdr">
+                <span class="insp-icon">🔍</span>
+                <div>
+                  <div class="insp-title">Health Inspector On-Site</div>
+                  <div class="insp-sub">Routine inspection · County Health Department</div>
+                </div>
+                <span class="insp-badge active">In Progress</span>
+              </div>
+              <div class="insp-items">
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Handwashing stations stocked</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Hot hold temps ≥ 140°F</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Walk-In A temp (CA-2847 resolved 4:28 PM)</span><span class="insp-result">✓ Pass</span></div>
+                <div class="insp-item warn"><span class="insp-dot">●</span><span>Date labels — back prep area</span><span class="insp-result">⚠ Review</span></div>
+                <div class="insp-item pending"><span class="insp-dot">●</span><span>Sanitizer concentration log</span><span class="insp-result">Pending</span></div>
+              </div>
+              <div class="insp-note">Walk-In A corrective action was shared with the inspector. Compressor repaired at 4:28 PM — temp confirmed back to 38°F.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8:12 PM - Incident -->
+        <div class="time-div"><span>8:12 PM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">a guest near table 15 slipped by the restroom hallway — they seem ok but shaken</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:12 PM</em></div>
+            <div class="ai-bubble">
+              <p>Document this now — even if they say they're fine. I've started the incident report. Fill in what you know and the manager can complete the rest.</p>
+            </div>
+            <div class="incident-card">
+              <div class="incident-hdr">
+                <span class="incident-icon">🚨</span>
+                <div>
+                  <div class="incident-title">Incident Report — Draft Started</div>
+                  <div class="incident-id">INC-0391 · 8:12 PM</div>
+                </div>
+                <span class="incident-status draft">Draft</span>
+              </div>
+              <div class="incident-rows">
+                <div class="incident-row"><span class="incident-lbl">What happened</span><span>Guest slip near restroom corridor</span></div>
+                <div class="incident-row"><span class="incident-lbl">Location</span><span>Section B hallway, near Table 15</span></div>
+                <div class="incident-row"><span class="incident-lbl">Guest status</span><span>Shaken, no visible injury reported</span></div>
+                <div class="incident-row"><span class="incident-lbl">Witness</span><span>Maria G. (on duty)</span></div>
+                <div class="incident-row"><span class="incident-lbl">Inspector</span><span>⚠ Health inspector still on-site — notified</span></div>
+              </div>
+              <div class="incident-actions-row">
+                <button class="card-action" onclick="inject('What do I say to the guest who slipped?')">→ What to say to guest</button>
+                <button class="card-action" onclick="inject('Who do I notify about the incident?')">→ Who to notify</button>
+              </div>
             </div>
           </div>
         </div>
@@ -2174,6 +2350,24 @@ function reply(text) {
     return `<p>Your comp authority tonight:</p>
 <p>→ <strong>You</strong>: 1 round drinks, 1 dessert, or up to $15/item — no approval needed<br>→ <strong>Manager (Emma, ext. 42)</strong>: full meal, % off check, gift card<br>→ <strong>Log it</strong>: Toast → item → Comp → Goodwill → add reason</p>
 <p>What table and what are you comping? I can walk you through the exact steps.</p>`;
+  }
+
+  if (t.includes('walk-in') || t.includes('cooler') || t.includes('sensor') || t.includes('temperature') || t.includes('at risk') || t.includes('ca-2847')) {
+    return `<p><strong>Walk-In A holds:</strong> salmon portions (86'd tonight — good timing), dairy (butter, cream), and the panna cotta desserts.</p>
+<p>At 43°F for under 30 min, food is still safe — USDA allows up to 2 hrs in the danger zone. Chef Rodriguez is on it. CA-2847 is assigned to him with a 4:30 PM deadline.</p>
+<p>If it's not resolved by service, everything moves to Walk-In B. <span class="hl-g">Nothing needs to be discarded yet.</span></p>`;
+  }
+
+  if (t.includes('incident') || t.includes('slipped') || t.includes('slip') || t.includes('fell') || t.includes('guest hurt') || t.includes('what to say to guest')) {
+    return `<p><strong>With the guest:</strong> "I'm so sorry that happened — are you okay? Can I get you some water and a seat?" Don't admit fault, don't speculate about the cause.</p>
+<p><strong>Right now:</strong> Incident report INC-0391 is started. Tell manager Emma (ext. 42) immediately — she needs to sign off before end of shift.</p>
+<p><strong>Note:</strong> Health inspector is still on-site. Emma is already aware of the incident.</p>`;
+  }
+
+  if (t.includes('notify') || t.includes('who to') || t.includes('report') || t.includes('manager')) {
+    return `<p><strong>Notify now:</strong></p>
+<p>→ <strong>Emma (Manager, ext. 42)</strong> — required within 15 min of incident<br>→ <strong>Health Inspector</strong> — already notified via the corrective action system<br>→ <strong>Guest</strong> — offer water, seat, and ask if they need medical attention</p>
+<p>Incident report INC-0391 is auto-saved. Emma can complete the rest at end of shift.</p>`;
   }
 
   return `<p>Got it. Based on what I know right now — <strong>Table 16</strong> still needs a greeting (allergy alert), <strong>Table 12</strong> is overdue and waiting on comp resolution, and pasta is running ~18 min for <strong>Table 15</strong>.</p>
