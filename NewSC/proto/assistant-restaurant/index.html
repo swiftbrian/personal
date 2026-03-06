@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontline Co-Pilot — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0d;
+  --phone-bg: #141414;
+  --surface: #212121;
+  --surface2: #282828;
+  --surface-hover: #2e2e2e;
+  --border: #323232;
+  --border-subtle: #1e1e1e;
+  --text-primary: #ededed;
+  --text-secondary: #9595a8;
+  --text-muted: #52526a;
+  --accent: #e8975a;
+  --accent-dim: rgba(232, 151, 90, 0.11);
+  --accent-glow: rgba(232, 151, 90, 0.06);
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.09);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.09);
+  --yellow: #fbbf24;
+  --yellow-dim: rgba(251, 191, 36, 0.08);
+  --blue: #60a5fa;
+  --blue-dim: rgba(96, 165, 250, 0.09);
+  --purple: #a78bfa;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text-primary);
+}
+
+body { display: flex; flex-direction: column; }
+
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Page top ─────────────────────────────────────── */
+.page-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  background: rgba(13,13,13,0.95);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.back-link:hover { color: var(--text-primary); }
+
+.page-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.proto-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(232,151,90,0.22);
+  letter-spacing: 0.04em;
+}
+
+/* ── Stage ────────────────────────────────────────── */
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 40px;
+  gap: 22px;
+  overflow-y: auto;
+}
+
+/* ── Intro ────────────────────────────────────────── */
+.intro {
+  max-width: 440px;
+  text-align: center;
+}
+
+.intro-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.intro-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.intro-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.intro-sub strong { color: var(--accent); font-weight: 500; }
+
+.pillars {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.pillar {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+/* ── Phone frame ─────────────────────────────────── */
+.phone-frame {
+  width: 393px;
+  height: 852px;
+  background: var(--phone-bg);
+  border-radius: 50px;
+  border: 1px solid #3e3e3e;
+  box-shadow:
+    0 0 0 1px #181818,
+    0 50px 120px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Dynamic island */
+.island {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 122px;
+  height: 35px;
+  background: #080808;
+  border-radius: 22px;
+  z-index: 30;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.island.expanded {
+  width: 280px;
+  height: 48px;
+  border-radius: 26px;
+}
+
+.island-inner {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 100%;
+}
+
+.island.expanded .island-inner { display: flex; }
+
+.island-icon { font-size: 18px; }
+
+.island-text {
+  flex: 1;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.island-sub {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+.status-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+}
+
+/* App header */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 9px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-orb {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #f0a96e 0%, #d4753a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(232,151,90,0.4);
+}
+
+.brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.brand-name em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hdr-space { flex: 1; }
+
+.live-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.18);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.worker-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8975a 0%, #c4673a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(232,151,90,0.3);
+}
+
+/* ── Tabs ────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 9px 8px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  font-family: var(--font);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab:hover:not(.active) { color: var(--text-secondary); }
+
+/* ── My Tables panel (tab 2) ─────────────────────── */
+.tables-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 8px;
+}
+
+.tables-view.active { display: flex; }
+
+.tables-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 6px;
+}
+
+.tables-hdr-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.tables-hdr-time {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.table-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 7px;
+}
+
+.table-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.table-card:hover { background: var(--surface2); border-color: #404040; }
+.table-card.alert { border-color: var(--red); }
+.table-card.warn  { border-color: var(--yellow); }
+.table-card.good  { border-color: var(--green); }
+.table-card.new-table { border-color: var(--blue); animation: newTablePulse 1s ease 3; }
+
+@keyframes newTablePulse {
+  0%, 100% { box-shadow: none; }
+  50% { box-shadow: 0 0 0 2px rgba(96,165,250,0.25); }
+}
+
+.table-number {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 2px;
+}
+
+.table-covers {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.table-status {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.s-seated   { background: var(--blue-dim); color: var(--blue); }
+.s-ordered  { background: var(--yellow-dim); color: var(--yellow); }
+.s-waiting  { background: var(--red-dim); color: var(--red); }
+.s-served   { background: var(--green-dim); color: var(--green); }
+.s-check    { background: var(--accent-dim); color: var(--accent); }
+.s-empty    { background: rgba(255,255,255,0.04); color: var(--text-muted); }
+
+.table-timer {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.table-timer.warn  { color: var(--yellow); }
+.table-timer.alert { color: var(--red); }
+
+.table-alert-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: alertDot 1.5s ease-in-out infinite;
+}
+
+@keyframes alertDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* Table detail expanded */
+.table-detail {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 12px 13px;
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.table-detail.visible { display: flex; }
+
+.td-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.td-title {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.td-close {
+  font-size: 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  padding: 2px 5px;
+}
+
+.td-items { display: flex; flex-direction: column; gap: 4px; }
+
+.td-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.td-item-icon { font-size: 14px; }
+
+.td-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.td-action {
+  flex: 1;
+  padding: 7px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+}
+
+.td-action:hover { border-color: var(--accent); color: var(--accent); }
+.td-action.primary { background: var(--accent); color: white; border-color: var(--accent); }
+.td-action.primary:hover { opacity: 0.85; }
+
+/* Shift summary section */
+.shift-summary {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 11px;
+  padding: 11px 13px;
+  margin-top: 4px;
+}
+
+.shift-summary-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.shift-nums {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.shift-num-val {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.shift-num-lbl {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.shift-bar-wrap {
+  margin-top: 12px;
+}
+
+.shift-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.shift-bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.shift-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--green);
+  transition: width 1.5s ease;
+}
+
+.shift-rank {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 7px 10px;
+  background: var(--surface2);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.shift-rank-icon { font-size: 14px; }
+
+/* My Growth tab (tab 3) */
+.growth-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 10px;
+}
+
+.growth-view.active { display: flex; }
+
+.growth-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 11px;
+  padding: 12px 13px;
+}
+
+.growth-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.skill-row:last-child { margin-bottom: 0; }
+
+.skill-name {
+  font-size: 12px;
+  color: var(--text-primary);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.skill-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 1.5s ease;
+}
+
+.skill-pct {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  width: 30px;
+  text-align: right;
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
+.badge.earned {
+  background: var(--accent-dim);
+  border-color: rgba(232,151,90,0.25);
+  color: var(--accent);
+}
+
+.badge.locked { color: var(--text-muted); }
+
+.badge-icon { font-size: 16px; }
+
+.badge-name { font-weight: 600; }
+
+.badge-sub {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.next-step {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--yellow-dim);
+  border: 1px solid rgba(251,191,36,0.18);
+  border-radius: 9px;
+  padding: 10px 12px;
+  line-height: 1.6;
+}
+
+.next-step strong { color: var(--yellow); }
+
+/* ── Chat view (tab 1) ───────────────────────────── */
+.chat-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.chat-view.active { display: flex; }
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+/* Time divider */
+.time-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0;
+}
+
+.time-div::before, .time-div::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.time-div span {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* AI message */
+.ai-msg {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  animation: fadeUp 0.25s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ai-orb {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f0a96e 0%, #d4753a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-content { flex: 1; min-width: 0; }
+
+.ai-meta {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.ai-meta em { font-style: normal; font-weight: 400; }
+
+.ai-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px 14px 14px 14px;
+  padding: 10px 13px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.ai-bubble p { margin-bottom: 8px; }
+.ai-bubble p:last-child { margin-bottom: 0; }
+.ai-bubble strong { color: var(--text-primary); font-weight: 600; }
+.hl   { color: var(--accent); }
+.hl-g { color: var(--green); }
+.hl-r { color: var(--red); }
+.hl-y { color: var(--yellow); }
+.hl-b { color: var(--blue); }
+
+/* User message */
+.user-msg {
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeUp 0.2s ease;
+}
+
+.user-bubble {
+  background: var(--accent);
+  border-radius: 14px 4px 14px 14px;
+  padding: 10px 13px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: white;
+  max-width: 82%;
+}
+
+/* Briefing card */
+.brief-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.brief-hdr {
+  padding: 9px 13px;
+  background: var(--surface-hover);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brief-hdr-icon { font-size: 15px; }
+
+.brief-hdr-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.brief-sec {
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brief-sec:last-child { border-bottom: none; }
+
+.brief-sec-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin-bottom: 7px;
+}
+
+.brief-rows { display: flex; flex-direction: column; gap: 6px; }
+
+.brief-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.brief-row-icon { font-size: 14px; flex-shrink: 0; }
+.brief-row-note { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+.brief-row.x86 {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.brief-row.x86 .brief-row-icon { opacity: 0.35; }
+
+.x86-badge {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--red);
+  background: var(--red-dim);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(248,113,113,0.2);
+  text-decoration: none;
+}
+
+.vip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  background: rgba(251,191,36,0.06);
+  border: 1px solid rgba(251,191,36,0.16);
+  border-radius: 9px;
+  padding: 8px 10px;
+}
+
+.vip-badge {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--yellow);
+  background: rgba(251,191,36,0.14);
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.vip-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.vip-note { font-size: 11px; color: var(--red); }
+
+/* Alert card */
+.alert-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--yellow);
+  border-radius: 4px 12px 12px 4px;
+  padding: 10px 13px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin-top: 5px;
+}
+
+.alert-card.urgent { border-left-color: var(--red); }
+.alert-card.good   { border-left-color: var(--green); }
+.alert-card.info   { border-left-color: var(--blue); }
+
+.alert-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 5px;
+  color: var(--yellow);
+}
+
+.alert-card.urgent .alert-label { color: var(--red); }
+.alert-card.good   .alert-label { color: var(--green); }
+.alert-card.info   .alert-label { color: var(--blue); }
+
+/* Action button inside card */
+.card-action {
+  margin-top: 9px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+  width: 100%;
+  text-align: left;
+}
+
+.card-action:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Win card */
+.win-card {
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.16);
+  border-radius: 12px;
+  padding: 12px 13px;
+  margin-top: 5px;
+}
+
+.win-star { font-size: 24px; margin-bottom: 5px; }
+
+.win-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 5px;
+}
+
+.win-quote {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 10px;
+  border-left: 2px solid rgba(74,222,128,0.3);
+}
+
+.win-source {
+  margin-top: 7px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* Answer card — structured response */
+.ans-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.ans-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ans-row:last-child { border-bottom: none; }
+
+.ans-row-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+.ans-row-body { flex: 1; }
+
+.ans-row-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1px;
+}
+
+.ans-row-note { color: var(--text-secondary); font-size: 11px; }
+
+.ans-ok  { color: var(--green); }
+.ans-bad { color: var(--red); }
+
+/* Typing */
+.typing-ind {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  animation: fadeUp 0.2s ease;
+}
+
+.tdots {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px 14px 14px 14px;
+  padding: 10px 14px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.tdot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: tdot 1.4s ease-in-out infinite;
+}
+
+.tdot:nth-child(2) { animation-delay: 0.2s; }
+.tdot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes tdot {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50%       { opacity: 1;   transform: translateY(-3px); }
+}
+
+/* ── Notification banner ────────────────────────── */
+.notif-banner {
+  position: absolute;
+  top: 55px;
+  left: 12px;
+  right: 12px;
+  background: rgba(30,30,30,0.97);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 11px 13px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  z-index: 200;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  transform: translateY(-120px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+}
+
+.notif-banner.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.notif-app-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.notif-body { flex: 1; }
+
+.notif-app-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.notif-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.notif-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.notif-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  font-family: var(--font);
+}
+
+.notif-dismiss:hover { color: var(--text-secondary); }
+
+/* Suggestions */
+.sugg-row {
+  padding: 8px 12px 5px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+  scrollbar-width: none;
+}
+
+.sugg-row::-webkit-scrollbar { display: none; }
+
+.sugg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.sugg:hover { border-color: var(--accent); color: var(--text-primary); }
+
+/* Input */
+.input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px 16px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.voice-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.voice-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.input-wrap {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  transition: border-color 0.15s;
+}
+
+.input-wrap:focus-within { border-color: rgba(232,151,90,0.4); }
+
+.chat-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 13px;
+  resize: none;
+  line-height: 1.5;
+  max-height: 80px;
+  min-height: 20px;
+}
+
+.chat-input::placeholder { color: var(--text-muted); }
+
+.send-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.send-btn:hover { opacity: 0.85; }
+
+/* ── Hints below phone ──────────────────────────── */
+.hints {
+  max-width: 393px;
+  width: 100%;
+}
+
+.hints-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.hints-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.hint {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+
+.hint:hover { border-color: var(--accent); color: var(--text-primary); }
+
+.hint-cat {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Page top ─────────────────────────────────── -->
+<div class="page-top">
+  <a href="../index.html" class="back-link">
+    <span>←</span>
+    <span>Prototypes</span>
+  </a>
+  <div class="page-label">Frontline Co-Pilot</div>
+  <div class="proto-badge">Prototype</div>
+</div>
+
+<!-- ── Stage ────────────────────────────────────── -->
+<div class="stage">
+
+  <div class="intro">
+    <div class="intro-eyebrow">Restaurant Worker · Friday Dinner Shift</div>
+    <div class="intro-title">A personal AI for every frontline worker</div>
+    <div class="intro-sub">Not a compliance tool, not a manager's dashboard — a <strong>genuine co-pilot</strong> that knows your section, watches your tables, and surfaces exactly what you need before you ask.</div>
+    <div class="pillars">
+      <span class="pillar">Proactive awareness</span>
+      <span class="pillar">Instant knowledge</span>
+      <span class="pillar">Personal advocacy</span>
+      <span class="pillar">Skill building</span>
+    </div>
+  </div>
+
+  <!-- ── Phone ──────────────────────────────────── -->
+  <div class="phone-frame" id="phone">
+
+    <!-- Dynamic island -->
+    <div class="island" id="island">
+      <div class="island-inner">
+        <span class="island-icon">🔔</span>
+        <div>
+          <div class="island-text">Table 16 Seated</div>
+          <div class="island-sub">Shellfish allergy · Dana K.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification banner -->
+    <div class="notif-banner" id="notif-banner">
+      <div class="notif-app-icon">🔔</div>
+      <div class="notif-body">
+        <div class="notif-app-name">Co-Pilot · Now</div>
+        <div class="notif-title">Table 16 Just Seated — Allergy Alert</div>
+        <div class="notif-text">Party of 4. Dana K. has a shellfish allergy on file. I've flagged kitchen.</div>
+      </div>
+      <button class="notif-dismiss" onclick="dismissNotif()">✕</button>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>7:23 PM</span>
+      <div class="status-right">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>84%</span>
+      </div>
+    </div>
+
+    <!-- App header -->
+    <div class="app-header">
+      <div class="brand">
+        <div class="brand-orb">✦</div>
+        <div class="brand-name">Co-Pilot <em>for Maria</em></div>
+      </div>
+      <div class="hdr-space"></div>
+      <div class="live-chip"><div class="live-dot"></div>LIVE</div>
+      <div class="worker-avatar" title="Maria Gonzalez">MG</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('chat', this)">Co-Pilot</button>
+      <button class="tab" onclick="switchTab('tables', this)">My Tables</button>
+      <button class="tab" onclick="switchTab('growth', this)">My Growth</button>
+    </div>
+
+    <!-- ── Chat view ─────────────────────────────── -->
+    <div class="chat-view active" id="tab-chat">
+      <div class="chat-area" id="chat-area">
+
+        <!-- 3:55 PM -->
+        <div class="time-div"><span>3:55 PM · Shift Start</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 3:55 PM</em></div>
+            <div class="ai-bubble">
+              <p>Hey Maria 👋 Ready for Friday dinner? I pulled tonight's reservation list, menu updates, and kitchen notes so you don't have to. Here's everything before the floor opens.</p>
+            </div>
+            <div class="brief-card">
+              <div class="brief-hdr">
+                <span class="brief-hdr-icon">🍽️</span>
+                <span class="brief-hdr-title">Tonight's Shift Brief</span>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Section B · Tables 11–16</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👥</span>
+                    <span>60 covers projected — busiest Friday in 3 weeks</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🍝</span>
+                    <span>Pasta station running ~18 min tonight — set expectations early</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">86'd Tonight</div>
+                <div class="brief-rows">
+                  <div class="brief-row x86">
+                    <span class="brief-row-icon">🐟</span>
+                    <span>Atlantic Salmon</span>
+                    <span class="x86-badge">OUT</span>
+                  </div>
+                  <div class="brief-row x86">
+                    <span class="brief-row-icon">🥣</span>
+                    <span>Lobster Bisque</span>
+                    <span class="x86-badge">OUT</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Tonight's Specials</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🦆</span>
+                    <span>Duck Confit · Cherry gastrique</span>
+                    <span class="brief-row-note">$28</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🍝</span>
+                    <span>Truffle Fettuccine · Black truffle, parmesan</span>
+                    <span class="brief-row-note">$26</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">VIP Reservation</div>
+                <div class="vip-row">
+                  <div class="vip-badge">GOLD</div>
+                  <div>
+                    <div class="vip-name">John Reyes · Table 14 · 6:30 PM</div>
+                    <div class="vip-note">⚠️ Tree nut allergy on file</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4:42 PM -->
+        <div class="time-div"><span>4:42 PM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 4:42 PM</em></div>
+            <div class="alert-card">
+              <div class="alert-label">⚠️ VIP Heads Up · Table 14</div>
+              John Reyes usually orders the salmon — it's 86'd tonight. <strong>Duck Confit</strong> has a similar richness and pairs perfectly with his usual Pinot Noir. A proactive suggestion before he even asks is usually appreciated by regulars.
+            </div>
+          </div>
+        </div>
+
+        <div class="user-msg">
+          <div class="user-bubble">oh perfect, good catch thank you</div>
+        </div>
+
+        <!-- 5:17 PM -->
+        <div class="time-div"><span>5:17 PM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 5:17 PM</em></div>
+            <div class="win-card">
+              <div class="win-star">🌟</div>
+              <div class="win-title">You got a shoutout!</div>
+              <div class="win-quote">"Maria remembered my allergy before I had to say a word. That kind of care is rare. Best dinner we've had in months."</div>
+              <div class="win-source">— John Reyes · Table 14 · Google Review, posted 5:14 PM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6:47 PM -->
+        <div class="time-div"><span>6:47 PM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">Table 11 asking about gluten free desserts</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 6:47 PM</em></div>
+            <div class="ans-card">
+              <div class="ans-row">
+                <span class="ans-row-icon">✅</span>
+                <div class="ans-row-body">
+                  <div class="ans-row-name ans-ok">Crème Brûlée</div>
+                  <div class="ans-row-note">Fully GF — no cross-risk</div>
+                </div>
+              </div>
+              <div class="ans-row">
+                <span class="ans-row-icon">✅</span>
+                <div class="ans-row-body">
+                  <div class="ans-row-name ans-ok">House Sorbet</div>
+                  <div class="ans-row-note">Fully GF — dairy-free too</div>
+                </div>
+              </div>
+              <div class="ans-row">
+                <span class="ans-row-icon">✅</span>
+                <div class="ans-row-body">
+                  <div class="ans-row-name ans-ok">NY Cheesecake</div>
+                  <div class="ans-row-note">GF almond crust since Jan — confirmed ✓</div>
+                </div>
+              </div>
+              <div class="ans-row">
+                <span class="ans-row-icon">❌</span>
+                <div class="ans-row-body">
+                  <div class="ans-row-name ans-bad">Brownie Sundae</div>
+                  <div class="ans-row-note">Wheat flour + walnuts — avoid</div>
+                </div>
+              </div>
+              <div class="ans-row">
+                <span class="ans-row-icon">❌</span>
+                <div class="ans-row-body">
+                  <div class="ans-row-name ans-bad">Molten Lava Cake</div>
+                  <div class="ans-row-note">Flour-based — not GF</div>
+                </div>
+              </div>
+            </div>
+            <div class="ai-bubble" style="margin-top:5px;font-size:11px;color:var(--text-secondary)">
+              Celiac? Ask kitchen to use clean utensils — flag it on the ticket as "GF strict."
+            </div>
+          </div>
+        </div>
+
+        <!-- 7:10 PM -->
+        <div class="time-div"><span>7:10 PM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:10 PM</em></div>
+            <div class="alert-card urgent">
+              <div class="alert-label">🕐 Table 12 · 14 Min Wait</div>
+              Entrées have been up 14 minutes — kitchen says 5 more. An honest, proactive check-in usually turns frustration around before it starts.
+              <button class="card-action" onclick="inject('What should I say to table 12 about their long wait?')">→ Draft what to say to them</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7:20 PM -->
+        <div class="time-div"><span>7:20 PM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">How do I comp a round of drinks for table 12?</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:21 PM</em></div>
+            <div class="ai-bubble">
+              <p>You're authorized for this — no manager needed for 1 round of drinks.</p>
+              <p>In Toast: table → tap the drink → <strong>Comp → Goodwill</strong> → add note "extended wait." Logs automatically.</p>
+              <p>A quick <em>"on us tonight, really sorry for the wait"</em> when you drop them usually flips the whole table. 👍</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- chat-area -->
+
+      <!-- Suggestions -->
+      <div class="sugg-row" id="sugg-row">
+        <button class="sugg" onclick="qs('Pasta station wait time right now?')">Pasta wait?</button>
+        <button class="sugg" onclick="qs('Guest at table 15 has a cold steak. What do I do?')">Handle complaint</button>
+        <button class="sugg" onclick="qs('My schedule this week')">My schedule</button>
+        <button class="sugg" onclick="qs('Pitch the duck confit for me')">Sell the duck</button>
+        <button class="sugg" onclick="qs(&quot;I'm overwhelmed right now&quot;)">Overwhelmed</button>
+        <button class="sugg" onclick="qs('What are my tips and earnings tonight?')">My tips tonight</button>
+      </div>
+
+      <!-- Input -->
+      <div class="input-bar">
+        <button class="voice-btn" title="Voice input">🎤</button>
+        <div class="input-wrap">
+          <textarea class="chat-input" id="chat-input"
+            placeholder="Ask anything…"
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMsg()">↑</button>
+      </div>
+    </div><!-- tab-chat -->
+
+    <!-- ── My Tables view ─────────────────────────── -->
+    <div class="tables-view" id="tab-tables">
+      <div class="tables-hdr">
+        <span class="tables-hdr-title">Section B · Live Status</span>
+        <span class="tables-hdr-time" id="tables-clock">7:23 PM</span>
+      </div>
+
+      <div class="table-cards">
+        <div class="table-card good" onclick="openTable(11)" id="tc-11">
+          <div class="table-number">11</div>
+          <div class="table-covers">2 covers</div>
+          <span class="table-status s-check">Check</span>
+          <div class="table-timer">42 min</div>
+        </div>
+        <div class="table-card warn" onclick="openTable(12)" id="tc-12">
+          <div class="table-number">12</div>
+          <div class="table-covers">4 covers</div>
+          <span class="table-status s-waiting">Waiting</span>
+          <div class="table-alert-dot"></div>
+        </div>
+        <div class="table-card" onclick="openTable(13)" id="tc-13">
+          <div class="table-number">13</div>
+          <div class="table-covers">3 covers</div>
+          <span class="table-status s-served">Served</span>
+          <div class="table-timer">28 min</div>
+        </div>
+        <div class="table-card" onclick="openTable(14)" id="tc-14">
+          <div class="table-number">14</div>
+          <div class="table-covers">2 covers</div>
+          <span class="table-status s-check">Check</span>
+          <div class="table-timer">VIP</div>
+        </div>
+        <div class="table-card" onclick="openTable(15)" id="tc-15">
+          <div class="table-number">15</div>
+          <div class="table-covers">5 covers</div>
+          <span class="table-status s-ordered">Ordered</span>
+          <div class="table-timer warn">12 min</div>
+        </div>
+        <div class="table-card new-table" onclick="openTable(16)" id="tc-16">
+          <div class="table-number">16</div>
+          <div class="table-covers">4 covers</div>
+          <span class="table-status s-seated">Just Seated</span>
+          <div class="table-alert-dot"></div>
+        </div>
+      </div>
+
+      <!-- Table detail panel -->
+      <div class="table-detail" id="table-detail">
+        <div class="td-header">
+          <div class="td-title" id="td-title">Table 12</div>
+          <button class="td-close" onclick="closeTable()">✕</button>
+        </div>
+        <div class="td-items" id="td-items"></div>
+        <div class="td-actions" id="td-actions"></div>
+      </div>
+
+      <div class="shift-summary">
+        <div class="shift-summary-title">Shift So Far</div>
+        <div class="shift-nums">
+          <div>
+            <div class="shift-num-val" style="color:var(--green)">$127</div>
+            <div class="shift-num-lbl">Tips earned</div>
+          </div>
+          <div>
+            <div class="shift-num-val">9</div>
+            <div class="shift-num-lbl">Tables closed</div>
+          </div>
+          <div>
+            <div class="shift-num-val" style="color:var(--yellow)">18</div>
+            <div class="shift-num-lbl">Avg tip %</div>
+          </div>
+        </div>
+        <div class="shift-bar-wrap">
+          <div class="shift-bar-label">
+            <span>Upsell rate tonight</span>
+            <span style="color:var(--green)">74%</span>
+          </div>
+          <div class="shift-bar-track">
+            <div class="shift-bar-fill" id="upsell-bar" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="shift-rank">
+          <span class="shift-rank-icon">🏆</span>
+          <span>You're <strong style="color:var(--accent)">#2 in the restaurant</strong> for tips this week</span>
+        </div>
+      </div>
+    </div><!-- tab-tables -->
+
+    <!-- ── My Growth view ─────────────────────────── -->
+    <div class="growth-view" id="tab-growth">
+
+      <div class="growth-card">
+        <div class="growth-card-title">Skills This Month</div>
+        <div class="skill-row">
+          <span class="skill-name">Guest Relations</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb1" style="width:0%"></div></div>
+          <span class="skill-pct">92%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Menu Knowledge</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb2" style="width:0%"></div></div>
+          <span class="skill-pct">88%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Upselling</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb3" style="width:0%"></div></div>
+          <span class="skill-pct">74%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Food Safety</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb4" style="width:0%"></div></div>
+          <span class="skill-pct">100%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Recovery</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb5" style="width:0%"></div></div>
+          <span class="skill-pct">95%</span>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Badges</div>
+        <div class="badge-row">
+          <div class="badge earned">
+            <span class="badge-icon">🌟</span>
+            <div>
+              <div class="badge-name">Guest Champion</div>
+              <div class="badge-sub">Earned Mar 2026</div>
+            </div>
+          </div>
+          <div class="badge earned">
+            <span class="badge-icon">🛡️</span>
+            <div>
+              <div class="badge-name">Allergy Expert</div>
+              <div class="badge-sub">Earned Feb 2026</div>
+            </div>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">🍷</span>
+            <div>
+              <div class="badge-name">Sommelier</div>
+              <div class="badge-sub">2 modules left</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Up Next</div>
+        <div class="next-step">
+          Complete <strong>2 wine pairing modules</strong> to unlock the Sommelier badge — servers with this badge average <strong style="color:var(--green)">+$11/table</strong> on check size. Your next day off is Wednesday.
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Recent Recognition</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div class="alert-card good" style="margin-top:0">
+            <div class="alert-label">🌟 Guest Mention</div>
+            "Maria was incredibly attentive — remembered my preference without being asked." — Table 14 tonight
+          </div>
+          <div class="alert-card good" style="margin-top:0">
+            <div class="alert-label">📣 Manager Shoutout</div>
+            "Best allergy-awareness on the team." — Emma R., 2 weeks ago
+          </div>
+        </div>
+      </div>
+
+    </div><!-- tab-growth -->
+
+  </div><!-- phone-frame -->
+
+  <!-- ── Hints below ──────────────────────────────── -->
+  <div class="hints">
+    <div class="hints-label">Try asking</div>
+    <div class="hints-grid">
+      <button class="hint" onclick="goChat(); inject('Is the cheesecake actually fully gluten free or just gluten friendly?')">
+        <span class="hint-cat">Allergens</span>
+        GF cheesecake — really safe?
+      </button>
+      <button class="hint" onclick="goChat(); inject('A guest has a cold steak and is getting upset. Walk me through it.')">
+        <span class="hint-cat">Service Recovery</span>
+        Cold steak, upset guest
+      </button>
+      <button class="hint" onclick="goChat(); inject('Describe the duck confit so I can sell it perfectly')">
+        <span class="hint-cat">Menu Knowledge</span>
+        Pitch the duck special
+      </button>
+      <button class="hint" onclick="goChat(); inject('Can I request next Saturday off and how do I do it?')">
+        <span class="hint-cat">HR &amp; Schedule</span>
+        Request time off
+      </button>
+      <button class="hint" onclick="goChat(); inject('What should I say to a table that\'s been waiting 20 minutes for food?')">
+        <span class="hint-cat">Service Script</span>
+        Script for long wait
+      </button>
+      <button class="hint" onclick="goChat(); inject('What wine pairs with the duck confit?')">
+        <span class="hint-cat">Wine Pairing</span>
+        Wine for duck confit
+      </button>
+    </div>
+  </div>
+
+</div><!-- stage -->
+
+<script>
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.chat-view, .tables-view, .growth-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+
+  if (name === 'tables') {
+    setTimeout(() => {
+      document.getElementById('upsell-bar').style.width = '74%';
+    }, 200);
+  }
+  if (name === 'growth') {
+    setTimeout(() => {
+      const bars = [['sb1',92],['sb2',88],['sb3',74],['sb4',100],['sb5',95]];
+      bars.forEach(([id,pct]) => { document.getElementById(id).style.width = pct + '%'; });
+    }, 200);
+  }
+}
+
+function goChat() {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === 0));
+  document.querySelectorAll('.chat-view, .tables-view, .growth-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('tab-chat').classList.add('active');
+}
+
+// ── Table detail ───────────────────────────────────────────────
+const TABLE_DATA = {
+  11: {
+    title: 'Table 11 · 2 covers · 42 min',
+    items: [
+      ['🍸','Cocktails ordered','Aperol Spritz x2'],
+      ['🥗','Starters cleared','On track'],
+      ['💳','Check dropped','No response yet — 8 min'],
+    ],
+    actions: [
+      { label: '→ Ask about dessert', q: 'What desserts should I push to a table finishing dinner?' },
+      { label: 'Mark as closed', q: '', cls: 'primary' },
+    ]
+  },
+  12: {
+    title: 'Table 12 · 4 covers · WAITING',
+    items: [
+      ['⏰','Food overdue','14 min past estimate'],
+      ['🍷','Wine ordered','Ordered 2 bottles — good sign'],
+      ['💬','Comp authorized','1 round of drinks — no approval needed'],
+    ],
+    actions: [
+      { label: '→ Script for this table', q: 'What should I say to table 12 about their long wait?' },
+      { label: '→ How to comp drinks', q: 'How do I comp a round of drinks in Toast?' },
+    ]
+  },
+  13: {
+    title: 'Table 13 · 3 covers · 28 min',
+    items: [
+      ['🍽️','Entrées delivered','Duck Confit x1, Truffle Fettuccine x2'],
+      ['😊','Mood check','Guests looked happy at delivery'],
+      ['📝','Next step','Check back in 5–7 min — offer dessert'],
+    ],
+    actions: [
+      { label: '→ Dessert upsell tips', q: 'What\'s the best way to sell dessert to a table mid-meal?' },
+    ]
+  },
+  14: {
+    title: 'Table 14 · 2 covers · VIP',
+    items: [
+      ['⭐','John Reyes · Gold member','Tree nut allergy — handled ✓'],
+      ['🦆','Ordered Duck Confit','Your redirect worked!'],
+      ['🌟','5-star review posted','"Maria remembered my allergy…"'],
+    ],
+    actions: [
+      { label: '→ Follow-up message ideas', q: 'What should I say when I bring the check to a VIP guest who had a great night?' },
+    ]
+  },
+  15: {
+    title: 'Table 15 · 5 covers · 12 min',
+    items: [
+      ['🍝','Pasta x3 ordered','Running ~18 min tonight — let them know'],
+      ['🥩','Steak x2 ordered','On track'],
+      ['⏰','ETA: ~6 more min','Kitchen confirmed'],
+    ],
+    actions: [
+      { label: '→ Manage pasta wait expectations', q: 'How do I set expectations for pasta wait time?' },
+    ]
+  },
+  16: {
+    title: 'Table 16 · 4 covers · JUST SEATED',
+    items: [
+      ['🔔','NEW — seated 7:23 PM','Greet within 2 min'],
+      ['⚠️','Dana K. — shellfish allergy','Kitchen already flagged ✓'],
+      ['📋','No orders yet','Take drinks first'],
+    ],
+    actions: [
+      { label: '→ Opening line for new table', q: 'What\'s a great opening line for a new table on a busy Friday night?' },
+      { label: '→ Handle shellfish allergy', q: 'Dana at table 16 has a shellfish allergy. What do I need to tell them about the menu?', cls: 'primary' },
+    ]
+  }
+};
+
+function openTable(num) {
+  const d = TABLE_DATA[num];
+  if (!d) return;
+  const detail = document.getElementById('table-detail');
+  document.getElementById('td-title').textContent = d.title;
+  document.getElementById('td-items').innerHTML = d.items.map(([icon, name, note]) =>
+    `<div class="td-item"><span style="font-size:15px">${icon}</span><div><div style="font-size:12px;font-weight:600;color:var(--text-primary)">${name}</div><div style="font-size:11px;color:var(--text-secondary)">${note}</div></div></div>`
+  ).join('');
+  document.getElementById('td-actions').innerHTML = d.actions.map(a =>
+    `<button class="td-action ${a.cls||''}" onclick="${a.q ? `goChat();inject(${JSON.stringify(a.q)})` : 'closeTable()'}">${a.label}</button>`
+  ).join('');
+  detail.classList.add('visible');
+}
+
+function closeTable() {
+  document.getElementById('table-detail').classList.remove('visible');
+}
+
+// ── Notification ───────────────────────────────────────────────
+function showNotif() {
+  const banner = document.getElementById('notif-banner');
+  const island = document.getElementById('island');
+  island.classList.add('expanded');
+  setTimeout(() => {
+    island.classList.remove('expanded');
+    banner.classList.add('show');
+  }, 1800);
+}
+
+function dismissNotif() {
+  document.getElementById('notif-banner').classList.remove('show');
+  // Inject into chat
+  const ca = document.getElementById('chat-area');
+  ca.appendChild(mkTimediv('7:23 PM · Now'));
+  const d = document.createElement('div');
+  d.className = 'ai-msg';
+  d.innerHTML = `
+    <div class="ai-orb" style="background:var(--red)">🔔</div>
+    <div class="ai-content">
+      <div class="ai-meta">Co-Pilot <em>· just now</em></div>
+      <div class="alert-card urgent">
+        <div class="alert-label">🔔 Table 16 Just Seated</div>
+        Party of 4. <strong>Dana K. has a shellfish allergy</strong> on file. I've flagged the kitchen already. Just steer her away from Seafood Linguine and Surf &amp; Turf — everything else is clear.
+        <button class="card-action" onclick="inject('Dana at table 16 has a shellfish allergy. What exactly do I need to warn her about on the menu?')">→ Full allergy guide for table 16</button>
+      </div>
+    </div>`;
+  ca.appendChild(d);
+  scrollBottom();
+}
+
+// ── Chat helpers ───────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+
+function qs(text) {
+  goChat();
+  document.getElementById('chat-input').value = text;
+  sendMsg();
+  document.getElementById('sugg-row').style.display = 'none';
+}
+
+function inject(text) {
+  const inp = document.getElementById('chat-input');
+  inp.value = text;
+  inp.focus();
+  autoResize(inp);
+}
+
+function scrollBottom() {
+  const ca = document.getElementById('chat-area');
+  ca.scrollTop = ca.scrollHeight;
+}
+
+function mkTimediv(label) {
+  const d = document.createElement('div');
+  d.className = 'time-div';
+  d.innerHTML = `<span>${label}</span>`;
+  return d;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  const ca = document.getElementById('chat-area');
+  const now = new Date();
+  const ts = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  ca.appendChild(mkTimediv(ts));
+
+  const uDiv = document.createElement('div');
+  uDiv.className = 'user-msg';
+  uDiv.innerHTML = `<div class="user-bubble">${esc(text)}</div>`;
+  ca.appendChild(uDiv);
+
+  inp.value = '';
+  inp.style.height = 'auto';
+  scrollBottom();
+
+  const typing = document.createElement('div');
+  typing.className = 'typing-ind';
+  typing.innerHTML = `
+    <div class="ai-orb">✦</div>
+    <div class="tdots"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
+  ca.appendChild(typing);
+  scrollBottom();
+
+  setTimeout(() => {
+    typing.remove();
+    const html = reply(text);
+    const aDiv = document.createElement('div');
+    aDiv.className = 'ai-msg';
+    aDiv.innerHTML = `
+      <div class="ai-orb">✦</div>
+      <div class="ai-content">
+        <div class="ai-meta">Co-Pilot <em>· just now</em></div>
+        <div class="ai-bubble">${html}</div>
+      </div>`;
+    ca.appendChild(aDiv);
+    scrollBottom();
+  }, 900 + Math.random() * 600);
+}
+
+// ── Reply engine ───────────────────────────────────────────────
+function reply(text) {
+  const t = text.toLowerCase();
+
+  if (t.includes('gluten') || t.includes('celiac') || t.includes('gf') || t.includes('cheesecake') || t.includes('gluten free')) {
+    return `<p>NY Cheesecake is <span class="hl-g">fully GF</span> — switched to an almond crust in January, not just "gluten friendly." ✓</p>
+<p><span class="hl-g">Also safe:</span> Crème Brûlée ✓, House Sorbet ✓<br><span class="hl-r">Avoid:</span> Brownie Sundae (wheat + walnuts), Molten Cake.</p>
+<p style="font-size:11px;color:var(--text-secondary)">Celiac? Flag the ticket "GF strict" — kitchen will use dedicated utensils.</p>`;
+  }
+
+  if (t.includes('tree nut') || t.includes('peanut') || t.includes('walnut') || t.includes('nut allerg')) {
+    return `<p><span class="hl-r">Tree nuts in:</span> Brownie Sundae (walnuts), Harvest Salad (candied pecans). No peanuts on any dish.</p>
+<p><span class="hl-g">Safe tonight:</span> Duck Confit ✓, Truffle Fettuccine ✓, Crème Brûlée ✓, Sorbet ✓, Cheesecake ✓</p>
+<p style="font-size:11px;color:var(--text-secondary)">Mark ticket "TREE NUT ALLERGY" — kitchen uses separate prep tools.</p>`;
+  }
+
+  if (t.includes('shellfish') || t.includes('dana') || t.includes('shrimp') || t.includes('lobster')) {
+    return `<p>For Dana K. at table 16 — shellfish is in: <span class="hl-r">Seafood Linguine</span> and <span class="hl-r">Surf &amp; Turf</span>. Lobster Bisque is 86'd anyway.</p>
+<p><span class="hl-g">Everything else is safe.</span> When you greet: <em>"Just so you know, we have your allergy on file — I'll make sure the kitchen knows too."</em> That alone earns trust.</p>
+<p style="font-size:11px;color:var(--text-secondary)">Already flagged with kitchen ✓ — you're covered.</p>`;
+  }
+
+  if (t.includes('cold') || t.includes('complain') || t.includes('upset') || t.includes('angry') || t.includes('wrong') || t.includes('steak')) {
+    return `<p><strong>Step 1</strong> — Acknowledge first, no defending: <em>"I'm so sorry about that — let me fix it right now."</em></p>
+<p><strong>Step 2</strong> — Offer to replace or correct at no charge. For a cold steak: new one (fastest), or heat it (ask first).</p>
+<p><strong>Step 3</strong> — You can comp up to $15/item on your own. Anything bigger, text Emma at ext. 42.</p>
+<p><strong>Step 4</strong> — Log in Toast → "Manager Comp" → add reason before end of shift.</p>
+<p style="font-size:11px;color:var(--text-secondary)">You've resolved 11 complaints this month with a 95% positive outcome. You've handled tougher rooms than this. 💪</p>`;
+  }
+
+  if (t.includes('duck') || t.includes('pitch') || t.includes('describe') || t.includes('sell') || t.includes('upsell') || (t.includes('special') && !t.includes('schedule'))) {
+    return `<p><strong>Duck Confit · $28</strong> — your line:</p>
+<p style="font-style:italic;border-left:2px solid var(--accent);padding-left:10px;color:var(--text-secondary)">"Tonight's special is slow-braised duck confit — 8 hours in its own fat until it falls off the bone, finished with a Bing cherry gastrique. Rich and savory without being heavy. Chef Marco makes it once a week when the ducks come in fresh."</p>
+<p>Pair with: 2022 Willamette Pinot Noir ($14/glass) — natural upsell that fits the flavor profile perfectly.</p>
+<p style="font-size:11px;color:var(--text-secondary)">💡 The "8 hours" detail resonates — guests love knowing the craft behind it.</p>`;
+  }
+
+  if (t.includes('wine') || t.includes('pairing') || t.includes('sommelier')) {
+    return `<p><strong>Duck Confit</strong> → 2022 Willamette Pinot Noir ($14) — earthy, cherry notes match the gastrique perfectly.</p>
+<p><strong>Truffle Fettuccine</strong> → 2021 Burgundy Chardonnay ($16) — buttery, can stand up to the truffle richness.</p>
+<p><strong>Surf &amp; Turf</strong> → Either Cab Sauv for the steak ($17) or ask what they prefer.</p>
+<p style="font-size:11px;color:var(--text-secondary)">💡 You're 2 modules away from the Sommelier badge, which lets you recommend pairings independently on the menu.</p>`;
+  }
+
+  if (t.includes('pasta') || t.includes('wait time') || t.includes('how long') || t.includes('kitchen')) {
+    return `<p>Pasta station is running <span class="hl-y">~18–22 min</span> tonight — Tony has a full board.</p>
+<p>When they order, set it early: <em>"Our pasta is hand-made to order — about 20 minutes tonight. Worth the wait, but I wanted you to know."</em></p>
+<p>Guests given an honest heads-up complain 3x less. If it's going longer, tell me and I'll draft an update for you.</p>`;
+  }
+
+  if (t.includes('opening line') || t.includes('greet') || t.includes('new table') || t.includes('introduce')) {
+    return `<p>For a busy Friday first impression:</p>
+<p style="font-style:italic;border-left:2px solid var(--accent);padding-left:10px;color:var(--text-secondary)">"Hi, I'm Maria — I'll be taking great care of you tonight. It's a busy one, so I want to make sure you're never waiting. Can I start you with something to drink while you look over the menu?"</p>
+<p>Mentioning "I'll make sure you're never waiting" sets a service expectation that guests remember — and tend to tip higher on. 🍷</p>`;
+  }
+
+  if (t.includes('what should i say') || t.includes('script') || t.includes('long wait') || t.includes('20 min') || t.includes('waiting for food')) {
+    return `<p>For a table waiting on food:</p>
+<p style="font-style:italic;border-left:2px solid var(--accent);padding-left:10px;color:var(--text-secondary)">"Hi folks — I wanted to give you an honest update. Your food is about 5 minutes out. Kitchen got backed up tonight and I know that's not what you want to hear. Can I refill your drinks while you wait?"</p>
+<p>Honesty + a small gesture (refill, bread) is the formula. Offering to comp a round? Even better — you're authorized.</p>`;
+  }
+
+  if (t.includes('dessert') || t.includes('after dinner') || t.includes('push dessert')) {
+    return `<p>Best line after entrées are cleared:</p>
+<p style="font-style:italic;border-left:2px solid var(--accent);padding-left:10px;color:var(--text-secondary)">"We actually have a Crème Brûlée I'd feel bad if you missed — Chef caramelizes it tableside. Splits easily for two if you want to try it."</p>
+<p>Mentioning "tableside" and "split for two" removes the commitment barrier. Tables that get this pitch say yes <span class="hl-g">41%</span> of the time.</p>`;
+  }
+
+  if (t.includes('schedule') || t.includes('hours') || t.includes('time off') || t.includes('off request') || t.includes('saturday off')) {
+    return `<p>This week: Mon off, Tue 4–10PM, Wed off, Thu 4–10PM, <strong>Fri 4–11PM (tonight)</strong>, Sat 11AM–4PM, Sun off. Total: 28 hrs.</p>
+<p>For time-off requests: open <strong>7shifts</strong> → Schedule → Request Time Off. Needs 72 hrs notice; Emma approves by Sunday noon.</p>
+<p style="font-size:11px;color:var(--text-secondary)">Next paycheck est: ~$680 base + ~$490 in tips based on this week's pace.</p>`;
+  }
+
+  if (t.includes('overwhelm') || t.includes('stress') || t.includes("can't handle") || t.includes('too much') || t.includes('i need help')) {
+    return `<p>Hey — you're doing great. Friday dinner is the hardest shift there is. Right now, your actual priorities:</p>
+<p>1. <strong>Table 16</strong> — just seated, allergy note (Dana K.), needs a greeting<br>2. <strong>Table 12</strong> — comp pending, check back in<br>3. <strong>Table 15</strong> — pasta ETA ~6 min, set expectations<br>4. Everyone else is holding fine for 5+ minutes</p>
+<p>Those three, in order. I'm watching the rest and will alert you if anything else needs attention.</p>
+<p style="font-size:11px;color:var(--text-secondary)">You've worked 47 Friday dinners here. You always find your rhythm. 💪</p>`;
+  }
+
+  if (t.includes('tip') || t.includes('earn') || t.includes('money') || t.includes('how much') || t.includes('my tips')) {
+    return `<p>Tonight so far: <span class="hl-g">$127 in tips</span> across 9 closed tables — avg $14.11/table, which is 18%.</p>
+<p>Tables ordering wine tonight tip 6% higher on average. Table 16 just seated, no drinks yet. 🍷</p>
+<p>You're on pace for about <span class="hl-g">$175–190</span> by end of shift based on your current section turnover.</p>
+<p style="font-size:11px;color:var(--text-secondary)">This week: <strong>#2 in the restaurant</strong> for tips. $12 behind the leader.</p>`;
+  }
+
+  if (t.includes('train') || t.includes('badge') || t.includes('certif') || t.includes('learn') || t.includes('modules')) {
+    return `<p>Your food handler cert renewal is due in <span class="hl-y">18 days</span> — 45-min online module, I can send you the link.</p>
+<p>You're <strong>2 modules away</strong> from the Sommelier Badge. Servers with that badge average <span class="hl-g">+$11/check</span> from independent wine pairings.</p>
+<p>Want me to schedule the modules for Wednesday when you're off? Takes about 30 minutes total.</p>`;
+  }
+
+  if (t.includes('comp') || t.includes('free') || t.includes('waive') || t.includes('discount')) {
+    return `<p>Your comp authority tonight:</p>
+<p>→ <strong>You</strong>: 1 round drinks, 1 dessert, or up to $15/item — no approval needed<br>→ <strong>Manager (Emma, ext. 42)</strong>: full meal, % off check, gift card<br>→ <strong>Log it</strong>: Toast → item → Comp → Goodwill → add reason</p>
+<p>What table and what are you comping? I can walk you through the exact steps.</p>`;
+  }
+
+  return `<p>Got it. Based on what I know right now — <strong>Table 16</strong> still needs a greeting (allergy alert), <strong>Table 12</strong> is overdue and waiting on comp resolution, and pasta is running ~18 min for <strong>Table 15</strong>.</p>
+<p>What do you need most right now? I'm watching everything and will flag anything that needs your attention first.</p>`;
+}
+
+// ── Init ───────────────────────────────────────────────────────
+scrollBottom();
+
+// Show notification banner after 7 seconds
+setTimeout(showNotif, 7000);
+
+// Update tables clock
+setInterval(() => {
+  const el = document.getElementById('tables-clock');
+  if (el) {
+    el.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  }
+}, 30000);
+</script>
+</body>
+</html>

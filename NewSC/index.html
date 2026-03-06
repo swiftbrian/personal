@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafetyCulture × AI — Strategic Vision</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  /* GT Alpina via CDN fallback to Georgia for rendering */
+  @import url('https://fonts.cdnfonts.com/css/gt-alpina');
+
+  :root {
+    --orange: #FF5C35;
+    --dark: #0C0C0C;
+    --mid: #161616;
+    --surface: #1E1E1E;
+    --border: #272727;
+    --muted: #555;
+    --text: #E6E1D8;
+    --threat: #FF3B3B;
+    --opp: #00D68F;
+    --star: #FFD166;
+    --blue: #4A9EFF;
+    --purple: #B87FFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* subtle grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .serif {
+    font-family: 'GT Alpina', 'GT Alpina Trial', Georgia, 'Times New Roman', serif;
+  }
+
+  /* ── MASTHEAD ── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(12,12,12,0.94);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+  }
+  .nav-brand {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--orange);
+    letter-spacing: 0.01em;
+  }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 88px 56px 72px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 80px;
+    align-items: end;
+  }
+  .hero-kicker {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-kicker::before { content: ''; width: 28px; height: 1px; background: var(--orange); display: block; }
+  .hero h1 {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: clamp(48px, 6.5vw, 82px);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: up 0.8s ease 0.2s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--orange); }
+  .hero-deck {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #8A8278;
+    line-height: 1.65;
+    opacity: 0;
+    animation: up 0.8s ease 0.4s forwards;
+  }
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    opacity: 0;
+    animation: up 0.8s ease 0.5s forwards;
+  }
+  .hero-stat {
+    background: var(--mid);
+    padding: 20px 24px;
+  }
+  .hero-stat-num {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .hero-stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+
+  @keyframes up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION ── */
+  .section {
+    padding: 72px 56px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-header {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0;
+    align-items: baseline;
+    margin-bottom: 48px;
+  }
+  .section-num {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    padding-top: 6px;
+  }
+  .section-title {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; }
+  .col-threat { color: var(--threat); }
+  .col-opp { color: var(--opp); }
+  .col-star { color: var(--star); }
+  .col-orange { color: var(--orange); }
+
+  /* ── GRID ── */
+  .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; }
+  .g2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--mid);
+    padding: 32px 28px;
+    transition: background 0.15s;
+  }
+  .card:hover { background: var(--surface); }
+  .pill {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .pill-r { background: rgba(255,59,59,0.1); color: #FF7060; border: 1px solid rgba(255,59,59,0.22); }
+  .pill-r2 { background: rgba(255,59,59,0.06); color: #FF9088; border: 1px solid rgba(255,59,59,0.15); }
+  .pill-g { background: rgba(0,214,143,0.1); color: var(--opp); border: 1px solid rgba(0,214,143,0.25); }
+  .pill-b { background: rgba(74,158,255,0.1); color: var(--blue); border: 1px solid rgba(74,158,255,0.22); }
+  .pill-s { background: rgba(255,209,102,0.1); color: var(--star); border: 1px solid rgba(255,209,102,0.25); }
+  .pill-p { background: rgba(184,127,255,0.1); color: var(--purple); border: 1px solid rgba(184,127,255,0.22); }
+
+  .card-title {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .card-body { font-size: 12px; color: #8A8278; line-height: 1.75; }
+  .card-foot {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .card-foot strong { color: #B0AA9E; font-weight: 400; }
+
+  /* ── BANNER ── */
+  .banner {
+    background: var(--mid);
+    padding: 40px 44px;
+    margin-bottom: 1px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .banner-label {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 42px;
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+  .banner-body { font-size: 13px; color: #8A8278; line-height: 1.8; }
+  .banner-body em { color: var(--text); font-style: normal; }
+
+  /* ── STAR SECTION ── */
+  .star-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1px;
+    margin-bottom: 1px;
+  }
+  .star-widget {
+    background: var(--mid);
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .star-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .s { font-size: 28px; line-height: 1; }
+  .s-filled { color: var(--star); filter: drop-shadow(0 0 8px rgba(255,209,102,0.5)); }
+  .s-empty { color: var(--border); }
+  .star-big {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 68px;
+    font-weight: 400;
+    color: var(--star);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .star-sub { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-top: 6px; margin-bottom: 4px; }
+  .star-site { font-size: 12px; color: var(--text); margin-bottom: 28px; }
+  .bar-rows { width: 100%; display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; }
+  .bar-lbl { font-size: 10px; color: var(--muted); width: 110px; flex-shrink: 0; }
+  .bar-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; }
+  .bar-fill { height: 100%; background: var(--star); border-radius: 2px; }
+  .bar-val { font-size: 10px; color: var(--star); width: 24px; text-align: right; }
+
+  .star-copy {
+    background: var(--mid);
+    padding: 40px 40px;
+  }
+  .star-copy h3 {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.3;
+  }
+  .star-copy h3 em { font-style: italic; color: var(--star); }
+  .star-copy p { font-size: 12px; color: #8A8278; line-height: 1.8; margin-bottom: 12px; }
+  .star-copy p:last-child { margin-bottom: 0; }
+
+  .star-apps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+  }
+  .star-app {
+    background: var(--mid);
+    padding: 24px 24px;
+  }
+  .sa-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--star);
+    margin-bottom: 8px;
+  }
+  .sa-title {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 15px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .sa-body { font-size: 11px; color: #8A8278; line-height: 1.7; }
+
+  /* ── SCENARIO ── */
+  .scenario { background: var(--mid); margin-bottom: 1px; }
+  .sc-head {
+    padding: 20px 36px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .sc-tag {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--orange);
+    background: rgba(255,92,53,0.08);
+    border: 1px solid rgba(255,92,53,0.22);
+    padding: 3px 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .sc-title {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .sc-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .sc-col { padding: 28px 36px; }
+  .sc-col.sc-before { border-right: 1px solid var(--border); }
+  .sc-col-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sc-col-label::before { content: ''; width: 16px; height: 1px; background: currentColor; }
+  .lbl-b { color: var(--threat); }
+  .lbl-a { color: var(--opp); }
+
+  .moment { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; }
+  .m-time { font-size: 10px; color: var(--muted); width: 48px; flex-shrink: 0; padding-top: 1px; }
+  .m-text { font-size: 12px; color: #8A8278; line-height: 1.6; }
+  .m-text strong { color: #C0BAB0; font-weight: 400; }
+  .m-text.bright { color: var(--text); }
+
+  .sc-delta {
+    padding: 16px 36px;
+    background: rgba(0,214,143,0.04);
+    border-top: 1px solid rgba(0,214,143,0.12);
+    display: flex;
+    gap: 48px;
+  }
+  .delta-n {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--opp);
+    line-height: 1;
+  }
+  .delta-d { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* ── TECH STACK ── */
+  .stack-g { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 1px; }
+  .stack-col { background: var(--mid); padding: 36px 32px; }
+  .stack-col-h {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 15px;
+    font-weight: 400;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .si { display: flex; gap: 12px; margin-bottom: 16px; }
+  .si-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .dr { background: var(--threat); } .dg { background: var(--opp); }
+  .dy { background: #FFB830; } .db { background: var(--blue); }
+  .si-text { font-size: 12px; color: #8A8278; line-height: 1.65; }
+  .si-text strong { color: #B0AA9E; font-weight: 400; display: block; margin-bottom: 2px; }
+
+  .layers { display: flex; flex-direction: column; gap: 2px; }
+  .layer { padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+  .l-new { background: rgba(0,214,143,0.08); border-left: 3px solid var(--opp); color: var(--opp); }
+  .l-mid { background: rgba(255,184,48,0.06); border-left: 3px solid #FFB830; color: #FFB830; }
+  .l-old { background: rgba(255,59,59,0.05); border-left: 3px solid rgba(255,59,59,0.3); color: #8A8278; }
+  .l-badge { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.6; }
+
+  /* ── VERTICALS ── */
+  .vert-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-bottom: 1px; }
+  .vert-card {
+    background: var(--mid);
+    padding: 28px 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .vert-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+  .vc1::after { background: #FF8C42; }
+  .vc2::after { background: var(--purple); }
+  .vc3::after { background: var(--blue); }
+  .vc4::after { background: var(--opp); }
+  .vc5::after { background: #FF6B9D; }
+  .vc6::after { background: #FFB830; }
+  .v-ind { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .v-title { font-family: 'GT Alpina', Georgia, serif; font-size: 15px; margin-bottom: 8px; line-height: 1.3; }
+  .v-body { font-size: 11px; color: #8A8278; line-height: 1.7; margin-bottom: 14px; }
+  .v-agents { display: flex; flex-direction: column; gap: 4px; }
+  .v-agent { font-size: 10px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .v-agent::before { content: '→'; color: var(--orange); }
+
+  .cust-g { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; margin-bottom: 1px; }
+  .cust-card { background: var(--mid); padding: 28px 26px; }
+  .cust-card.c1 { border-top: 2px solid rgba(0,214,143,0.4); }
+  .cust-card.c2 { border-top: 2px solid rgba(74,158,255,0.4); }
+  .cust-card.c3 { border-top: 2px solid rgba(255,92,53,0.5); }
+  .cust-title { font-family: 'GT Alpina', Georgia, serif; font-size: 15px; margin-bottom: 8px; line-height: 1.3; }
+  .cust-body { font-size: 11px; color: #8A8278; line-height: 1.7; }
+
+  .moat-g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; }
+  .moat-card { background: var(--mid); padding: 24px 22px; }
+  .moat-icon { font-size: 22px; margin-bottom: 10px; }
+  .moat-title { font-family: 'GT Alpina', Georgia, serif; font-size: 14px; margin-bottom: 6px; }
+  .moat-body { font-size: 11px; color: #8A8278; line-height: 1.65; }
+
+  /* ── STRATEGIC BETS ── */
+  .bets-g { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; }
+  .bet {
+    background: var(--mid);
+    padding: 36px 32px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .bet-n {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--orange);
+    opacity: 0.25;
+    line-height: 1;
+  }
+  .bet-title { font-family: 'GT Alpina', Georgia, serif; font-size: 17px; font-weight: 400; margin-bottom: 10px; line-height: 1.3; }
+  .bet-body { font-size: 12px; color: #8A8278; line-height: 1.75; margin-bottom: 14px; }
+  .bet-signal { font-size: 11px; color: var(--orange); font-style: italic; }
+
+  /* ── MANIFESTO ── */
+  .manifesto {
+    padding: 80px 56px;
+    background: var(--mid);
+    border-bottom: 1px solid var(--border);
+  }
+  .manifesto-q {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(20px, 2.6vw, 32px);
+    line-height: 1.55;
+    max-width: 760px;
+    color: var(--text);
+    padding-left: 36px;
+    position: relative;
+  }
+  .manifesto-q::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 4px;
+    width: 2px;
+    height: calc(100% - 8px);
+    background: var(--orange);
+  }
+  .manifesto-by {
+    margin-top: 24px;
+    padding-left: 36px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── MATRIX ── */
+  .matrix { display: grid; grid-template-columns: 180px 1fr 1fr 1fr; border: 1px solid var(--border); }
+  .mc { padding: 14px 18px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 11px; line-height: 1.5; }
+  .mc:nth-child(4n) { border-right: none; }
+  .mc.mh { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--surface); color: var(--muted); font-family: 'DM Mono', monospace; }
+  .mc.ml { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; background: var(--surface); }
+  .dh::before { content: '●'; color: var(--opp); margin-right: 5px; font-size: 9px; }
+  .dm::before { content: '●'; color: #FFB830; margin-right: 5px; font-size: 9px; }
+  .dl::before { content: '●'; color: var(--border); margin-right: 5px; font-size: 9px; }
+
+  /* ── FOOTER ── */
+  .foot {
+    padding: 28px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .foot-l { font-size: 10px; color: var(--muted); letter-spacing: 0.12em; }
+  .foot-r {
+    font-family: 'GT Alpina', Georgia, serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--orange);
+  }
+  .pdot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--orange); margin-right: 8px; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+
+  @media (max-width: 860px) {
+    .nav, .hero, .section, .manifesto, .foot { padding-left: 20px; padding-right: 20px; }
+    .hero { grid-template-columns: 1fr; gap: 40px; }
+    .g3, .g2, .star-apps, .vert-g, .cust-g, .moat-g, .bets-g, .sc-cols, .stack-g, .star-layout { grid-template-columns: 1fr; }
+    .banner { grid-template-columns: 1fr; }
+    .matrix { grid-template-columns: 100px 1fr 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">SafetyCulture × AI Agents</div>
+  <ul class="nav-links">
+    <li><a href="#threats">Threats</a></li>
+    <li><a href="#opportunities">Opportunities</a></li>
+    <li><a href="#star">Five Star Rating</a></li>
+    <li><a href="#scenarios">Imagine If</a></li>
+    <li><a href="#tech">Tech</a></li>
+    <li><a href="#verticals">Verticals</a></li>
+    <li><a href="#bets">Bets</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-kicker">Strategic Vision — 2026–2030</div>
+    <h1 class="serif">The <em>Agentic</em><br>Inflection Point</h1>
+    <p class="hero-deck serif">AI agents are reshaping how the physical world operates. SafetyCulture sits at the exact intersection where this transformation will be most disruptive — and most valuable.</p>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-num serif">76,000+</div>
+      <div class="hero-stat-label">Organizations on platform</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num serif">1B+</div>
+      <div class="hero-stat-label">Checks completed / year</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num serif">10 yrs</div>
+      <div class="hero-stat-label">Physical-world operational data</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num serif" style="color: var(--star);">Five Star Rating</div>
+      <div class="hero-stat-label">"How are we improving today?"</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── THREATS ── -->
+<section class="section" id="threats">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title serif col-threat">The Threats</h2>
+  </div>
+
+  <div class="banner" style="margin-bottom:1px;">
+    <div class="banner-label serif col-threat">Platform<br>Bypass</div>
+    <div class="banner-body">As AI agents become capable of autonomous task execution, enterprises will ask: <em>"Why do workers fill out checklists when an agent can observe, verify, and act directly?"</em> Microsoft, ServiceNow, and Salesforce are building operations agents that don't need SafetyCulture's templates — they want the <em>data</em>, which they'll try to capture themselves. The risk isn't disruption. It's irrelevance.</div>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <span class="pill pill-r">Critical</span>
+      <div class="card-title serif">Template Commoditization</div>
+      <div class="card-body">LLMs can generate industry-specific checklists in seconds. The 10,000-template library — once a moat — is becoming a commodity. The templates aren't the moat. The network, context, and decade of execution history are.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-r">Critical</span>
+      <div class="card-title serif">Agent-Native Competitors</div>
+      <div class="card-body">Well-funded startups unburdened by legacy architecture are building operations platforms designed from the ground up for a world where the primary user is an agent, not a human. The window to pre-empt them is now.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-r2">High</span>
+      <div class="card-title serif">ERP Absorption</div>
+      <div class="card-body">SAP, Oracle, and vertical incumbents (Procore, Toast) are adding AI-native safety modules. With existing integrations and CFO relationships, they threaten SafetyCulture's foothold in core verticals through consolidation pressure.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-r2">High</span>
+      <div class="card-title serif">Passive Observation Shift</div>
+      <div class="card-body">Computer vision and IoT sensors enable continuous, passive safety monitoring — without a human conducting inspections. The scheduled inspection workflow at SafetyCulture's core faces structural challenge as "observe, don't report" becomes viable.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-r2">High</span>
+      <div class="card-title serif">Tech Debt Velocity Gap</div>
+      <div class="card-body">Older architecture means AI-native features take longer to ship. Well-funded startups with clean stacks iterate faster. If agent features feel bolted-on, customers notice. Innovation velocity is now a survival metric.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-r2" style="background:rgba(255,184,48,0.08);color:#FFB830;border-color:rgba(255,184,48,0.2);">Medium</span>
+      <div class="card-title serif">Liability Ambiguity</div>
+      <div class="card-body">When an AI agent signs off on a safety inspection and an incident occurs, who is liable? Regulators are unprepared. Moving too fast creates legal exposure; moving too slow cedes ground. SafetyCulture must help define the standard.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OPPORTUNITIES ── -->
+<section class="section" id="opportunities">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title serif col-opp">The Opportunity</h2>
+  </div>
+
+  <div class="banner">
+    <div class="banner-label serif col-opp">The<br>Operations<br>Brain</div>
+    <div class="banner-body">SafetyCulture has something extraordinarily rare: <em>10 years of physical-world operational data at billion-check scale</em> — what was inspected, what failed, what was corrected, and what happened next. This is not generic web text. It's ground-truth operational intelligence across manufacturing, logistics, hospitality, construction, and healthcare. The opportunity is to become the intelligence layer that every enterprise AI agent queries when it needs to understand physical-world risk. Think Bloomberg Terminal for operations.</div>
+  </div>
+
+  <div style="height:1px"></div>
+
+  <div class="g3">
+    <div class="card">
+      <span class="pill pill-g">Now</span>
+      <div class="card-title serif">Agents as Autonomous Inspectors</div>
+      <div class="card-body">Deploy agents that continuously monitor sensors, cameras, and IoT data between human inspections. The agent surfaces anomalies, pre-populates reports, and escalates only true risks. Humans shift from data collectors to decision-makers — 10x value without replacing existing workflows.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-g">Now</span>
+      <div class="card-title serif">Predictive Risk Intelligence</div>
+      <div class="card-body">The data to start this exists today. Train models on 1B+ checks to predict asset failures, sites trending toward incidents, and teams needing intervention — before anything happens. Launch now as risk intelligence for operations leaders and insurers. As the dataset compounds across 76,000+ organizations over time, this becomes the world's definitive operational benchmark — "your sites are in the bottom quartile for your industry; here's what top performers do differently." A new revenue stream that grows more valuable every year.</div>
+      <div class="card-foot"><strong>Launches now</strong> · Compounds into a global benchmark over 2–3 years</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-g">Now</span>
+      <div class="card-title serif">Agentic Corrective Loops</div>
+      <div class="card-body">Today: inspect → create task → resolve → close. Tomorrow: agent finds issue → assigns work order → schedules technician → verifies resolution → updates compliance record. SafetyCulture becomes the operational nervous system, not just the sensor.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-b">Near-term</span>
+      <div class="card-title serif">Frontline Co-Pilot</div>
+      <div class="card-body">The first truly context-aware frontline assistant: knows this worker, this site, this asset's history, and the relevant regulations for this jurisdiction. Not generic AI — expert operational intelligence surfaced at the exact moment of action. Deepens engagement and switching costs dramatically.</div>
+    </div>
+    <div class="card">
+      <span class="pill pill-b">Near-term</span>
+      <div class="card-title serif">Agent Marketplace</div>
+      <div class="card-body">Open the platform as an agent orchestration layer. Partners and customers build specialized agents — confined space entry, food safety audit, vehicle pre-start — that compose with SafetyCulture's data. Become the App Store for operational AI, capturing platform economics over commodity seats.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OPS SCORE ── -->
+<section class="section" id="star">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title serif col-star">The Five Star Rating</h2>
+  </div>
+
+  <div class="star-layout">
+    <div class="star-widget">
+      <div class="star-row">
+        <span class="s s-filled">★</span>
+        <span class="s s-filled">★</span>
+        <span class="s s-filled">★</span>
+        <span class="s s-filled">★</span>
+        <span class="s s-empty">★</span>
+      </div>
+      <div class="star-big serif">4.2</div>
+      <div class="star-sub">Five Star Rating</div>
+      <div class="star-site">Melbourne Distribution Centre</div>
+      <div class="bar-rows">
+        <div class="bar-row"><div class="bar-lbl">Inspection Rate</div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><div class="bar-val">4.4</div></div>
+        <div class="bar-row"><div class="bar-lbl">Issue Resolution</div><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><div class="bar-val">3.6</div></div>
+        <div class="bar-row"><div class="bar-lbl">Training Compliance</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="bar-val">4.5</div></div>
+        <div class="bar-row"><div class="bar-lbl">Incident Trend</div><div class="bar-track"><div class="bar-fill" style="width:76%"></div></div><div class="bar-val">3.8</div></div>
+        <div class="bar-row"><div class="bar-lbl">Asset Health</div><div class="bar-track"><div class="bar-fill" style="width:84%"></div></div><div class="bar-val">4.2</div></div>
+      </div>
+    </div>
+    <div class="star-copy">
+      <h3 class="serif">One number that answers: <em>"How do we improve today?"</em></h3>
+      <p>The Five Star Rating is SafetyCulture's most powerful strategic primitive — a single, universal, comparable measure of operational health that every leader from site supervisor to CEO understands instantly. It spans safety, quality, compliance, training, and asset health. Not just a safety metric.</p>
+      <p>Every low score is a prescription, not just a diagnosis. Because it decomposes into scored dimensions, an agent generates a ranked improvement plan automatically — "fix these three things and your score moves from 3.8 to 4.3 within 30 days."</p>
+      <p>At scale, it becomes something unprecedented: the first universal benchmark for operational excellence. A Brisbane logistics company can compare against Rotterdam. An insurer can underwrite based on live scores, not annual audits. SafetyCulture becomes infrastructure for how the world transacts on operational trust.</p>
+    </div>
+  </div>
+
+  <div class="star-apps">
+    <div class="star-app">
+      <div class="sa-label">Site Level</div>
+      <div class="sa-title serif">Live site scoring</div>
+      <div class="sa-body">Every site gets a live rating, updated as inspections complete and issues close. A critical item unresolved drops the score in real-time — and the agent tells the manager exactly why and what to fix first.</div>
+    </div>
+    <div class="star-app">
+      <div class="sa-label">Portfolio Level</div>
+      <div class="sa-title serif">Executive portfolio view</div>
+      <div class="sa-body">34 hotels, 12 construction sites, 200 warehouses — ranked by rating, live. The outlier surfaces immediately. The agent explains why and generates an intervention plan before the COO asks for one.</div>
+    </div>
+    <div class="star-app">
+      <div class="sa-label">Industry Benchmark</div>
+      <div class="sa-title serif">Peer comparison</div>
+      <div class="sa-body">Compare against anonymized industry peers. Top-quartile performers are identified. The three practices they share are surfaced. This benchmark data is SafetyCulture's most defensible moat — deepening with every new customer.</div>
+    </div>
+    <div class="star-app">
+      <div class="sa-label">Agent Trigger</div>
+      <div class="sa-title serif">Scores drive agent action</div>
+      <div class="sa-body">A site drops below 3.5? The Site Agent automatically schedules an emergency inspection, reassigns overdue tasks, and escalates to the area manager. The Five Star Rating is the heartbeat that drives autonomous action.</div>
+    </div>
+    <div class="star-app">
+      <div class="sa-label">Supply Chain</div>
+      <div class="sa-title serif">Procurement trust signal</div>
+      <div class="sa-body">Enterprise customers begin requiring Five Star Ratings from suppliers as a condition of procurement. SafetyCulture becomes the infrastructure for how the world transacts on operational trust — not just a compliance tool.</div>
+    </div>
+    <div class="star-app">
+      <div class="sa-label">Insurance</div>
+      <div class="sa-title serif">Real-time underwriting</div>
+      <div class="sa-body">Insurers use live Five Star Ratings to adjust premiums dynamically. This is a fundamentally new revenue model — and an entirely new reason for customers to stay on the platform and improve their score.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── IMAGINE IF ── -->
+<section class="section" id="scenarios">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title serif col-orange">Imagine If...</h2>
+  </div>
+  <p style="font-size:12px;color:#8A8278;max-width:640px;margin-bottom:40px;line-height:1.75;" class="serif"><em>Three before/after narratives showing what a 10x improvement feels like in a real person's day.</em></p>
+
+  <!-- SCENARIO 1 -->
+  <div class="scenario">
+    <div class="sc-head">
+      <span class="sc-tag">Construction</span>
+      <div class="sc-title serif">The Site Manager's Monday Morning</div>
+    </div>
+    <div class="sc-cols">
+      <div class="sc-col sc-before">
+        <div class="sc-col-label lbl-b">Before</div>
+        <div class="moment"><div class="m-time">6:45am</div><div class="m-text">Jamie arrives. 47 unread emails. Scrolls to find anything urgent.</div></div>
+        <div class="moment"><div class="m-time">7:10am</div><div class="m-text"><strong>3 overdue inspections from last week.</strong> Not sure which are critical.</div></div>
+        <div class="moment"><div class="m-time">7:40am</div><div class="m-text">Calls two team leads to chase sign-offs. One doesn't answer.</div></div>
+        <div class="moment"><div class="m-time">8:30am</div><div class="m-text">Starts weekly report manually — copies numbers from 4 screens into a spreadsheet. <strong>Takes 90 minutes.</strong></div></div>
+        <div class="moment"><div class="m-time">10:00am</div><div class="m-text">Discovers a corrective action from 3 weeks ago was never closed. Was it a contributing factor to Friday's incident?</div></div>
+      </div>
+      <div class="sc-col">
+        <div class="sc-col-label lbl-a">After — SafetyCulture Agents</div>
+        <div class="moment"><div class="m-time">6:45am</div><div class="m-text bright">Jamie opens SafetyCulture. <strong>The Site Agent has already prepared a brief:</strong> "Five Star Rating dropped from 4.1 to 3.8 overnight. One critical issue is driving it."</div></div>
+        <div class="moment"><div class="m-time">6:47am</div><div class="m-text bright">Scaffolding inspection on Level 3 overdue 18 hours. <strong>Auto-assigned to Tom Chen</strong> (on shift, closest). Awaiting Jamie's confirmation.</div></div>
+        <div class="moment"><div class="m-time">6:50am</div><div class="m-text bright">Jamie approves with one tap. Agent notifies Tom, <strong>pre-fills the inspection template</strong> for this specific structure type.</div></div>
+        <div class="moment"><div class="m-time">7:15am</div><div class="m-text bright">Tom completes inspection. Agent verifies, closes the issue. <strong>Five Star Rating recovers to 4.0.</strong></div></div>
+        <div class="moment"><div class="m-time">8:00am</div><div class="m-text bright"><strong>Weekly report already in inbox</strong> — auto-generated overnight, with narrative context and recommended actions.</div></div>
+      </div>
+    </div>
+    <div class="sc-delta">
+      <div><div class="delta-n serif">3.5 hrs</div><div class="delta-d">saved on Monday morning admin</div></div>
+      <div><div class="delta-n serif">Zero</div><div class="delta-d">critical issues missed</div></div>
+      <div><div class="delta-n serif">+0.2 ★</div><div class="delta-d">Five Star Rating recovered before 8am</div></div>
+    </div>
+  </div>
+
+  <!-- SCENARIO 2 -->
+  <div class="scenario">
+    <div class="sc-head">
+      <span class="sc-tag">Food Manufacturing</span>
+      <div class="sc-title serif">The Quality Manager's Audit</div>
+    </div>
+    <div class="sc-cols">
+      <div class="sc-col sc-before">
+        <div class="sc-col-label lbl-b">Before</div>
+        <div class="moment"><div class="m-time">Day −14</div><div class="m-text">Audit announced. QM Sarah spends two weeks gathering evidence.</div></div>
+        <div class="moment"><div class="m-time">Day −7</div><div class="m-text"><strong>6 corrective actions never formally closed.</strong> Scrambles to backfill documentation.</div></div>
+        <div class="moment"><div class="m-time">Day −3</div><div class="m-text">Temperature logs for Cold Room B missing for 11 days. <strong>Can't explain why.</strong></div></div>
+        <div class="moment"><div class="m-time">Audit Day</div><div class="m-text">Auditor asks for 18 months of evidence. Sarah <strong>manually searches 300+ reports.</strong> Auditor waits.</div></div>
+      </div>
+      <div class="sc-col">
+        <div class="sc-col-label lbl-a">After — SafetyCulture Agents</div>
+        <div class="moment"><div class="m-time">Always-on</div><div class="m-text bright">The <strong>Compliance Agent</strong> continuously monitors open actions and documentation gaps. The system is always audit-ready.</div></div>
+        <div class="moment"><div class="m-time">Day −1</div><div class="m-text bright">Sarah: <em>"Prepare our FSANZ audit pack."</em> Agent assembles all evidence, <strong>flags one gap with explanation and corrective action already documented.</strong></div></div>
+        <div class="moment"><div class="m-time">Audit Day</div><div class="m-text bright">Sarah shares a <strong>live audit portal in 10 seconds</strong> — evidence organized by clause, timestamped, signed off.</div></div>
+        <div class="moment"><div class="m-time">Result</div><div class="m-text bright"><strong>Audit in 4 hours, not 2 days. Zero non-conformances.</strong> Auditor: "Best-prepared organization I've visited."</div></div>
+      </div>
+    </div>
+    <div class="sc-delta">
+      <div><div class="delta-n serif">2 weeks → 2 hrs</div><div class="delta-d">audit preparation time</div></div>
+      <div><div class="delta-n serif">100%</div><div class="delta-d">documentation completeness</div></div>
+      <div><div class="delta-n serif">Zero</div><div class="delta-d">non-conformances from doc gaps</div></div>
+    </div>
+  </div>
+
+  <!-- SCENARIO 3 -->
+  <div class="scenario">
+    <div class="sc-head">
+      <span class="sc-tag">Hospitality — Multi-Site</span>
+      <div class="sc-title serif">The Operations Director's Portfolio View</div>
+    </div>
+    <div class="sc-cols">
+      <div class="sc-col sc-before">
+        <div class="sc-col-label lbl-b">Before</div>
+        <div class="moment"><div class="m-time">Weekly</div><div class="m-text">Marcus manages 34 hotels. Gets 34 separate reports. <strong>Spends Friday reading them.</strong> By Monday they're stale.</div></div>
+        <div class="moment"><div class="m-time">Quarterly</div><div class="m-text">Board asks which sites underperform on safety. Marcus <strong>manually builds a comparison spreadsheet. Three days.</strong></div></div>
+        <div class="moment"><div class="m-time">Reactive</div><div class="m-text">Hears about a problem site <strong>after a guest incident.</strong> By then it's a PR and legal issue.</div></div>
+      </div>
+      <div class="sc-col">
+        <div class="sc-col-label lbl-a">After — SafetyCulture Agents</div>
+        <div class="moment"><div class="m-time">Live</div><div class="m-text bright"><strong>34 sites ranked by <span style="color:var(--star)">Five Star</span> Rating — live.</strong> Cannes property is 3.1. Everyone else is above 4.0.</div></div>
+        <div class="moment"><div class="m-time">Instant</div><div class="m-text bright">Taps Cannes. Agent: <strong>"Fire door compliance dropped to 41%. 3 new staff training overdue."</strong> Root cause and recommended action in one view.</div></div>
+        <div class="moment"><div class="m-time">Proactive</div><div class="m-text bright">Monday brief: <strong>"Nice property trending downward — predicted to breach threshold in 8 days. Intervention recommended."</strong></div></div>
+        <div class="moment"><div class="m-time">Board</div><div class="m-text bright">Quarterly pack auto-generated with trend lines, benchmarks, <strong>and a 90-day rating forecast per site.</strong></div></div>
+      </div>
+    </div>
+    <div class="sc-delta">
+      <div><div class="delta-n serif">Friday afternoons</div><div class="delta-d">report reading → 5-min daily brief</div></div>
+      <div><div class="delta-n serif">Proactive</div><div class="delta-d">from reactive to predictive intervention</div></div>
+      <div><div class="delta-n serif">Auto-generated</div><div class="delta-d">board packs, always current</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TECH STACK ── -->
+<section class="section" id="tech">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title serif">Tech Stack — The Build Strategy</h2>
+  </div>
+  <p style="font-size:12px;color:#8A8278;max-width:660px;margin-bottom:36px;line-height:1.8;">The older tech stack is a real constraint — but also a forcing function for good architecture. The approach is the <em style="color:var(--text);">Strangler Fig pattern</em>: named after the tree that grows around an existing trunk and gradually replaces it, it means building the new system incrementally around the old one — new customers get the modern experience, existing customers stay stable, and the legacy surfaces are retired piece by piece over time. No risky big-bang rewrite. No disruption to the existing business.</p>
+
+  <div class="stack-g">
+    <div class="stack-col">
+      <div class="stack-col-h serif col-threat">The Challenge</div>
+      <div class="si"><div class="si-dot dr"></div><div class="si-text"><strong>Agent integration complexity</strong>LLM/agent capabilities require real-time data access, streaming, and event-driven triggers — difficult to retrofit into older service architectures.</div></div>
+      <div class="si"><div class="si-dot dr"></div><div class="si-text"><strong>Data model rigidity</strong>Agents need fluid, context-rich access across entities. Legacy schemas designed for form capture don't expose the relationship graph agents need to reason across.</div></div>
+      <div class="si"><div class="si-dot dy"></div><div class="si-text"><strong>Migration risk</strong>76,000 organizations depend on current workflows. Any architectural change must maintain backwards compatibility — can't break what's working.</div></div>
+      <div class="si"><div class="si-dot dy"></div><div class="si-text"><strong>Engineering talent</strong>AI-native engineers want to work on cutting-edge stacks. Older architecture creates headwinds for attracting the team needed to build the future.</div></div>
+    </div>
+    <div class="stack-col">
+      <div class="stack-col-h serif col-opp">The Strategy</div>
+      <div class="si"><div class="si-dot dg"></div><div class="si-text"><strong>Agent Layer as a new service</strong>Build the agentic platform as a separate, modern microservice — event-driven, streaming-native, LLM-ready — sitting above the existing platform and reading from its APIs. New capabilities ship fast without touching legacy code.</div></div>
+      <div class="si"><div class="si-dot dg"></div><div class="si-text"><strong>Operational Knowledge Graph</strong>A new service that indexes SafetyCulture's data in a format optimized for LLM context and agent reasoning. The brain layer — separate from the transactional layer.</div></div>
+      <div class="si"><div class="si-dot db"></div><div class="si-text"><strong>Strangler Fig migration</strong>New product surfaces (agent UI, co-pilot, Five Star Rating) built entirely modern. Legacy surfaces remain stable. Over 3 years, legacy surfaces are deprecated as new ones reach parity — no risky full rewrite required.</div></div>
+    </div>
+  </div>
+
+  <div class="layers" style="margin-top:1px;">
+    <div class="layer l-new"><span>AI Agent Platform — event-driven, streaming, LLM-native</span><span class="l-badge">Build now · Ships independently</span></div>
+    <div class="layer l-new"><span>Operational Knowledge Graph — context-optimized data layer</span><span class="l-badge">Build now · Reads from existing APIs</span></div>
+    <div class="layer l-new"><span><span style="color:var(--star)">Five Star</span> Rating Engine — real-time scoring service</span><span class="l-badge">Build now · New revenue surface</span></div>
+    <div class="layer l-mid"><span>API Integration Bridge — translates legacy models for modern services</span><span class="l-badge">Temporary · Replace over 18 months</span></div>
+    <div class="layer l-old"><span>Legacy Platform — inspections, tasks, training, assets</span><span class="l-badge">Maintain · Deprecate gradually</span></div>
+  </div>
+</section>
+
+<!-- ── VERTICALS ── -->
+<section class="section" id="verticals">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title serif col-orange">Verticalization & Customization</h2>
+  </div>
+  <p style="font-size:12px;color:#8A8278;max-width:660px;margin-bottom:36px;line-height:1.8;">The deepest moat against vertical-specific competitors isn't having vertical data — it's giving customers the ability to make the platform and its agents their own. A construction company's agents should know their specific workflows, their standards, their language. This creates lock-in no generic competitor can replicate.</p>
+
+  <div class="vert-g">
+    <div class="vert-card vc1">
+      <div class="v-ind">Construction</div>
+      <div class="v-title serif">SC for Construction</div>
+      <div class="v-body">AS/NZS standards, OSHA construction specs, Procore integration, and trained understanding of permit-to-work, fall protection, and scaffolding. Rating weighted for construction-specific risk.</div>
+      <div class="v-agents">
+        <div class="v-agent">Permit-to-Work Agent</div>
+        <div class="v-agent">Subcontractor Compliance Agent</div>
+        <div class="v-agent">Daily Pre-Start Agent</div>
+      </div>
+    </div>
+    <div class="vert-card vc2">
+      <div class="v-ind">Hospitality</div>
+      <div class="v-title serif">SC for Hospitality</div>
+      <div class="v-body">HACCP, liquor licensing, and brand standard audits built in. Agents know the difference between a critical food safety breach and a housekeeping miss — and prioritize accordingly.</div>
+      <div class="v-agents">
+        <div class="v-agent">Food Safety Monitor Agent</div>
+        <div class="v-agent">Brand Standards Audit Agent</div>
+        <div class="v-agent">Allergen Alert Agent</div>
+      </div>
+    </div>
+    <div class="vert-card vc3">
+      <div class="v-ind">Manufacturing</div>
+      <div class="v-title serif">SC for Manufacturing</div>
+      <div class="v-body">ISO 45001, LOTO procedures, machine guarding, and OEE integration. Agents understand production context — distinguishing a safety stop from a quality hold. Deep CMMS integration.</div>
+      <div class="v-agents">
+        <div class="v-agent">LOTO Compliance Agent</div>
+        <div class="v-agent">Shift Handover Agent</div>
+        <div class="v-agent">Near-Miss Pattern Agent</div>
+      </div>
+    </div>
+    <div class="vert-card vc4">
+      <div class="v-ind">Transport & Logistics</div>
+      <div class="v-title serif">SC for Logistics</div>
+      <div class="v-body">Driver fatigue management, chain of responsibility, and dangerous goods handling. Agents know NHVR regulations and adjust inspection requirements based on load type and route.</div>
+      <div class="v-agents">
+        <div class="v-agent">Vehicle Pre-Start Agent</div>
+        <div class="v-agent">Fatigue Management Agent</div>
+        <div class="v-agent">DG Compliance Agent</div>
+      </div>
+    </div>
+    <div class="vert-card vc5">
+      <div class="v-ind">Retail</div>
+      <div class="v-title serif">SC for Retail</div>
+      <div class="v-body">Brand standards, loss prevention, food handling, and store opening procedures built in. Agents that know the difference between a planogram compliance miss and a food safety breach — and treat them accordingly across hundreds of locations.</div>
+      <div class="v-agents">
+        <div class="v-agent">Store Standards Agent</div>
+        <div class="v-agent">Food Safety Agent</div>
+        <div class="v-agent">Opening & Closing Agent</div>
+      </div>
+    </div>
+    <div class="vert-card vc6">
+      <div class="v-ind">Mining & Energy</div>
+      <div class="v-title serif">SC for Mining</div>
+      <div class="v-body">High-hazard intelligence built in: explosive atmospheres, ground control, emergency readiness. Agents calibrated for the consequence severity that mining incidents demand.</div>
+      <div class="v-agents">
+        <div class="v-agent">Critical Risk Control Agent</div>
+        <div class="v-agent">Isolation Management Agent</div>
+        <div class="v-agent">Emergency Response Agent</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;margin-bottom:16px;">
+    <div style="font-family:'GT Alpina',Georgia,serif;font-size:20px;margin-bottom:8px;color:var(--text);">Enterprise Customization — Three Tiers</div>
+    <p style="font-size:12px;color:#8A8278;max-width:660px;margin-bottom:24px;line-height:1.8;">The deeper a customer customizes SafetyCulture to their specific operations and language, the more it becomes <em style="color:var(--text);font-style:italic;">their</em> system. This is what defeats vertical startups — they can have vertical depth, but not your company's depth.</p>
+  </div>
+
+  <div class="cust-g">
+    <div class="cust-card c1">
+      <div class="cust-title serif">SMB — Self-Serve</div>
+      <div class="cust-body">Vertical template packs and pre-built agents out of the box. Simple prompt interface for agent customization — no technical knowledge required. "Always escalate any chemical spill to the area manager within 5 minutes."</div>
+    </div>
+    <div class="cust-card c2">
+      <div class="cust-title serif">Mid-Market — Guided Build</div>
+      <div class="cust-body">Field Deployment Engineer maps company-specific SOPs, org structures, and risk thresholds into the platform. Custom agent workflows via a no-code builder. Company-specific <span style="color:var(--star)">Five Star Rating</span> weightings configured to match internal risk appetite.</div>
+    </div>
+    <div class="cust-card c3">
+      <div class="cust-title serif">Enterprise — Full Custom</div>
+      <div class="cust-body">Full Agent SDK access. Build proprietary agents on SafetyCulture's data infrastructure. Fine-tune models on company-specific operational data. Private benchmarking within corporate groups. White-label for supply chain partners.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1px;">
+    <div class="moat-g">
+      <div class="moat-card">
+        <div class="moat-icon">🔒</div>
+        <div class="moat-title serif">Configuration Stickiness</div>
+        <div class="moat-body">The more a customer configures agents to their SOPs and language, the more the platform becomes genuinely theirs. Switching costs compound with every custom agent built.</div>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">🌐</div>
+        <div class="moat-title serif">Cross-Vertical Intelligence</div>
+        <div class="moat-body">A hospitality company with a construction division sees combined intelligence. No vertical startup can offer this — SafetyCulture becomes the operational spine of diversified enterprises.</div>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">📡</div>
+        <div class="moat-title serif">Benchmark Network Effects</div>
+        <div class="moat-body">Every new customer improves the benchmark for all customers in that vertical. More data → better predictions → more value. A vertical startup's benchmark pool is tiny by comparison.</div>
+      </div>
+      <div class="moat-card">
+        <div class="moat-icon">🏗️</div>
+        <div class="moat-title serif">Agent Ecosystem Lock-In</div>
+        <div class="moat-body">Once an enterprise has built 10 custom agents on the SC Agent SDK, migration isn't a software switch — it's a re-engineering project. The platform becomes operational infrastructure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MANIFESTO ── -->
+<div class="manifesto">
+  <div class="manifesto-q">The question SafetyCulture must ask is not "how do we add AI to our product?" It is "how do we become the operational intelligence layer that the physical world runs on?" The <span style="color:var(--star)">Five Star</span> Rating is the answer made legible. The agent platform is the answer made actionable. And the data — 10 years, 1 billion checks, 76,000 organizations — is the answer made defensible.</div>
+  <div class="manifesto-by">Strategic Thesis — SafetyCulture AI-First Vision, 2025</div>
+</div>
+
+<!-- ── STRATEGIC BETS ── -->
+<section class="section" id="bets">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title serif col-orange">The 5 Strategic Bets</h2>
+  </div>
+
+  <div class="bets-g">
+    <div class="bet">
+      <div class="bet-n serif">01</div>
+      <div>
+        <div class="bet-title serif">Make the Five Star Rating the Industry Standard</div>
+        <div class="bet-body">Invest in making the Five Star Rating the universal language for operational health — spanning safety, quality, compliance, and asset health for operational health. Partner with major insurers, industry bodies, and regulators to pilot rating-based underwriting and procurement requirements. This turns SafetyCulture's data into a global standard — impossible to displace once embedded.</div>
+        <div class="bet-signal">→ New revenue: rating-as-a-service, API licensing to insurers</div>
+      </div>
+    </div>
+    <div class="bet">
+      <div class="bet-n serif">02</div>
+      <div>
+        <div class="bet-title serif">Build Agent Infrastructure, Not Just Features</div>
+        <div class="bet-body">Create a dedicated Agent Platform as a product layer — with its own SDK, marketplace, and developer ecosystem. Let customers, FDEs, and partners build on top. Goal: SafetyCulture becomes the Salesforce of operational AI. Platform revenue replaces seat revenue. Network effects replace sales motion.</div>
+        <div class="bet-signal">→ Platform economics: rev-share on marketplace agents, usage pricing</div>
+      </div>
+    </div>
+    <div class="bet">
+      <div class="bet-n serif">03</div>
+      <div>
+        <div class="bet-title serif">Verticalize Deeply, Unify Strategically</div>
+        <div class="bet-body">Launch distinct vertical products with vertical-specific agents, benchmarks, and UI — each a credible competitor to vertical-only startups. But unify at the platform layer: shared data infrastructure, shared <span style="color:var(--star)">Five Star Rating</span> framework, shared agent SDK. Vertical depth, horizontal scale.</div>
+        <div class="bet-signal">→ Compete with vertical startups while expanding total addressable market</div>
+      </div>
+    </div>
+    <div class="bet">
+      <div class="bet-n serif">04</div>
+      <div>
+        <div class="bet-title serif">Execute the Strangler Fig Migration</div>
+        <div class="bet-body">Commit to building new around old — not rewriting everything at once. New Agent Platform and Knowledge Graph ship as modern, independent services. Legacy platform maintained but not extended. Year 1 — agent platform in pilot. Year 2 — default for all new customers. Year 3 — migration path offered to legacy base.</div>
+        <div class="bet-signal">→ Innovation velocity without betting the existing business</div>
+      </div>
+    </div>
+    <div class="bet" style="grid-column:1/-1;">
+      <div class="bet-n serif">05</div>
+      <div>
+        <div class="bet-title serif">Own the Physical-World Data Moat</div>
+        <div class="bet-body">Aggressively expand data ingestion: IoT partnerships, wearable integrations, CMMS connectors, and sensor APIs. Define and publish an "Operational Data Standard" — evangelize it, partner on it, become the default format. No competitor has 10 years of this data at this scale, and that gap widens with every customer added.</div>
+        <div class="bet-signal">→ Compounding defensibility — more data → better agents → more customers → more data</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="foot-l"><span class="pdot"></span>SafetyCulture Strategic Vision · AI-First · 2026–2030</div>
+  <div class="foot-r serif">The future of work is already here.</div>
+</footer>
+
+</body>
+</html>

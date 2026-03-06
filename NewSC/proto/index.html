@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontline Co-Pilot — Prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0d;
+  --surface: #191919;
+  --surface2: #212121;
+  --surface-hover: #252525;
+  --border: #2e2e2e;
+  --border-subtle: #1c1c1c;
+  --text-primary: #ededed;
+  --text-secondary: #9595a8;
+  --text-muted: #52526a;
+  --accent: #e8975a;
+  --accent-dim: rgba(232, 151, 90, 0.1);
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.08);
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --blue: #60a5fa;
+  --purple: #a78bfa;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text-primary);
+}
+
+body { display: flex; flex-direction: column; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Top nav ─────────────────────────────────────── */
+.top-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: rgba(13,13,13,0.96);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+
+.nav-logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: white;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.nav-logo-text em {
+  font-style: normal;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.nav-sep {
+  color: var(--border);
+  font-size: 18px;
+  font-weight: 200;
+  margin: 0 2px;
+}
+
+.nav-section {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.nav-space { flex: 1; }
+
+.nav-chip {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid rgba(232,151,90,0.22);
+  letter-spacing: 0.04em;
+}
+
+/* ── Hero ────────────────────────────────────────── */
+.hero {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 28px 40px;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -1.2px;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, #f0a96e, #e8975a, #c96f2e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 28px;
+}
+
+.hero-sub strong { color: var(--text-primary); font-weight: 500; }
+
+.hero-pillars {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-pillar {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+/* ── Grid ────────────────────────────────────────── */
+.proto-grid {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 28px 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.section-label {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  padding-top: 8px;
+}
+
+/* Prototype card */
+.proto-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+
+.proto-card:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.proto-card.active:hover { border-color: rgba(232,151,90,0.4); }
+
+.card-preview {
+  height: 130px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Restaurant preview */
+.preview-restaurant {
+  background: linear-gradient(160deg, #1e1510 0%, #1a1a1a 100%);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Retail preview */
+.preview-retail {
+  background: linear-gradient(160deg, #0e1a14 0%, #1a1a1a 100%);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* Coming soon preview */
+.preview-soon {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.preview-phone {
+  width: 68px;
+  height: 110px;
+  background: #141414;
+  border-radius: 14px;
+  border: 1px solid #383838;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-phone-notch {
+  width: 32px;
+  height: 10px;
+  background: #0a0a0a;
+  border-radius: 0 0 8px 8px;
+  margin: 0 auto;
+}
+
+.preview-phone-hdr {
+  padding: 2px 5px 3px;
+  border-bottom: 1px solid #252525;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.preview-hdr-orb {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.preview-hdr-orb.orange { background: var(--accent); }
+.preview-hdr-orb.green  { background: #2d8c4e; }
+
+.preview-hdr-name {
+  font-size: 5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.preview-live {
+  width: 18px;
+  height: 6px;
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 3px;
+  margin-left: auto;
+}
+
+.preview-msg {
+  height: 10px;
+  border-radius: 2px 5px 5px 5px;
+  background: #282828;
+  margin: 3px 5px 0 13px;
+}
+
+.preview-msg.user {
+  background: var(--accent);
+  margin: 3px 13px 0 24px;
+  border-radius: 5px 2px 5px 5px;
+}
+
+.preview-msg.card {
+  height: 22px;
+  border-radius: 5px;
+  background: #282828;
+  border: 1px solid #333;
+  margin: 3px 5px 0 5px;
+}
+
+/* Decorative glow behind phone */
+.preview-glow {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.25;
+}
+
+.preview-glow.orange { background: var(--accent); left: 10px; top: 20px; }
+.preview-glow.green  { background: var(--green); left: 10px; top: 20px; }
+
+/* Worker label floating */
+.preview-worker-tag {
+  position: absolute;
+  bottom: 10px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border-subtle);
+  padding: 3px 7px;
+  border-radius: 4px;
+}
+
+.card-body {
+  padding: 16px 18px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.card-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.card-titles {}
+
+.card-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.card-worker {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.card-tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.card-tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--surface2);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+}
+
+.card-cta {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: var(--accent-dim);
+  border: 1px solid rgba(232,151,90,0.2);
+  transition: all 0.15s;
+}
+
+.card-link:hover {
+  background: rgba(232,151,90,0.18);
+  border-color: rgba(232,151,90,0.4);
+}
+
+.card-link-arrow { font-size: 11px; }
+
+/* Coming soon card */
+.proto-card.coming-soon {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.soon-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface2);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.preview-soon-icon {
+  font-size: 32px;
+  opacity: 0.3;
+}
+
+/* ── Vision section ──────────────────────────────── */
+.vision {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 28px 60px;
+}
+
+.vision-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.vision-divider::before, .vision-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.vision-divider span {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.vision-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.vision-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.vision-icon { font-size: 20px; margin-bottom: 10px; }
+
+.vision-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+}
+
+.vision-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Top nav ────────────────────────────────────── -->
+<nav class="top-nav">
+  <a href="../index.html" class="nav-logo">
+    <div class="nav-logo-mark">SC</div>
+    <div class="nav-logo-text">SafetyCulture <em>AI</em></div>
+  </a>
+  <span class="nav-sep">/</span>
+  <span class="nav-section">Prototypes</span>
+  <div class="nav-space"></div>
+  <div class="nav-chip">Frontline Co-Pilot</div>
+</nav>
+
+<!-- ── Hero ──────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-eyebrow">Frontline Co-Pilot · Interactive Prototypes</div>
+  <h1 class="hero-title">An AI that shows up <span>for every worker</span></h1>
+  <p class="hero-sub">These prototypes explore what a truly personal AI co-pilot looks like across different frontline industries — <strong>proactive, knowledgeable, and genuinely useful</strong> on the floor.</p>
+  <div class="hero-pillars">
+    <span class="hero-pillar">Proactive awareness</span>
+    <span class="hero-pillar">Instant expertise</span>
+    <span class="hero-pillar">Personal advocacy</span>
+    <span class="hero-pillar">Skill development</span>
+    <span class="hero-pillar">Works on any device</span>
+  </div>
+</div>
+
+<!-- ── Prototype grid ─────────────────────────────── -->
+<div class="proto-grid">
+
+  <div class="section-label">Live Prototypes</div>
+
+  <!-- Restaurant -->
+  <a href="./assistant-restaurant/" class="proto-card active">
+    <div class="card-preview preview-restaurant">
+      <div class="preview-glow orange"></div>
+      <div class="preview-phone">
+        <div class="preview-phone-notch"></div>
+        <div class="preview-phone-hdr">
+          <div class="preview-hdr-orb orange"></div>
+          <span class="preview-hdr-name">Co-Pilot</span>
+          <div class="preview-live"></div>
+        </div>
+        <div class="preview-msg" style="width:80%;height:18px;margin-top:4px"></div>
+        <div class="preview-msg card" style="margin-top:4px"></div>
+        <div class="preview-msg" style="width:60%"></div>
+        <div class="preview-msg user" style="width:50%"></div>
+        <div class="preview-msg" style="width:70%"></div>
+      </div>
+      <div class="preview-worker-tag">Server · Dinner shift</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🍽️</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Restaurant)</div>
+          <div class="card-worker">Maria G. · Ember &amp; Oak · Friday dinner</div>
+        </div>
+      </div>
+      <div class="card-desc">Table awareness, allergen lookup, comp authority, and real-time service coaching — all through a personal AI that knows her section.</div>
+      <div class="card-tags">
+        <span class="card-tag">Table management</span>
+        <span class="card-tag">Allergens</span>
+        <span class="card-tag">Service recovery</span>
+        <span class="card-tag">VIP alerts</span>
+      </div>
+      <div class="card-cta">
+        <span class="card-link">View prototype <span class="card-link-arrow">→</span></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Retail -->
+  <a href="./assistant-retail/" class="proto-card active">
+    <div class="card-preview preview-retail">
+      <div class="preview-glow green"></div>
+      <div class="preview-phone">
+        <div class="preview-phone-notch"></div>
+        <div class="preview-phone-hdr">
+          <div class="preview-hdr-orb green"></div>
+          <span class="preview-hdr-name">Co-Pilot</span>
+          <div class="preview-live"></div>
+        </div>
+        <div class="preview-msg" style="width:80%;height:18px;margin-top:4px"></div>
+        <div class="preview-msg card" style="margin-top:4px"></div>
+        <div class="preview-msg" style="width:55%"></div>
+        <div class="preview-msg user" style="width:45%"></div>
+        <div class="preview-msg" style="width:75%"></div>
+      </div>
+      <div class="preview-worker-tag">Crew Member · Opening shift</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🛒</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Retail)</div>
+          <div class="card-worker">Alex C. · Trader Joe's · Morning shift</div>
+        </div>
+      </div>
+      <div class="card-desc">Truck-day stocking priorities, on-demand product knowledge, stock alerts, and customer wayfinding — before the store even opens.</div>
+      <div class="card-tags">
+        <span class="card-tag">Product expertise</span>
+        <span class="card-tag">Stocking queue</span>
+        <span class="card-tag">Stock alerts</span>
+        <span class="card-tag">Customer assist</span>
+      </div>
+      <div class="card-cta">
+        <span class="card-link">View prototype <span class="card-link-arrow">→</span></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Coming soon cards -->
+  <div class="section-label">Coming Soon</div>
+
+  <div class="proto-card coming-soon">
+    <div class="card-preview preview-soon">
+      <div class="preview-soon-icon">🏥</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🏥</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Healthcare)</div>
+          <div class="card-worker">CNA · Memory care facility</div>
+        </div>
+      </div>
+      <div class="card-desc">Resident care plans, medication reminders, shift handoff intelligence, and real-time safety alerts.</div>
+      <div class="card-cta">
+        <span class="soon-badge">Coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="proto-card coming-soon">
+    <div class="card-preview preview-soon">
+      <div class="preview-soon-icon">🏗️</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🏗️</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Construction)</div>
+          <div class="card-worker">Site worker · Active build</div>
+        </div>
+      </div>
+      <div class="card-desc">Safety protocol lookup, permit status, equipment checklists, and incident reporting — hands-free on site.</div>
+      <div class="card-cta">
+        <span class="soon-badge">Coming soon</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="proto-card coming-soon">
+    <div class="card-preview preview-soon">
+      <div class="preview-soon-icon">🏨</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🏨</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Hospitality)</div>
+          <div class="card-worker">Housekeeper · Hotel property</div>
+        </div>
+      </div>
+      <div class="card-desc">Room inspection workflows, guest special requests, supply levels, and shift performance tracking.</div>
+      <div class="card-cta">
+        <span class="soon-badge">Coming soon</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Vision ─────────────────────────────────────── -->
+<div class="vision">
+  <div class="vision-divider"><span>What makes it different</span></div>
+  <div class="vision-grid">
+    <div class="vision-card">
+      <div class="vision-icon">⚡</div>
+      <div class="vision-title">Proactive, not reactive</div>
+      <div class="vision-desc">Surfaces what workers need before they ask — shift briefs, stock alerts, VIP notes — without any configuration or prompting.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">🧠</div>
+      <div class="vision-title">Expert knowledge, instantly</div>
+      <div class="vision-desc">Deep product, menu, and policy knowledge at the fingertips of every worker — not just the ones who've been there for years.</div>
+    </div>
+    <div class="vision-card">
+      <div class="vision-icon">🌱</div>
+      <div class="vision-title">Builds skills over time</div>
+      <div class="vision-desc">Tracks individual performance, surfaces growth opportunities, and gives real-time coaching — turning every shift into a development moment.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

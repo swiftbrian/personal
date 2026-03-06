@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontline Co-Pilot — Retail (Trader Joe's)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d0d;
+  --phone-bg: #141414;
+  --surface: #212121;
+  --surface2: #282828;
+  --surface-hover: #2e2e2e;
+  --border: #323232;
+  --border-subtle: #1e1e1e;
+  --text-primary: #ededed;
+  --text-secondary: #9595a8;
+  --text-muted: #52526a;
+  --accent: #2d8c4e;
+  --accent-bright: #4ade80;
+  --accent-dim: rgba(45, 140, 78, 0.12);
+  --accent-glow: rgba(74, 222, 128, 0.08);
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.09);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.09);
+  --yellow: #fbbf24;
+  --yellow-dim: rgba(251, 191, 36, 0.08);
+  --blue: #60a5fa;
+  --blue-dim: rgba(96, 165, 250, 0.09);
+  --orange: #e8975a;
+  --orange-dim: rgba(232, 151, 90, 0.09);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text-primary);
+}
+
+body { display: flex; flex-direction: column; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Page top ─────────────────────────────────────── */
+.page-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 0;
+  background: rgba(13,13,13,0.95);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.back-link:hover { color: var(--text-primary); }
+
+.page-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.proto-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+  border: 1px solid rgba(74,222,128,0.2);
+  letter-spacing: 0.04em;
+}
+
+/* ── Stage ────────────────────────────────────────── */
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 40px;
+  gap: 22px;
+  overflow-y: auto;
+}
+
+/* ── Intro ────────────────────────────────────────── */
+.intro {
+  max-width: 440px;
+  text-align: center;
+}
+
+.intro-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-bright);
+  margin-bottom: 8px;
+}
+
+.intro-title {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  line-height: 1.25;
+}
+
+.intro-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.intro-sub strong { color: var(--accent-bright); font-weight: 500; }
+
+.pillars {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.pillar {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 11px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+/* ── Phone frame ─────────────────────────────────── */
+.phone-frame {
+  width: 393px;
+  height: 852px;
+  background: var(--phone-bg);
+  border-radius: 50px;
+  border: 1px solid #3e3e3e;
+  box-shadow:
+    0 0 0 1px #181818,
+    0 50px 120px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+/* Dynamic island */
+.island {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 122px;
+  height: 35px;
+  background: #080808;
+  border-radius: 22px;
+  z-index: 30;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.island.expanded {
+  width: 290px;
+  height: 48px;
+  border-radius: 26px;
+}
+
+.island-inner {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 100%;
+}
+
+.island.expanded .island-inner { display: flex; }
+.island-icon { font-size: 18px; }
+.island-text { flex: 1; font-size: 11px; font-weight: 600; color: var(--text-primary); }
+.island-sub  { font-size: 10px; color: var(--text-secondary); font-weight: 400; }
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+}
+
+.status-right { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+
+/* App header */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 9px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.brand { display: flex; align-items: center; gap: 8px; }
+
+.brand-orb {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #3ea85e 0%, #1f6b38 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(45,140,78,0.4);
+}
+
+.brand-name { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
+
+.brand-name em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.hdr-space { flex: 1; }
+
+.live-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.18);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+.worker-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3ea85e 0%, #1f6b38 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(74,222,128,0.25);
+}
+
+/* ── Tabs ────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  padding: 0 4px;
+}
+
+.tab {
+  flex: 1;
+  padding: 9px 8px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: none;
+  background: none;
+  font-family: var(--font);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  margin-bottom: -1px;
+}
+
+.tab.active { color: var(--accent-bright); border-bottom-color: var(--accent-bright); }
+.tab:hover:not(.active) { color: var(--text-secondary); }
+
+/* ── Chat view ───────────────────────────────────── */
+.chat-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.chat-view.active { display: flex; }
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 14px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+/* Time divider */
+.time-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0;
+}
+
+.time-div::before, .time-div::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.time-div span {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* AI message */
+.ai-msg {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  animation: fadeUp 0.25s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ai-orb {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3ea85e 0%, #1f6b38 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: white;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-content { flex: 1; min-width: 0; }
+
+.ai-meta { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+.ai-meta em { font-style: normal; font-weight: 400; }
+
+.ai-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px 14px 14px 14px;
+  padding: 10px 13px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.ai-bubble p { margin-bottom: 8px; }
+.ai-bubble p:last-child { margin-bottom: 0; }
+.ai-bubble strong { color: var(--text-primary); font-weight: 600; }
+
+.hl   { color: var(--accent-bright); }
+.hl-r { color: var(--red); }
+.hl-y { color: var(--yellow); }
+.hl-b { color: var(--blue); }
+.hl-o { color: var(--orange); }
+
+/* User message */
+.user-msg {
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeUp 0.2s ease;
+}
+
+.user-bubble {
+  background: var(--accent);
+  border-radius: 14px 4px 14px 14px;
+  padding: 10px 13px;
+  font-size: 13px;
+  line-height: 1.65;
+  color: white;
+  max-width: 82%;
+}
+
+/* ── Brief card ──────────────────────────────────── */
+.brief-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.brief-hdr {
+  padding: 9px 13px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brief-hdr-icon { font-size: 15px; }
+
+.brief-hdr-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.brief-sec {
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brief-sec:last-child { border-bottom: none; }
+
+.brief-sec-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin-bottom: 7px;
+}
+
+.brief-rows { display: flex; flex-direction: column; gap: 5px; }
+
+.brief-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.brief-row-icon { font-size: 14px; flex-shrink: 0; }
+.brief-row-note { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+.priority-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.priority-badge.high { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+.priority-badge.med  { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+.priority-badge.low  { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border-subtle); }
+
+/* Stock alert card */
+.alert-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--yellow);
+  border-radius: 4px 12px 12px 4px;
+  padding: 10px 13px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin-top: 5px;
+}
+
+.alert-card.urgent { border-left-color: var(--red); }
+.alert-card.good   { border-left-color: var(--green); }
+.alert-card.info   { border-left-color: var(--blue); }
+
+.alert-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 5px;
+  color: var(--yellow);
+}
+
+.alert-card.urgent .alert-label { color: var(--red); }
+.alert-card.good   .alert-label { color: var(--green); }
+.alert-card.info   .alert-label { color: var(--blue); }
+
+.card-action {
+  margin-top: 9px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all 0.15s;
+  width: 100%;
+  text-align: left;
+}
+
+.card-action:hover { border-color: var(--accent-bright); color: var(--accent-bright); }
+
+/* Product answer card */
+.product-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.product-card-hdr {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.product-card-icon { font-size: 20px; }
+.product-card-name { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.product-card-sub  { font-size: 10px; color: var(--text-secondary); }
+
+.product-card-body { padding: 9px 12px; display: flex; flex-direction: column; gap: 7px; }
+
+.product-fact {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.product-fact-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  width: 56px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.product-fact-val { color: var(--text-secondary); line-height: 1.5; flex: 1; }
+.product-fact-val strong { color: var(--text-primary); }
+
+.cert-row {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.cert {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.cert.gf  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(74,222,128,0.2); }
+.cert.veg { background: var(--accent-dim); color: var(--accent-bright); border: 1px solid rgba(74,222,128,0.2); }
+.cert.nut { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(96,165,250,0.2); }
+.cert.org { background: var(--orange-dim); color: var(--orange); border: 1px solid rgba(232,151,90,0.2); }
+
+/* Win card */
+.win-card {
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.16);
+  border-radius: 12px;
+  padding: 12px 13px;
+  margin-top: 5px;
+}
+
+.win-star { font-size: 24px; margin-bottom: 5px; }
+
+.win-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 5px;
+}
+
+.win-quote {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 10px;
+  border-left: 2px solid rgba(74,222,128,0.3);
+}
+
+.win-source { margin-top: 7px; font-size: 10px; color: var(--text-muted); }
+
+/* Typing */
+.typing-ind {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  animation: fadeUp 0.2s ease;
+}
+
+.tdots {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px 14px 14px 14px;
+  padding: 10px 14px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.tdot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: tdot 1.4s ease-in-out infinite;
+}
+
+.tdot:nth-child(2) { animation-delay: 0.2s; }
+.tdot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes tdot {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50%       { opacity: 1;   transform: translateY(-3px); }
+}
+
+/* ── Notification banner ────────────────────────── */
+.notif-banner {
+  position: absolute;
+  top: 55px;
+  left: 12px;
+  right: 12px;
+  background: rgba(28,28,28,0.97);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 11px 13px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  z-index: 200;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  transform: translateY(-120px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+}
+
+.notif-banner.show { transform: translateY(0); opacity: 1; }
+
+.notif-app-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #3ea85e, #1f6b38);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.notif-body { flex: 1; }
+.notif-app-name { font-size: 10px; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+.notif-title    { font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+.notif-text     { font-size: 11px; color: var(--text-secondary); line-height: 1.45; }
+
+.notif-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 4px;
+  flex-shrink: 0;
+  font-family: var(--font);
+}
+
+.notif-dismiss:hover { color: var(--text-secondary); }
+
+/* ── Suggestions ─────────────────────────────────── */
+.sugg-row {
+  padding: 8px 12px 5px;
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+  scrollbar-width: none;
+}
+
+.sugg-row::-webkit-scrollbar { display: none; }
+
+.sugg {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.sugg:hover { border-color: var(--accent-bright); color: var(--text-primary); }
+
+/* ── Input ───────────────────────────────────────── */
+.input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px 16px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.voice-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.voice-btn:hover { border-color: var(--accent-bright); color: var(--accent-bright); }
+
+.input-wrap {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  transition: border-color 0.15s;
+}
+
+.input-wrap:focus-within { border-color: rgba(74,222,128,0.35); }
+
+.chat-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 13px;
+  resize: none;
+  line-height: 1.5;
+  max-height: 80px;
+  min-height: 20px;
+}
+
+.chat-input::placeholder { color: var(--text-muted); }
+
+.send-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.send-btn:hover { opacity: 0.85; }
+
+/* ── My Tasks tab ────────────────────────────────── */
+.tasks-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 10px;
+}
+
+.tasks-view.active { display: flex; }
+
+.tasks-hdr {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 2px 4px;
+}
+
+.tasks-hdr-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.tasks-hdr-count {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.task-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: 4px 2px 2px;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.task-item:hover { background: var(--surface2); }
+.task-item.done  { opacity: 0.5; }
+
+.task-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.task-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: white;
+}
+
+.task-info { flex: 1; }
+
+.task-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
+.task-name.done { text-decoration: line-through; color: var(--text-muted); }
+
+.task-detail { font-size: 11px; color: var(--text-secondary); }
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.task-location {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+
+.task-priority {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.task-priority.p1 { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+.task-priority.p2 { background: var(--yellow-dim); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+.task-priority.p3 { color: var(--text-muted); }
+
+.task-item.flagged { border-color: rgba(248,113,113,0.3); }
+.task-item.ai-added { border-color: rgba(74,222,128,0.2); }
+
+.ai-added-tag {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--green);
+  background: var(--green-dim);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(74,222,128,0.2);
+}
+
+/* Shift snapshot */
+.shift-snap {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 11px;
+  padding: 12px 13px;
+}
+
+.shift-snap-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.shift-nums {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.shift-num-val {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.shift-num-lbl { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
+.break-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.break-label { color: var(--text-secondary); }
+.break-time  { font-weight: 600; color: var(--text-primary); }
+.break-next  { font-size: 10px; color: var(--accent-bright); font-weight: 600; }
+
+/* ── My Shift tab ────────────────────────────────── */
+.shift-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  gap: 10px;
+}
+
+.shift-view.active { display: flex; }
+
+.shift-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 11px;
+  padding: 12px 13px;
+}
+
+.shift-card-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.skill-row:last-child { margin-bottom: 0; }
+
+.skill-name { font-size: 12px; color: var(--text-primary); width: 100px; flex-shrink: 0; }
+
+.skill-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent-bright);
+  transition: width 1.5s ease;
+}
+
+.skill-pct { font-size: 10px; font-weight: 600; color: var(--text-secondary); width: 30px; text-align: right; }
+
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  font-size: 11px;
+}
+
+.badge.earned {
+  background: var(--green-dim);
+  border-color: rgba(74,222,128,0.2);
+  color: var(--green);
+}
+
+.badge.locked { color: var(--text-muted); }
+.badge-icon { font-size: 16px; }
+.badge-name { font-weight: 600; }
+.badge-sub  { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+
+.next-step {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--yellow-dim);
+  border: 1px solid rgba(251,191,36,0.18);
+  border-radius: 9px;
+  padding: 10px 12px;
+  line-height: 1.6;
+}
+
+.next-step strong { color: var(--yellow); }
+
+.recog-item {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--green);
+  border-radius: 4px 10px 10px 4px;
+  padding: 9px 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.recog-item:last-child { margin-bottom: 0; }
+
+.recog-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+/* ── Below phone hints ───────────────────────────── */
+.hints {
+  max-width: 393px;
+  width: 100%;
+}
+
+.hints-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.hints-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.hint {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+
+.hint:hover { border-color: var(--accent-bright); color: var(--text-primary); }
+
+.hint-cat {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Page top ─────────────────────────────────── -->
+<div class="page-top">
+  <a href="../index.html" class="back-link">
+    <span>←</span>
+    <span>Prototypes</span>
+  </a>
+  <div class="page-label">Assistant (Retail)</div>
+  <div class="proto-badge">Prototype</div>
+</div>
+
+<!-- ── Stage ────────────────────────────────────── -->
+<div class="stage">
+
+  <div class="intro">
+    <div class="intro-eyebrow">Retail Worker · Trader Joe's · Opening Shift</div>
+    <div class="intro-title">Product knowledge for every crew member</div>
+    <div class="intro-sub">From truck-day priorities to instant product expertise — a <strong>genuine co-pilot</strong> that makes every crew member feel like a 10-year veteran before they even hit the floor.</div>
+    <div class="pillars">
+      <span class="pillar">Truck-day intelligence</span>
+      <span class="pillar">Product expertise</span>
+      <span class="pillar">Stock awareness</span>
+      <span class="pillar">Customer wayfinding</span>
+    </div>
+  </div>
+
+  <!-- ── Phone ──────────────────────────────────── -->
+  <div class="phone-frame" id="phone">
+
+    <!-- Dynamic island -->
+    <div class="island" id="island">
+      <div class="island-inner">
+        <span class="island-icon">📋</span>
+        <div>
+          <div class="island-text">Fearless Flyer Drops Today</div>
+          <div class="island-sub">12 new products · I've prepped your brief</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification banner -->
+    <div class="notif-banner" id="notif-banner">
+      <div class="notif-app-icon">📋</div>
+      <div class="notif-body">
+        <div class="notif-app-name">Co-Pilot · Now</div>
+        <div class="notif-title">This Week's Fearless Flyer Is Live</div>
+        <div class="notif-text">12 new products starting Thursday. I've prepped a brief on each so you can talk to customers today.</div>
+      </div>
+      <button class="notif-dismiss" onclick="dismissNotif()">✕</button>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>8:14 AM</span>
+      <div class="status-right">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>91%</span>
+      </div>
+    </div>
+
+    <!-- App header -->
+    <div class="app-header">
+      <div class="brand">
+        <div class="brand-orb">✦</div>
+        <div class="brand-name">Co-Pilot <em>for Alex</em></div>
+      </div>
+      <div class="hdr-space"></div>
+      <div class="live-chip"><div class="live-dot"></div>LIVE</div>
+      <div class="worker-avatar" title="Alex Chen">AC</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('chat', this)">Co-Pilot</button>
+      <button class="tab" onclick="switchTab('tasks', this)">My Tasks</button>
+      <button class="tab" onclick="switchTab('shift', this)">My Shift</button>
+    </div>
+
+    <!-- ── Chat view ─────────────────────────────── -->
+    <div class="chat-view active" id="tab-chat">
+      <div class="chat-area" id="chat-area">
+
+        <!-- 6:05 AM -->
+        <div class="time-div"><span>6:05 AM · Shift Start</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 6:05 AM</em></div>
+            <div class="ai-bubble">
+              <p>Morning Alex! 🛒 Truck pulled in at 5:28 — 847 cases on the dock. You've got Dairy and Frozen Foods today. Here's everything before the doors open.</p>
+            </div>
+            <div class="brief-card">
+              <div class="brief-hdr">
+                <span class="brief-hdr-icon">🚚</span>
+                <span class="brief-hdr-title">Opening Shift Brief</span>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Your Sections</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🧀</span>
+                    <span>Dairy · Aisles 7–8</span>
+                    <span class="brief-row-note">14 items to restock</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">❄️</span>
+                    <span>Frozen Foods · Back wall</span>
+                    <span class="brief-row-note">22 items to restock</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Truck Priorities</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🐔</span>
+                    <span>Mandarin Orange Chicken</span>
+                    <span class="priority-badge high">P1</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🥛</span>
+                    <span>Organic Greek Yogurt (Plain)</span>
+                    <span class="priority-badge high">P1</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🥟</span>
+                    <span>Cauliflower Gnocchi</span>
+                    <span class="priority-badge med">P2</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🌮</span>
+                    <span>Mini Chicken Tacos</span>
+                    <span class="priority-badge low">P3</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Sample Station · Setup by 9 AM</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🐔</span>
+                    <span>Mandarin Orange Chicken bites</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🥟</span>
+                    <span>Gyoza (new Pork & Ginger)</span>
+                    <span class="brief-row-note">+ toothpicks, napkins</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Team Today</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Alex (you) · Dairy + Frozen</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Jamie · Produce</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Sam · Dry Goods</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Maria · Registers (opens at 8)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6:52 AM -->
+        <div class="time-div"><span>6:52 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 6:52 AM</em></div>
+            <div class="alert-card urgent">
+              <div class="alert-label">📉 Stock Alert · Everything But the Bagel Seasoning</div>
+              Down to 3 units on shelf — we sell ~40/day on Saturdays. Full case (12 units) is in Receiving, Row C, Shelf 2. Added to your restock queue at P1.
+              <button class="card-action" onclick="inject('What row and shelf is the EBTB seasoning case in receiving?')">→ Give me the exact location</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-msg">
+          <div class="user-bubble">added, I'll grab it on my next run</div>
+        </div>
+
+        <!-- 7:30 AM -->
+        <div class="time-div"><span>7:30 AM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">customer asking if the cauliflower gnocchi is gluten free</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:30 AM</em></div>
+            <div class="product-card">
+              <div class="product-card-hdr">
+                <span class="product-card-icon">🥟</span>
+                <div>
+                  <div class="product-card-name">Cauliflower Gnocchi</div>
+                  <div class="product-card-sub">Frozen · $3.49 · Aisle F-12</div>
+                </div>
+              </div>
+              <div class="product-card-body">
+                <div class="product-fact">
+                  <span class="product-fact-label">Certs</span>
+                  <div class="cert-row">
+                    <span class="cert gf">✓ Gluten-Free</span>
+                    <span class="cert veg">✓ Vegan</span>
+                    <span class="cert org">✓ Organic</span>
+                  </div>
+                </div>
+                <div class="product-fact">
+                  <span class="product-fact-label">Main</span>
+                  <div class="product-fact-val">Cauliflower (75%), cassava flour, potato starch, extra virgin olive oil</div>
+                </div>
+                <div class="product-fact">
+                  <span class="product-fact-label">Best tip</span>
+                  <div class="product-fact-val"><strong>Pan-fry, don't boil</strong> — thaw first, then cook in a dry skillet until golden. Most complaints come from boiling it (gets mushy).</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8:05 AM -->
+        <div class="time-div"><span>8:05 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:05 AM</em></div>
+            <div class="win-card">
+              <div class="win-star">🌟</div>
+              <div class="win-title">3 customers helped before the store opened!</div>
+              <div class="win-quote">"The crew member who helped me find the collagen peptides AND knew which flavor to try — most helpful TJ's visit ever."</div>
+              <div class="win-source">— Google review posted 7:58 AM · likely the guest from the cereal aisle</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- chat-area -->
+
+      <!-- Suggestions -->
+      <div class="sugg-row" id="sugg-row">
+        <button class="sugg" onclick="qs('How do I set up the sample station for today?')">Sample station setup</button>
+        <button class="sugg" onclick="qs('What are the new products in this week\\'s Fearless Flyer?')">New Fearless Flyer</button>
+        <button class="sugg" onclick="qs('Can I swap my 10am break with Jamie?')">Swap break with Jamie</button>
+        <button class="sugg" onclick="qs('How do I handle a return with no receipt?')">Return, no receipt?</button>
+        <button class="sugg" onclick="qs('Best way to cook Mandarin Orange Chicken?')">Mandarin Orange Chicken</button>
+        <button class="sugg" onclick="qs('Where are the frozen burritos in the store?')">Find frozen burritos</button>
+      </div>
+
+      <!-- Input -->
+      <div class="input-bar">
+        <button class="voice-btn" title="Voice input">🎤</button>
+        <div class="input-wrap">
+          <textarea class="chat-input" id="chat-input"
+            placeholder="Ask anything…"
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMsg()">↑</button>
+      </div>
+    </div><!-- tab-chat -->
+
+    <!-- ── My Tasks view ──────────────────────────── -->
+    <div class="tasks-view" id="tab-tasks">
+
+      <div class="tasks-hdr">
+        <span class="tasks-hdr-title">Restock Queue</span>
+        <span class="tasks-hdr-count" id="task-count">11 items · 3 done</span>
+      </div>
+
+      <div class="task-section-label">Priority 1 — Do First</div>
+
+      <div class="task-item ai-added" id="task-ebtb">
+        <div class="task-check" onclick="toggleTask(this, 'task-ebtb')"></div>
+        <div class="task-info">
+          <div class="task-name">Everything But the Bagel Seasoning</div>
+          <div class="task-detail">1 case (12 units) → Dry Goods, Aisle 4, Shelf 3</div>
+          <div class="task-meta">
+            <span class="task-location">Receiving Row C · Shelf 2</span>
+            <span class="task-priority p1">P1</span>
+            <span class="ai-added-tag">✦ AI added</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item flagged">
+        <div class="task-check" onclick="toggleTask(this)"></div>
+        <div class="task-info">
+          <div class="task-name">Mandarin Orange Chicken</div>
+          <div class="task-detail">2 cases (24 bags) → Frozen, Aisle F-7</div>
+          <div class="task-meta">
+            <span class="task-location">Receiving Row A · Shelf 1</span>
+            <span class="task-priority p1">P1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div class="task-check" onclick="toggleTask(this)"></div>
+        <div class="task-info">
+          <div class="task-name">Organic Greek Yogurt — Plain</div>
+          <div class="task-detail">1 case (6 units) → Dairy, Aisle 7, Shelf 2</div>
+          <div class="task-meta">
+            <span class="task-location">Receiving Row B · Shelf 4</span>
+            <span class="task-priority p1">P1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-section-label">Priority 2</div>
+
+      <div class="task-item">
+        <div class="task-check" onclick="toggleTask(this)"></div>
+        <div class="task-info">
+          <div class="task-name">Cauliflower Gnocchi</div>
+          <div class="task-detail">3 cases → Frozen, Aisle F-12</div>
+          <div class="task-meta">
+            <span class="task-location">Receiving Row A · Shelf 3</span>
+            <span class="task-priority p2">P2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-item">
+        <div class="task-check" onclick="toggleTask(this)"></div>
+        <div class="task-info">
+          <div class="task-name">Pork & Ginger Gyoza (new)</div>
+          <div class="task-detail">2 cases · Also needed for sample station</div>
+          <div class="task-meta">
+            <span class="task-location">Receiving Row A · Shelf 2</span>
+            <span class="task-priority p2">P2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-section-label">Completed</div>
+
+      <div class="task-item done">
+        <div class="task-check checked">✓</div>
+        <div class="task-info">
+          <div class="task-name done">Organic Whole Milk</div>
+          <div class="task-detail">Dairy, Aisle 7 — ✦ auto-logged 6:22 AM</div>
+        </div>
+      </div>
+
+      <div class="task-item done">
+        <div class="task-check checked">✓</div>
+        <div class="task-info">
+          <div class="task-name done">Cage-Free Eggs (12 ct)</div>
+          <div class="task-detail">Dairy, Aisle 8 — ✦ auto-logged 6:41 AM</div>
+        </div>
+      </div>
+
+      <div class="task-item done">
+        <div class="task-check checked">✓</div>
+        <div class="task-info">
+          <div class="task-name done">Almond Beverage — Unsweetened</div>
+          <div class="task-detail">Dairy, Aisle 7 — ✦ auto-logged 7:05 AM</div>
+        </div>
+      </div>
+
+      <!-- Shift snapshot -->
+      <div class="shift-snap">
+        <div class="shift-snap-title">Shift So Far</div>
+        <div class="shift-nums">
+          <div>
+            <div class="shift-num-val" style="color:var(--green)">3</div>
+            <div class="shift-num-lbl">Tasks done</div>
+          </div>
+          <div>
+            <div class="shift-num-val">68</div>
+            <div class="shift-num-lbl">Cases stocked</div>
+          </div>
+          <div>
+            <div class="shift-num-val" style="color:var(--accent-bright)">3</div>
+            <div class="shift-num-lbl">Customers helped</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="break-row">
+            <span class="break-label">Morning break</span>
+            <span class="break-time">10:00 AM</span>
+            <span class="break-next">↑ Next</span>
+          </div>
+          <div class="break-row">
+            <span class="break-label">Lunch</span>
+            <span class="break-time">12:30 PM</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- tab-tasks -->
+
+    <!-- ── My Shift tab ───────────────────────────── -->
+    <div class="shift-view" id="tab-shift">
+
+      <div class="shift-card">
+        <div class="shift-card-title">Skills This Month</div>
+        <div class="skill-row">
+          <span class="skill-name">Product Knowledge</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb1" style="width:0%"></div></div>
+          <span class="skill-pct">96%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Customer Assist</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb2" style="width:0%"></div></div>
+          <span class="skill-pct">91%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Stocking Speed</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb3" style="width:0%"></div></div>
+          <span class="skill-pct">82%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Accuracy</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb4" style="width:0%"></div></div>
+          <span class="skill-pct">100%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Sample Station</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" id="sb5" style="width:0%"></div></div>
+          <span class="skill-pct">88%</span>
+        </div>
+      </div>
+
+      <div class="shift-card">
+        <div class="shift-card-title">Badges</div>
+        <div class="badge-row">
+          <div class="badge earned">
+            <span class="badge-icon">🧠</span>
+            <div>
+              <div class="badge-name">Product Expert</div>
+              <div class="badge-sub">Earned Jan 2026</div>
+            </div>
+          </div>
+          <div class="badge earned">
+            <span class="badge-icon">⭐</span>
+            <div>
+              <div class="badge-name">Customer Favorite</div>
+              <div class="badge-sub">Earned Mar 2026</div>
+            </div>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">🍷</span>
+            <div>
+              <div class="badge-name">Wine Guide</div>
+              <div class="badge-sub">4 tastings left</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="shift-card">
+        <div class="shift-card-title">Up Next</div>
+        <div class="next-step">Complete <strong>4 more wine-section shifts</strong> to earn the Wine Guide badge — crew members with this badge handle 60% more customer assists in the wine aisle and are often first to cross-train at registers.</div>
+      </div>
+
+      <div class="shift-card">
+        <div class="shift-card-title">Recent Recognition</div>
+        <div class="recog-item">
+          <div class="recog-label">🌟 Guest Review</div>
+          "Most knowledgeable TJ's crew member I've ever met — knew exactly which collagen to try and why." — this morning
+        </div>
+        <div class="recog-item">
+          <div class="recog-label">📣 Captain Shoutout</div>
+          "Alex ran the cleanest dairy section during our busiest February on record." — 3 weeks ago
+        </div>
+      </div>
+
+    </div><!-- tab-shift -->
+
+  </div><!-- phone-frame -->
+
+  <!-- ── Hints ──────────────────────────────────── -->
+  <div class="hints">
+    <div class="hints-label">Try asking</div>
+    <div class="hints-grid">
+      <button class="hint" onclick="goChat(); inject('Is the Mandarin Orange Chicken actually good? What\\'s the best way to make it?')">
+        <span class="hint-cat">Product Knowledge</span>
+        How to make Mandarin Orange Chicken
+      </button>
+      <button class="hint" onclick="goChat(); inject('A customer wants to return something they opened but didn\\'t like. No receipt.')">
+        <span class="hint-cat">Policy</span>
+        Return without receipt
+      </button>
+      <button class="hint" onclick="goChat(); inject('Where are the frozen vegetarian options in the store?')">
+        <span class="hint-cat">Wayfinding</span>
+        Where are frozen veggie items?
+      </button>
+      <button class="hint" onclick="goChat(); inject('What\\'s new in this week\\'s Fearless Flyer? What should I know?')">
+        <span class="hint-cat">New Products</span>
+        This week's new arrivals
+      </button>
+      <button class="hint" onclick="goChat(); inject('Customer asking if the Organic Tomato Soup is vegan. What are the ingredients?')">
+        <span class="hint-cat">Allergens</span>
+        Is the tomato soup vegan?
+      </button>
+      <button class="hint" onclick="goChat(); inject('How do I set up the sample station for Mandarin Orange Chicken?')">
+        <span class="hint-cat">Sample Station</span>
+        Set up today's demo
+      </button>
+    </div>
+  </div>
+
+</div><!-- stage -->
+
+<script>
+// ── Tab switching ──────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.chat-view, .tasks-view, .shift-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+
+  if (name === 'shift') {
+    setTimeout(() => {
+      [['sb1',96],['sb2',91],['sb3',82],['sb4',100],['sb5',88]].forEach(([id,pct]) => {
+        document.getElementById(id).style.width = pct + '%';
+      });
+    }, 200);
+  }
+}
+
+function goChat() {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i === 0));
+  document.querySelectorAll('.chat-view, .tasks-view, .shift-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('tab-chat').classList.add('active');
+}
+
+// ── Task toggle ───────────────────────────────────────────────
+function toggleTask(checkEl) {
+  const isChecked = checkEl.classList.toggle('checked');
+  if (isChecked) checkEl.textContent = '✓';
+  else checkEl.textContent = '';
+  const row = checkEl.closest('.task-item');
+  row.classList.toggle('done', isChecked);
+  const nameEl = row.querySelector('.task-name');
+  if (nameEl) nameEl.classList.toggle('done', isChecked);
+}
+
+// ── Notification ───────────────────────────────────────────────
+function showNotif() {
+  const island = document.getElementById('island');
+  island.classList.add('expanded');
+  setTimeout(() => {
+    island.classList.remove('expanded');
+    document.getElementById('notif-banner').classList.add('show');
+  }, 1800);
+}
+
+function dismissNotif() {
+  document.getElementById('notif-banner').classList.remove('show');
+  const ca = document.getElementById('chat-area');
+  ca.appendChild(mkTimediv('8:14 AM · Now'));
+  const d = document.createElement('div');
+  d.className = 'ai-msg';
+  d.innerHTML = `
+    <div class="ai-orb" style="background:linear-gradient(135deg,#3ea85e,#1f6b38)">📋</div>
+    <div class="ai-content">
+      <div class="ai-meta">Co-Pilot <em>· just now</em></div>
+      <div class="alert-card info">
+        <div class="alert-label">📋 Fearless Flyer · New This Week</div>
+        12 new products hitting shelves Thursday. Highlights: <strong>Crunchy Almond Butter Cups</strong>, <strong>Oat Milk Matcha Latte</strong>, and a new <strong>Peruvian Dark Chocolate Bar</strong>. Customers will start asking today.
+        <button class="card-action" onclick="inject('Tell me about all the new products in this week\\'s Fearless Flyer so I can answer customer questions')">→ Brief me on all 12 new products</button>
+      </div>
+    </div>`;
+  ca.appendChild(d);
+  scrollBottom();
+}
+
+// ── Chat helpers ───────────────────────────────────────────────
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+
+function qs(text) {
+  goChat();
+  document.getElementById('chat-input').value = text;
+  sendMsg();
+  document.getElementById('sugg-row').style.display = 'none';
+}
+
+function inject(text) {
+  const inp = document.getElementById('chat-input');
+  inp.value = text;
+  inp.focus();
+  autoResize(inp);
+}
+
+function scrollBottom() {
+  const ca = document.getElementById('chat-area');
+  ca.scrollTop = ca.scrollHeight;
+}
+
+function mkTimediv(label) {
+  const d = document.createElement('div');
+  d.className = 'time-div';
+  d.innerHTML = `<span>${label}</span>`;
+  return d;
+}
+
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+
+  const ca = document.getElementById('chat-area');
+  const now = new Date();
+  const ts = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  ca.appendChild(mkTimediv(ts));
+
+  const uDiv = document.createElement('div');
+  uDiv.className = 'user-msg';
+  uDiv.innerHTML = `<div class="user-bubble">${esc(text)}</div>`;
+  ca.appendChild(uDiv);
+
+  inp.value = '';
+  inp.style.height = 'auto';
+  scrollBottom();
+
+  const typing = document.createElement('div');
+  typing.className = 'typing-ind';
+  typing.innerHTML = `
+    <div class="ai-orb">✦</div>
+    <div class="tdots"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div>`;
+  ca.appendChild(typing);
+  scrollBottom();
+
+  setTimeout(() => {
+    typing.remove();
+    const html = reply(text);
+    const aDiv = document.createElement('div');
+    aDiv.className = 'ai-msg';
+    aDiv.innerHTML = `
+      <div class="ai-orb">✦</div>
+      <div class="ai-content">
+        <div class="ai-meta">Co-Pilot <em>· just now</em></div>
+        <div class="ai-bubble">${html}</div>
+      </div>`;
+    ca.appendChild(aDiv);
+    scrollBottom();
+  }, 850 + Math.random() * 600);
+}
+
+// ── Reply engine ───────────────────────────────────────────────
+function reply(text) {
+  const t = text.toLowerCase();
+
+  // Mandarin Orange Chicken
+  if (t.includes('mandarin') || t.includes('orange chicken')) {
+    return `<p><strong>Mandarin Orange Chicken</strong> is our #1 selling frozen item — 5M+ bags a year. Here's how to describe it:</p>
+<p style="font-style:italic;border-left:2px solid var(--accent-bright);padding-left:10px;color:var(--text-secondary)">"Crispy battered chicken pieces in a sweet, tangy mandarin orange sauce. Takes about 15 minutes, and the sauce gets gloriously sticky and caramelized if you finish it on the stovetop."</p>
+<p><strong>Best method:</strong> Bake at 400°F for 12 min (or air fryer 8 min), then toss with sauce in a hot pan for 2 minutes. Keeps its crunch that way.</p>
+<p style="font-size:11px;color:var(--text-secondary)">Fun fact: it won the Customer Choice Award 20 years running. It's genuinely that good.</p>`;
+  }
+
+  // Cauliflower gnocchi
+  if (t.includes('cauliflower') || t.includes('gnocchi')) {
+    return `<p><strong>Cauliflower Gnocchi</strong> — 75% cauliflower, certified GF + vegan + organic.</p>
+<p>The #1 tip: <strong>don't boil it</strong>. Thaw first, then dry-fry in a skillet (no oil needed) until golden and crispy on the outside. It gets mushy if boiled — that's where most negative reviews come from.</p>
+<p>Pair with: pesto, marinara, or brown butter and sage. Goes from freezer to crispy in about 8 minutes the right way.</p>`;
+  }
+
+  // EBTB / Everything But the Bagel
+  if (t.includes('ebtb') || t.includes('bagel') || t.includes('everything but')) {
+    return `<p><strong>Everything But the Bagel Sesame Seasoning</strong> — receiving Row C, Shelf 2. Full case is 12 units.</p>
+<p>It's in the spice aisle (Aisle 4, Shelf 3) as your shelf destination. We're at 3 units on floor right now; that'll be gone by noon on a Saturday.</p>
+<p style="font-size:11px;color:var(--text-secondary)">💡 Tip for customers who haven't tried it: "It's everything on a bagel — sesame, poppy, dried garlic and onion, salt. Goes on literally anything. Eggs, avocado toast, salmon, pasta."</p>`;
+  }
+
+  // Fearless Flyer / new products
+  if (t.includes('flyer') || t.includes('fearless') || t.includes('new product') || t.includes('new arrival') || t.includes('new this week') || t.includes('all 12')) {
+    return `<p>This week's highlights from the Fearless Flyer (hitting shelves Thursday):</p>
+<p>🍫 <strong>Peruvian Dark Chocolate Bar</strong> — 72% cacao, single origin. Pair pitch: "Great with a glass of red wine or as a hostess gift."<br>
+🥛 <strong>Oat Milk Matcha Latte</strong> — lightly sweetened, no steaming required. Big opportunity in the morning.<br>
+🍬 <strong>Crunchy Almond Butter Cups</strong> — like PB cups but nuttier, less sweet. Customers who love the PB cups will ask about it immediately.</p>
+<p>Want me to prep talking points for all 12? I can give you a quick cheat-sheet for each one.</p>`;
+  }
+
+  // Sample station setup
+  if (t.includes('sample') || t.includes('demo') || t.includes('sample station') || t.includes('set up')) {
+    return `<p>For today's station (Mandarin Orange Chicken + Pork &amp; Ginger Gyoza):</p>
+<p>→ Pre-heat station by 8:45 AM for a 9:00 open<br>
+→ MOC: bake trays at 400°F, 12 min. Cut bites in half — customers get a better look at the inside<br>
+→ Gyoza: use the hot griddle, no oil. 3 min per side until brown<br>
+→ Set out: toothpicks, napkins, and the product placards from the back office folder labeled "Today's Demo"</p>
+<p>If anyone asks about the gyoza: <em>"Brand new item — pork and ginger in a thin rice paper wrapper. Crispy on the outside, juicy inside."</em></p>`;
+  }
+
+  // Return policy
+  if (t.includes('return') || t.includes('refund') || t.includes('receipt') || t.includes('receipt')) {
+    return `<p>TJ's return policy is <strong>no-questions-asked</strong>, even without a receipt:</p>
+<p>→ If they have a receipt: full refund to original payment<br>
+→ No receipt: store credit or exchange — your call to approve up to $50<br>
+→ Opened and didn't like it: totally fine to refund. That's the TJ's promise<br>
+→ Anything over $50: get a Captain to approve</p>
+<p style="font-size:11px;color:var(--text-secondary)">The line to use: <em>"We want you to love everything you buy here — if it didn't hit, let's make it right."</em> That tone is the whole brand.</p>`;
+  }
+
+  // Wayfinding / where is
+  if (t.includes('where') || t.includes('find') || t.includes('located') || t.includes('aisle') || t.includes('burrito') || t.includes('veggie') || t.includes('vegetarian')) {
+    return `<p>Frozen vegetarian section is back wall, <strong>Aisle F-8 through F-10</strong> — from left to right it goes: burritos → Indian meals → grain bowls → pasta.</p>
+<p>Notable spots:<br>
+→ Frozen burritos: F-8, eye level<br>
+→ Saag paneer / Indian: F-9, middle shelf<br>
+→ Quinoa bowls: F-10<br>
+→ Cauliflower gnocchi: F-12 (slightly separate, by the pizza)</p>
+<p style="font-size:11px;color:var(--text-secondary)">Pro tip: if they ask "what's good" in that section, Saag Paneer and the Harvest Grains Bowl are the crew favorites.</p>`;
+  }
+
+  // Vegan / ingredient lookup
+  if (t.includes('vegan') || t.includes('vegetarian') || t.includes('soup') || t.includes('tomato') || t.includes('ingredient')) {
+    return `<p><strong>Organic Tomato Soup</strong> — <span class="hl">Yes, it's vegan. ✓</span></p>
+<p>Ingredients: Organic tomatoes, water, organic onion, organic olive oil, salt, organic citric acid. No dairy, no animal products.</p>
+<p>It's also GF. Pairs really well with our Gruyère cheese if they're not vegan — that's a popular combo.</p>
+<p style="font-size:11px;color:var(--text-secondary)">If they're looking for the creamier style: the Roasted Red Pepper and Tomato Soup has a splash of cream — that one's not vegan.</p>`;
+  }
+
+  // Wine section / wine guide
+  if (t.includes('wine') || t.includes('two buck') || t.includes('charles shaw')) {
+    return `<p>TJ's wine section is Aisle 9-10, right side of the store near the registers.</p>
+<p>Quick cheat-sheet for common asks:<br>
+→ <strong>"Best under $10"</strong>: Charles Shaw Cabernet ($4.99) or the Coastal Chardonnay ($6.99)<br>
+→ <strong>"Something special"</strong>: The Reserve Pinot Noir ($19.99) or any of the small-batch Burgundy imports<br>
+→ <strong>"Good gift bottle"</strong>: Anything from the "Winery of the Month" endcap — usually a story worth telling</p>
+<p style="font-size:11px;color:var(--text-secondary)">💡 You're 4 wine-section shifts away from the Wine Guide badge, which opens up cross-training at the wine endcap.</p>`;
+  }
+
+  // Break / schedule / coverage
+  if (t.includes('break') || t.includes('swap') || t.includes('jamie') || t.includes('schedule') || t.includes('cover')) {
+    return `<p>Your breaks today: <strong>10:00 AM</strong> (15 min) and <strong>12:30 PM</strong> lunch (30 min).</p>
+<p>To swap with Jamie: check 7shifts → Schedule → Message Jamie directly. If she agrees, you both update your availability notes — no manager approval needed for same-shift swaps under 1 hour.</p>
+<p style="font-size:11px;color:var(--text-secondary)">Jamie is on Produce today, so there's no overlap conflict. Easiest swap of the week.</p>`;
+  }
+
+  // Overwhelmed
+  if (t.includes('overwhelm') || t.includes('stress') || t.includes('behind') || t.includes('too much')) {
+    return `<p>Hey — you're doing great. Opening shifts with a full truck are always the hardest hour. Here's your actual priority right now:</p>
+<p>1. <strong>EBTB Seasoning</strong> — grab that case first, 3 units left on shelf<br>
+2. <strong>Mandarin Orange Chicken</strong> — needs to be stocked before sample station setup at 9<br>
+3. <strong>Sample station</strong> — pre-heat by 8:45</p>
+<p>Everything else can wait. Dairy yogurt and the gnocchi are P2 — they won't run out before 10.</p>
+<p style="font-size:11px;color:var(--text-secondary)">You've opened 34 times in the last year. You know this store better than anyone.</p>`;
+  }
+
+  // Collagen / supplements / vitamins
+  if (t.includes('collagen') || t.includes('supplement') || t.includes('vitamin') || t.includes('peptide')) {
+    return `<p><strong>Collagen Peptides</strong> — unflavored, grass-fed, dissolves in hot or cold liquid. Aisle 3, top shelf, right side near the protein powders.</p>
+<p>Common customer question: <em>"Does it taste like anything?"</em> — Answer: completely neutral. Add it to coffee, smoothies, or even water. No texture, no flavor change.</p>
+<p>We also carry a Collagen Beauty Blend (strawberry flavored, same aisle) if they want something more convenient for a morning drink.</p>`;
+  }
+
+  // Default
+  return `<p>Based on what I know about this store and your shift — your most time-sensitive item right now is the <strong>EBTB Seasoning</strong> (Receiving Row C, Shelf 2), then Mandarin Orange Chicken before sample station setup at 9.</p>
+<p>What specifically do you need? Product info, stock location, or customer answer?</p>`;
+}
+
+// ── Init ───────────────────────────────────────────────────────
+scrollBottom();
+setTimeout(showNotif, 7000);
+</script>
+</body>
+</html>
