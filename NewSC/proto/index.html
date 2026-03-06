@@ -241,6 +241,12 @@ body { display: flex; flex-direction: column; }
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Roofing preview */
+.preview-roofing {
+  background: linear-gradient(160deg, #0d1520 0%, #1a1a1a 100%);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
 /* Coming soon preview */
 .preview-soon {
   background: var(--surface2);
@@ -285,6 +291,7 @@ body { display: flex; flex-direction: column; }
 
 .preview-hdr-orb.orange { background: var(--accent); }
 .preview-hdr-orb.green  { background: #2d8c4e; }
+.preview-hdr-orb.blue   { background: #4a90c4; }
 
 .preview-hdr-name {
   font-size: 5px;
@@ -334,6 +341,7 @@ body { display: flex; flex-direction: column; }
 
 .preview-glow.orange { background: var(--accent); left: 10px; top: 20px; }
 .preview-glow.green  { background: var(--green); left: 10px; top: 20px; }
+.preview-glow.blue   { background: #4a90c4; left: 10px; top: 20px; }
 
 /* Worker label floating */
 .preview-worker-tag {
@@ -625,6 +633,46 @@ body { display: flex; flex-direction: column; }
       </div>
       <div class="card-cta">
         <span class="card-link">View prototype <span class="card-link-arrow">→</span></span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Roofing -->
+  <a href="./assistant-roofing/" class="proto-card active">
+    <div class="card-preview preview-roofing">
+      <div class="preview-glow blue"></div>
+      <div class="preview-phone">
+        <div class="preview-phone-notch"></div>
+        <div class="preview-phone-hdr">
+          <div class="preview-hdr-orb blue"></div>
+          <span class="preview-hdr-name">Co-Pilot</span>
+          <div class="preview-live"></div>
+        </div>
+        <div class="preview-msg" style="width:80%;height:18px;margin-top:4px"></div>
+        <div class="preview-msg card" style="margin-top:4px"></div>
+        <div class="preview-msg" style="width:65%"></div>
+        <div class="preview-msg user" style="width:40%"></div>
+        <div class="preview-msg" style="width:72%"></div>
+      </div>
+      <div class="preview-worker-tag">Applicator · Day 4 of Phase 2</div>
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-icon">🏗️</div>
+        <div class="card-titles">
+          <div class="card-name">Assistant (Roofing)</div>
+          <div class="card-worker">Marcus T. · Tremco · Westlake Corporate Campus</div>
+        </div>
+      </div>
+      <div class="card-desc">Substrate sensing, seam spec lookup, moisture alerts, QC inspections, and field condition reporting — right on the roof.</div>
+      <div class="card-tags">
+        <span class="card-tag">Substrate sensing</span>
+        <span class="card-tag">Warranty QC</span>
+        <span class="card-tag">Product specs</span>
+        <span class="card-tag">Safety compliance</span>
+      </div>
+      <div class="card-cta">
+        <span class="card-link" style="color:#6db3e8;background:rgba(74,144,196,0.1);border-color:rgba(74,144,196,0.25);">View prototype <span class="card-link-arrow">→</span></span>
       </div>
     </div>
   </a>

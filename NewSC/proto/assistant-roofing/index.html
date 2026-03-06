@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Frontline Co-Pilot — Tremco Roofing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #111318;
+  --sidebar-bg: #16181f;
+  --surface: #1e2028;
+  --surface-hover: #252830;
+  --border: #2e3140;
+  --border-subtle: #232533;
+  --text-primary: #e8eaf2;
+  --text-secondary: #7b8099;
+  --text-muted: #454860;
+  --accent: #4a90c4;
+  --accent-bright: #6db3e8;
+  --accent-dim: rgba(74, 144, 196, 0.12);
+  --accent-glow: rgba(74, 144, 196, 0.07);
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.12);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.12);
+  --yellow: #fbbf24;
+  --yellow-dim: rgba(251, 191, 36, 0.12);
+  --blue: #60a5fa;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font);
+  background: #0d0f14;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Page wrapper ──────────────────────────── */
+.page-top {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  gap: 12px;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.back-link:hover { color: var(--text-primary); }
+
+.page-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 auto;
+}
+
+.proto-badge {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--accent-dim);
+  color: var(--accent-bright);
+  border: 1px solid rgba(74, 144, 196, 0.3);
+  border-radius: 20px;
+  padding: 4px 12px;
+}
+
+/* ── Hero section ──────────────────────────── */
+.hero {
+  text-align: center;
+  padding: 20px 24px 28px;
+}
+
+.hero-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.hero-title span { color: var(--accent-bright); }
+
+.hero-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0 auto 18px;
+}
+
+.hero-sub strong { color: var(--text-primary); font-style: italic; }
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.pill {
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 14px;
+  color: var(--text-secondary);
+  background: var(--surface);
+}
+
+/* ── Phone frame ───────────────────────────── */
+.phone-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 60px;
+}
+
+.phone {
+  width: 393px;
+  height: 852px;
+  background: var(--bg);
+  border-radius: 50px;
+  border: 2px solid var(--border);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(74,144,196,0.1);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Dynamic island ────────────────────────── */
+.dynamic-island {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  border-radius: 20px;
+  z-index: 50;
+  overflow: hidden;
+  transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1), border-radius 0.4s ease;
+  width: 120px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.island-content { display: none; align-items: center; gap: 8px; padding: 0 14px; }
+.island-icon { font-size: 16px; }
+.island-text { font-size: 11px; font-weight: 600; color: #fff; white-space: nowrap; }
+.island-sub { font-size: 9px; color: rgba(255,255,255,0.6); white-space: nowrap; }
+
+/* ── Notification banner ───────────────────── */
+.notif-banner {
+  position: absolute;
+  top: 60px;
+  left: 12px;
+  right: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  z-index: 40;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transform: translateY(-120px);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.notif-banner.visible { transform: translateY(0); }
+
+.notif-app-icon {
+  font-size: 22px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notif-body { flex: 1; min-width: 0; }
+.notif-app-name { font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+.notif-title { font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.notif-text { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+
+.notif-dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  margin-top: -2px;
+  flex-shrink: 0;
+}
+
+/* ── Status bar ────────────────────────────── */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 22px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+.status-right { display: flex; gap: 5px; align-items: center; }
+
+/* ── App header ────────────────────────────── */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px 10px;
+  flex-shrink: 0;
+}
+
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand-orb {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(74, 144, 196, 0.4);
+}
+.brand-name { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+.brand-name em { color: var(--accent-bright); font-style: normal; }
+
+.hdr-space { flex: 1; }
+
+.live-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--green);
+  background: var(--green-dim);
+  border: 1px solid rgba(74,222,128,0.25);
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+
+.worker-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Tab bar ───────────────────────────────── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 9px 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.tab.active { color: var(--accent-bright); border-bottom-color: var(--accent); }
+.tab:hover:not(.active) { color: var(--text-primary); }
+
+/* ── Chat view ─────────────────────────────── */
+.chat-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.chat-view.active { display: flex; }
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time-div {
+  text-align: center;
+  margin: 10px 0 6px;
+}
+.time-div span {
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+
+.ai-msg { display: flex; gap: 8px; margin-bottom: 6px; }
+.ai-orb {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-content { flex: 1; min-width: 0; }
+.ai-meta { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; }
+.ai-meta em { color: var(--text-secondary); }
+
+.ai-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px 14px 14px 14px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.ai-bubble p + p { margin-top: 8px; }
+.ai-bubble strong { color: var(--text-primary); font-weight: 600; }
+.ai-bubble em { color: var(--accent-bright); font-style: normal; }
+
+.hl-g { color: var(--green); font-weight: 600; }
+.hl-y { color: var(--yellow); font-weight: 600; }
+.hl-r { color: var(--red); font-weight: 600; }
+.hl-b { color: var(--accent-bright); font-weight: 600; }
+
+.user-msg { display: flex; justify-content: flex-end; margin-bottom: 6px; }
+.user-bubble {
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  color: #fff;
+  border-radius: 14px 14px 4px 14px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 1.55;
+  max-width: 80%;
+  font-weight: 500;
+}
+
+/* ── Brief card ────────────────────────────── */
+.brief-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.brief-hdr {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--accent-dim);
+}
+
+.brief-hdr-icon { font-size: 16px; }
+.brief-hdr-title { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+
+.brief-sec { padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); }
+.brief-sec:last-child { border-bottom: none; }
+
+.brief-sec-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.brief-rows { display: flex; flex-direction: column; gap: 5px; }
+
+.brief-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.brief-row-icon { font-size: 13px; flex-shrink: 0; }
+.brief-row span:not(.brief-row-icon):not(.brief-row-note) { flex: 1; }
+.brief-row-note { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+.brief-row.x86 { color: var(--red); }
+.x86-badge {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--red-dim);
+  color: var(--red);
+  border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+.vip-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.vip-badge {
+  font-size: 9px;
+  font-weight: 700;
+  background: var(--yellow-dim);
+  color: var(--yellow);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 4px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.vip-name { font-size: 11px; font-weight: 600; color: var(--text-primary); }
+.vip-note { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Alert card ────────────────────────────── */
+.alert-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--yellow);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.alert-card.urgent { border-left-color: var(--red); background: rgba(248,113,113,0.04); }
+
+.alert-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 6px;
+}
+.alert-card.urgent .alert-label { color: var(--red); }
+
+.card-action {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-bright);
+  background: var(--accent-dim);
+  border: 1px solid rgba(74,144,196,0.2);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: all 0.15s;
+}
+.card-action:hover { background: rgba(74,144,196,0.2); }
+
+/* ── Win card ──────────────────────────────── */
+.win-card {
+  background: linear-gradient(135deg, rgba(74,222,128,0.08) 0%, rgba(74,144,196,0.06) 100%);
+  border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 6px;
+}
+.win-star { font-size: 20px; margin-bottom: 6px; }
+.win-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.win-quote { font-size: 11px; color: var(--text-secondary); line-height: 1.6; font-style: italic; margin-bottom: 6px; }
+.win-source { font-size: 10px; color: var(--text-muted); }
+
+/* ── Product spec card ─────────────────────── */
+.spec-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.spec-card-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--accent-dim);
+}
+.spec-card-icon { font-size: 20px; }
+.spec-card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.spec-card-sub { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.spec-card-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; }
+.spec-fact { display: flex; gap: 8px; align-items: flex-start; font-size: 11px; }
+.spec-fact-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); width: 68px; flex-shrink: 0; padding-top: 2px; }
+.spec-fact-value { color: var(--text-primary); line-height: 1.5; }
+.spec-row { display: flex; align-items: center; gap: 6px; }
+.spec-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.spec-dot.g { background: var(--green); }
+.spec-dot.y { background: var(--yellow); }
+.spec-dot.r { background: var(--red); }
+
+/* ── Action Card ── */
+.action-card {
+  background: rgba(74,144,196,0.06);
+  border: 1px solid rgba(74,144,196,0.28);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 8px;
+}
+.action-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.action-icon { font-size: 18px; }
+.action-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.action-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.action-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.action-status.open { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.action-status.resolved { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.action-rows { display: flex; flex-direction: column; gap: 6px; }
+.action-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.action-lbl { color: var(--text-secondary); width: 72px; flex-shrink: 0; }
+.action-row span:last-child { color: var(--text-primary); }
+
+/* ── Inspection Card ── */
+.inspection-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; margin-top: 6px;
+}
+.inspection-hdr {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.insp-icon { font-size: 20px; }
+.insp-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.insp-sub { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+.insp-badge {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.insp-badge.active { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.insp-badge.warn { background: rgba(251,191,36,0.15); color: var(--yellow); border: 1px solid rgba(251,191,36,0.3); }
+.insp-badge.pass { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.insp-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.insp-item { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.insp-item span:nth-child(2) { flex: 1; color: var(--text-primary); }
+.insp-dot { font-size: 8px; }
+.insp-item.pass .insp-dot { color: var(--green); }
+.insp-item.warn .insp-dot { color: var(--yellow); }
+.insp-item.pending .insp-dot { color: var(--text-muted); }
+.insp-result { font-size: 10px; margin-left: auto; white-space: nowrap; }
+.insp-item.pass .insp-result { color: var(--green); }
+.insp-item.warn .insp-result { color: var(--yellow); }
+.insp-item.pending .insp-result { color: var(--text-muted); }
+.insp-note {
+  font-size: 11px; color: var(--text-secondary); line-height: 1.5;
+  padding-top: 10px; border-top: 1px solid var(--border);
+}
+
+/* ── Incident Card ── */
+.incident-card {
+  background: rgba(248,113,113,0.05); border: 1px solid rgba(248,113,113,0.25);
+  border-radius: 12px; padding: 14px; margin-top: 8px;
+}
+.incident-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.incident-icon { font-size: 20px; }
+.incident-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.incident-id { font-size: 10px; color: var(--text-secondary); margin-top: 1px; }
+.incident-status {
+  margin-left: auto; font-size: 9px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px;
+}
+.incident-status.draft { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.incident-rows { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.incident-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.5; }
+.incident-lbl { color: var(--text-secondary); width: 80px; flex-shrink: 0; }
+.incident-row span:last-child { color: var(--text-primary); }
+.incident-actions-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.incident-actions-row .card-action { margin-top: 0; }
+
+/* ── Suggestions ───────────────────────────── */
+.sugg-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.sugg-row::-webkit-scrollbar { display: none; }
+
+.sugg {
+  flex-shrink: 0;
+  font-size: 11px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.sugg:hover { border-color: var(--accent); color: var(--text-primary); }
+
+/* ── Input bar ─────────────────────────────── */
+.input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 12px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.voice-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-wrap {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 8px 14px;
+  transition: border-color 0.15s;
+}
+.input-wrap:focus-within { border-color: var(--accent); }
+
+.chat-input {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: var(--font);
+  font-size: 12px;
+  color: var(--text-primary);
+  resize: none;
+  max-height: 80px;
+  overflow-y: auto;
+}
+.chat-input::placeholder { color: var(--text-muted); }
+
+.send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #5da8e0 0%, #2e6fa3 100%);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(74,144,196,0.4);
+}
+
+/* ── My Roof view ──────────────────────────── */
+.roof-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+}
+.roof-view.active { display: flex; }
+
+.roof-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px 8px;
+  flex-shrink: 0;
+}
+.roof-hdr-title { font-size: 12px; font-weight: 700; color: var(--text-primary); }
+.roof-hdr-sub { font-size: 10px; color: var(--text-muted); }
+
+.zone-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 0 12px 12px;
+}
+
+.zone-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+.zone-card:hover { background: var(--surface-hover); border-color: var(--accent); }
+.zone-card.complete { border-color: rgba(74,222,128,0.3); background: rgba(74,222,128,0.04); }
+.zone-card.in-progress { border-color: rgba(74,144,196,0.4); background: rgba(74,144,196,0.06); }
+.zone-card.hold { border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.04); }
+
+.zone-name { font-size: 15px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 2px; }
+.zone-size { font-size: 9px; color: var(--text-muted); margin-bottom: 8px; }
+.zone-status {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 2px 7px;
+  display: inline-block;
+}
+.s-complete { background: rgba(74,222,128,0.15); color: var(--green); }
+.s-progress { background: rgba(74,144,196,0.15); color: var(--accent-bright); }
+.s-priming { background: rgba(251,191,36,0.12); color: var(--yellow); }
+.s-hold { background: rgba(248,113,113,0.15); color: var(--red); }
+.s-pending { background: var(--surface-hover); color: var(--text-muted); }
+
+.zone-alert-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Zone detail panel */
+.zone-detail {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 16px 16px 20px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1);
+  z-index: 20;
+  max-height: 55%;
+  overflow-y: auto;
+}
+.zone-detail.open { transform: translateY(0); }
+
+.zd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.zd-title { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.zd-close {
+  background: var(--surface-hover);
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zd-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.zd-row { display: flex; gap: 8px; font-size: 11px; }
+.zd-lbl { color: var(--text-muted); width: 80px; flex-shrink: 0; }
+.zd-val { color: var(--text-primary); }
+
+.zd-actions { display: flex; flex-direction: column; gap: 6px; }
+.zd-action {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-bright);
+  background: var(--accent-dim);
+  border: 1px solid rgba(74,144,196,0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: all 0.15s;
+}
+.zd-action:hover { background: rgba(74,144,196,0.2); }
+
+/* Shift summary */
+.site-summary {
+  margin: 0 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.site-summary-title { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+.shift-nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.shift-num-val { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); }
+.shift-num-lbl { font-size: 9px; color: var(--text-muted); margin-top: 1px; }
+
+.qc-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+}
+.qc-label { color: var(--text-muted); }
+.qc-time { font-weight: 700; color: var(--accent-bright); margin-left: auto; }
+.qc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); }
+
+/* ── My Certs view ─────────────────────────── */
+.certs-view {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px 24px;
+  gap: 12px;
+}
+.certs-view.active { display: flex; }
+
+.growth-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.growth-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+/* Skill bars */
+.skill-rows { display: flex; flex-direction: column; gap: 10px; }
+.skill-row { display: flex; flex-direction: column; gap: 4px; }
+.skill-meta { display: flex; justify-content: space-between; font-size: 11px; }
+.skill-name { color: var(--text-secondary); }
+.skill-pct { color: var(--accent-bright); font-weight: 600; }
+.skill-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.skill-fill { height: 100%; background: linear-gradient(90deg, #5da8e0, #2e6fa3); border-radius: 2px; width: 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); }
+
+/* Badges */
+.badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.badge {
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+}
+.badge.earned { border-color: rgba(74,144,196,0.35); background: rgba(74,144,196,0.06); }
+.badge.locked { opacity: 0.5; }
+.badge-icon { font-size: 24px; margin-bottom: 6px; }
+.badge-name { font-size: 11px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+.badge-date { font-size: 9px; color: var(--text-muted); margin-top: 3px; }
+.badge-lock { position: absolute; top: 6px; right: 8px; font-size: 12px; }
+
+/* Next step card */
+.next-step {
+  background: rgba(251,191,36,0.05);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.next-step strong { color: var(--yellow); }
+
+/* Recognition */
+.recognition-items { display: flex; flex-direction: column; gap: 10px; }
+.recognition-item {
+  background: var(--surface-hover);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  border-left: 3px solid var(--accent);
+}
+.recognition-from { font-weight: 600; color: var(--text-primary); margin-bottom: 3px; }
+
+/* ── Growth tab hints ──────────────────────── */
+.hint-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.hint {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
+.hint:hover { border-color: var(--accent-bright); color: var(--text-primary); }
+.hint-cat {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Page top ─────────────────────────────────── -->
+<div class="page-top">
+  <a href="../index.html" class="back-link">
+    <span>←</span>
+    <span>Prototypes</span>
+  </a>
+  <span class="page-label">Assistant (Roofing)</span>
+  <span class="proto-badge">Prototype</span>
+</div>
+
+<!-- ── Hero ─────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-eyebrow">Commercial Roofing Applicator · Tremco · Day 4 of Phase 2</div>
+  <h1 class="hero-title">Field-ready intelligence for<br><span>every Tremco applicator</span></h1>
+  <p class="hero-sub">From substrate moisture readings to seam specs — a <strong>genuine co-pilot</strong> that knows the product, the site, and what Tremco warranty requires before you lay the first roll.</p>
+  <div class="pill-row">
+    <span class="pill">Product specs</span>
+    <span class="pill">Warranty compliance</span>
+    <span class="pill">Safety protocols</span>
+    <span class="pill">QC checkpoints</span>
+  </div>
+</div>
+
+<!-- ── Phone frame ───────────────────────────────── -->
+<div class="phone-wrap">
+  <div class="phone">
+
+    <!-- Dynamic Island -->
+    <div class="dynamic-island" id="dynamic-island">
+      <div class="island-content" id="island-content">
+        <span class="island-icon">💧</span>
+        <div>
+          <div class="island-text">Moisture Alert — Zone C</div>
+          <div class="island-sub">14.2% · stop work</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification banner -->
+    <div class="notif-banner" id="notif-banner">
+      <div class="notif-app-icon">💧</div>
+      <div class="notif-body">
+        <div class="notif-app-name">Co-Pilot · Now</div>
+        <div class="notif-title">Substrate Moisture Alert — Zone C</div>
+        <div class="notif-text">Reading 14.2% in grid C4 — above the 12% limit. Corrective action created. Hold Zone C.</div>
+      </div>
+      <button class="notif-dismiss" onclick="dismissNotif()">✕</button>
+    </div>
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span>9:47 AM</span>
+      <div class="status-right">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>91%</span>
+      </div>
+    </div>
+
+    <!-- App header -->
+    <div class="app-header">
+      <div class="brand">
+        <div class="brand-orb">✦</div>
+        <div class="brand-name">Co-Pilot <em>for Marcus</em></div>
+      </div>
+      <div class="hdr-space"></div>
+      <div class="live-chip"><div class="live-dot"></div>LIVE</div>
+      <div class="worker-avatar" title="Marcus Torres">MT</div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchTab('chat', this)">Co-Pilot</button>
+      <button class="tab" onclick="switchTab('roof', this)">My Roof</button>
+      <button class="tab" onclick="switchTab('certs', this)">My Certs</button>
+    </div>
+
+    <!-- ── Chat view ─────────────────────────────── -->
+    <div class="chat-view active" id="tab-chat">
+      <div class="chat-area" id="chat-area">
+
+        <!-- 6:30 AM -->
+        <div class="time-div"><span>6:30 AM · Day 4 Start</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 6:30 AM</em></div>
+            <div class="ai-bubble">
+              <p>Morning Marcus 👷 Day 4 on Westlake Bldg C. Conditions are good — let's get Zone A membraned before the QC checkpoint at noon.</p>
+            </div>
+            <div class="brief-card">
+              <div class="brief-hdr">
+                <span class="brief-hdr-icon">🏗️</span>
+                <span class="brief-hdr-title">Phase 2 Shift Brief — Day 4 of 8</span>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Conditions Today</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🌡️</span>
+                    <span>54°F now → 68°F by 10 AM — within TREMproof 200 MA range</span>
+                    <span class="brief-row-note">✓ OK</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">💧</span>
+                    <span>Dew point 41°F — safe for adhesive after 7:30 AM</span>
+                    <span class="brief-row-note">✓ OK</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">💨</span>
+                    <span>Wind 8 mph NW — below 15 mph limit for membrane rolls</span>
+                    <span class="brief-row-note">✓ OK</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Today's Scope</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🟢</span>
+                    <span>Zone A (6,200 sqft) — Primer applied yesterday, ready for membrane</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">🔵</span>
+                    <span>Zone B (6,100 sqft) — Priming this morning, membrane this afternoon</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">⚠️</span>
+                    <span>Zone C (5,600 sqft) — Substrate inspection first, hold for readings</span>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">QC Checkpoint · Noon</div>
+                <div class="vip-row">
+                  <div class="vip-badge">TREMCO</div>
+                  <div>
+                    <div class="vip-name">Dave K. · Tremco Warranty Rep · 12:00 PM</div>
+                    <div class="vip-note">⚠️ Seam overlaps ≥3" must be documented before inspection</div>
+                  </div>
+                </div>
+              </div>
+              <div class="brief-sec">
+                <div class="brief-sec-label">Crew Today</div>
+                <div class="brief-rows">
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Marcus (you) — Lead applicator, Zones A + B</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Devon — Zone B primer</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Rosa — Seam rolling and ITP documentation</span>
+                  </div>
+                  <div class="brief-row">
+                    <span class="brief-row-icon">👤</span>
+                    <span>Kwame — Safety observer / edge crew</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7:22 AM - Primer flash time alert -->
+        <div class="time-div"><span>7:22 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 7:22 AM</em></div>
+            <div class="alert-card">
+              <div class="alert-label">⏱ Primer Heads Up · Zone A</div>
+              TREMCO VOC-compliant primer in Zone A was applied at 6:50 AM. Flash time minimum is <strong>30–45 min at current temp (54°F)</strong>. Earliest safe membrane start: <strong>7:35 AM</strong>. Starting before full flash is the leading cause of seam delamination on this product.
+              <button class="card-action" onclick="inject('How do I confirm the primer flash time is complete in Zone A?')">→ How do I confirm it's ready?</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8:14 AM - Substrate moisture sensor + corrective action -->
+        <div class="time-div"><span>8:14 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:14 AM</em></div>
+            <div class="alert-card urgent">
+              <div class="alert-label">💧 Sensor Alert · Substrate Moisture — Zone C, Grid C4</div>
+              Tramex reading: <strong>14.2%</strong> — exceeds the 12% maximum for TREMproof 200 MA adhesion. Membrane applied over wet substrate is the #1 cause of warranty voids. <strong>Stop work in Zone C.</strong> Corrective action created.
+              <button class="card-action" onclick="inject('What do we do about the high moisture reading in Zone C?')">→ What do we do now?</button>
+            </div>
+            <div class="action-card">
+              <div class="action-hdr">
+                <span class="action-icon">📋</span>
+                <div>
+                  <div class="action-title">Corrective Action Created</div>
+                  <div class="action-id">CA-0088 · Auto-generated 8:14 AM</div>
+                </div>
+                <span class="action-status open">Open</span>
+              </div>
+              <div class="action-rows">
+                <div class="action-row"><span class="action-lbl">Issue</span><span>Zone C substrate moisture 14.2% (limit 12%)</span></div>
+                <div class="action-row"><span class="action-lbl">Assigned</span><span>Site Supervisor · Jen R.</span></div>
+                <div class="action-row"><span class="action-lbl">Due by</span><span>10:00 AM — apply heat, re-test, log in SafetyCulture</span></div>
+                <div class="action-row"><span class="action-lbl">Fallback</span><span>Exclude Zone C from noon warranty checkpoint</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-msg">
+          <div class="user-bubble">got it — starting on Zone A membrane now, will leave C alone</div>
+        </div>
+
+        <!-- 8:47 AM - Seam spec question -->
+        <div class="time-div"><span>8:47 AM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">what's the minimum seam overlap for the 200 MA on this job?</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 8:47 AM</em></div>
+            <div class="spec-card">
+              <div class="spec-card-hdr">
+                <span class="spec-card-icon">📐</span>
+                <div>
+                  <div class="spec-card-title">TREMproof 200 MA — Seam Specs</div>
+                  <div class="spec-card-sub">Self-adhered modified bitumen membrane</div>
+                </div>
+              </div>
+              <div class="spec-card-body">
+                <div class="spec-fact">
+                  <span class="spec-fact-label">Min overlap</span>
+                  <span class="spec-fact-value"><strong style="color:var(--accent-bright)">3 inches</strong> — Tremco warranty requirement, non-negotiable</span>
+                </div>
+                <div class="spec-fact">
+                  <div class="spec-row"><div class="spec-dot g"></div><span>Roll back edge 3" before pressing — clean, dry, no primer overspray</span></div>
+                </div>
+                <div class="spec-fact">
+                  <div class="spec-row"><div class="spec-dot g"></div><span>Probe seam every 12" with seam probe tool — Rosa logs all readings on ITP sheet</span></div>
+                </div>
+                <div class="spec-fact">
+                  <div class="spec-row"><div class="spec-dot y"></div><span>Below 50°F: warm membrane with heat gun before seaming — cold membrane won't bond</span></div>
+                </div>
+                <div class="spec-fact">
+                  <div class="spec-row"><div class="spec-dot r"></div><span>Never seam over a wrinkle or lifted section — cut out and patch</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="ai-bubble" style="margin-top:6px;font-size:11px;">
+              <p>Rosa needs the full ITP seam log for every zone before Dave K. arrives at noon. Noon sign-off without it means those zones are excluded from warranty.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:15 AM - Win card -->
+        <div class="time-div"><span>9:15 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 9:15 AM</em></div>
+            <div class="win-card">
+              <div class="win-star">🌟</div>
+              <div class="win-title">Zone A — membrane complete, ahead of schedule!</div>
+              <div class="win-quote">"Marcus ran the tightest seam documentation on any Tremco project this quarter."</div>
+              <div class="win-source">— Auto-logged 9:12 AM · 42 of 42 seams probed and documented · 40 min ahead of plan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:33 AM - QC inspection checkpoint -->
+        <div class="time-div"><span>9:33 AM</span></div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 9:33 AM</em></div>
+            <div class="inspection-card">
+              <div class="inspection-hdr">
+                <span class="insp-icon">📋</span>
+                <div>
+                  <div class="insp-title">Tremco Warranty QC Checkpoint — 12:00 PM</div>
+                  <div class="insp-sub">Tremco rep Dave K. · on-site in 2h 27min</div>
+                </div>
+                <span class="insp-badge warn">2 Pending</span>
+              </div>
+              <div class="insp-items">
+                <div class="insp-item pass"><span class="insp-dot">●</span><span>Zone A seam overlaps documented (42/42 seams)</span><span class="insp-result">✓ Done</span></div>
+                <div class="insp-item pending"><span class="insp-dot">●</span><span>Zone B seam overlaps — ITP log in progress</span><span class="insp-result">In progress</span></div>
+                <div class="insp-item warn"><span class="insp-dot">●</span><span>Zone C substrate moisture (CA-0088 still open)</span><span class="insp-result">⚠ Blocked</span></div>
+                <div class="insp-item pending"><span class="insp-dot">●</span><span>ITP sign-off sheet — not yet submitted</span><span class="insp-result">Pending</span></div>
+                <div class="insp-item pending"><span class="insp-dot">●</span><span>Zone A termination bars — not yet installed</span><span class="insp-result">Pending</span></div>
+              </div>
+              <div class="insp-note">CA-0088 must close before Dave K. arrives or Zone C is excluded from warranty coverage. Zone A is warranted — focus Zone B seaming now.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:41 AM - Field condition / ponding -->
+        <div class="time-div"><span>9:41 AM</span></div>
+
+        <div class="user-msg">
+          <div class="user-bubble">kwame just found a ponding area near drain 4 that wasn't in the drawings — about 8ft wide, 3/4" low spot</div>
+        </div>
+
+        <div class="ai-msg">
+          <div class="ai-orb">✦</div>
+          <div class="ai-content">
+            <div class="ai-meta">Co-Pilot <em>· 9:41 AM</em></div>
+            <div class="ai-bubble">
+              <p>Stop — do not membrane over that area. Undocumented ponding water is a warranty exclusion. Log this as a field condition report now and notify Jen R. and the project manager.</p>
+            </div>
+            <div class="incident-card">
+              <div class="incident-hdr">
+                <span class="incident-icon">⚠️</span>
+                <div>
+                  <div class="incident-title">Field Condition Report — Draft Started</div>
+                  <div class="incident-id">FCR-0031 · 9:41 AM</div>
+                </div>
+                <span class="incident-status draft">Draft</span>
+              </div>
+              <div class="incident-rows">
+                <div class="incident-row"><span class="incident-lbl">What found</span><span>Undocumented low spot / ponding area near Drain 4</span></div>
+                <div class="incident-row"><span class="incident-lbl">Location</span><span>Zone B, ~8 ft diameter, approx. 3/4" below surrounding deck</span></div>
+                <div class="incident-row"><span class="incident-lbl">Reported by</span><span>Kwame A. · Safety observer</span></div>
+                <div class="incident-row"><span class="incident-lbl">Warranty risk</span><span>⚠ Membrane over ponding = warranty void in that zone</span></div>
+              </div>
+              <div class="incident-actions-row">
+                <button class="card-action" onclick="inject('How do we handle the ponding area near drain 4?')">→ How do we handle it?</button>
+                <button class="card-action" onclick="inject('Who do I notify about the ponding area?')">→ Who to notify</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- chat-area -->
+
+      <!-- Suggestions -->
+      <div class="sugg-row" id="sugg-row">
+        <button class="sugg" onclick="qs('What is the application temperature range for TREMproof 200 MA?')">Temp range for 200 MA</button>
+        <button class="sugg" onclick="qs('How do I check if the primer flash time is complete?')">Primer flash time</button>
+        <button class="sugg" onclick="qs('What are the fall protection requirements on this roof?')">Fall protection</button>
+        <button class="sugg" onclick="qs('What do I say to Dave K. about Zone C not being ready?')">Zone C for Dave K.</button>
+        <button class="sugg" onclick="qs('How do I seal a penetration with TREMseal?')">TREMseal at penetrations</button>
+        <button class="sugg" onclick="qs('What happens if CA-0088 is not resolved before noon?')">CA-0088 deadline</button>
+      </div>
+
+      <!-- Input -->
+      <div class="input-bar">
+        <button class="voice-btn" title="Voice input">🎤</button>
+        <div class="input-wrap">
+          <textarea class="chat-input" id="chat-input"
+            placeholder="Ask anything…"
+            rows="1"
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+        </div>
+        <button class="send-btn" onclick="sendMsg()">↑</button>
+      </div>
+    </div><!-- tab-chat -->
+
+    <!-- ── My Roof view ───────────────────────────── -->
+    <div class="roof-view" id="tab-roof">
+      <div class="roof-hdr">
+        <div>
+          <div class="roof-hdr-title">Westlake Bldg C · Phase 2</div>
+          <div class="roof-hdr-sub">17,900 sqft total · Day 4 of 8</div>
+        </div>
+        <span id="roof-clock" style="font-size:11px;color:var(--text-muted)">9:47 AM</span>
+      </div>
+
+      <div class="zone-grid">
+        <div class="zone-card complete" onclick="openZone('A')">
+          <div class="zone-name">A</div>
+          <div class="zone-size">6,200 sqft</div>
+          <span class="zone-status s-complete">Complete</span>
+        </div>
+        <div class="zone-card in-progress" onclick="openZone('B1')">
+          <div class="zone-name">B-1</div>
+          <div class="zone-size">3,100 sqft</div>
+          <span class="zone-status s-progress">Seaming</span>
+        </div>
+        <div class="zone-card" onclick="openZone('B2')">
+          <div class="zone-name">B-2</div>
+          <div class="zone-size">3,000 sqft</div>
+          <span class="zone-status s-priming">Priming</span>
+        </div>
+        <div class="zone-card hold" onclick="openZone('C')">
+          <div class="zone-name">C</div>
+          <div class="zone-size">5,600 sqft</div>
+          <span class="zone-status s-hold">HOLD</span>
+          <div class="zone-alert-dot"></div>
+        </div>
+        <div class="zone-card" onclick="openZone('EW')">
+          <div class="zone-name">Edge W</div>
+          <div class="zone-size">Parapet</div>
+          <span class="zone-status s-pending">Pending</span>
+        </div>
+        <div class="zone-card" onclick="openZone('EE')">
+          <div class="zone-name">Edge E</div>
+          <div class="zone-size">Parapet</div>
+          <span class="zone-status s-pending">Pending</span>
+        </div>
+      </div>
+
+      <!-- Zone detail panel -->
+      <div class="zone-detail" id="zone-detail">
+        <div class="zd-header">
+          <div class="zd-title" id="zd-title">Zone A</div>
+          <button class="zd-close" onclick="closeZone()">✕</button>
+        </div>
+        <div class="zd-items" id="zd-items"></div>
+        <div class="zd-actions" id="zd-actions"></div>
+      </div>
+
+      <div class="site-summary">
+        <div class="site-summary-title">Shift So Far</div>
+        <div class="shift-nums">
+          <div>
+            <div class="shift-num-val" style="color:var(--green)">6,200</div>
+            <div class="shift-num-lbl">sqft done</div>
+          </div>
+          <div>
+            <div class="shift-num-val">42</div>
+            <div class="shift-num-lbl">Seams logged</div>
+          </div>
+          <div>
+            <div class="shift-num-val" style="color:var(--red)">1</div>
+            <div class="shift-num-lbl">Open CAs</div>
+          </div>
+        </div>
+        <div class="qc-bar">
+          <div class="qc-dot"></div>
+          <span class="qc-label">Next: QC checkpoint with Dave K.</span>
+          <span class="qc-time">12:00 PM</span>
+        </div>
+      </div>
+    </div><!-- tab-roof -->
+
+    <!-- ── My Certs view ──────────────────────────── -->
+    <div class="certs-view" id="tab-certs">
+
+      <div class="growth-card">
+        <div class="growth-card-title">Performance This Month</div>
+        <div class="skill-rows">
+          <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Seam Quality</span><span class="skill-pct">97%</span></div>
+            <div class="skill-track"><div class="skill-fill" id="sc1"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Application Speed</span><span class="skill-pct">88%</span></div>
+            <div class="skill-track"><div class="skill-fill" id="sc2"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Safety Compliance</span><span class="skill-pct">100%</span></div>
+            <div class="skill-track"><div class="skill-fill" id="sc3"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">QC Documentation</span><span class="skill-pct">79%</span></div>
+            <div class="skill-track"><div class="skill-fill" id="sc4"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-meta"><span class="skill-name">Product Knowledge</span><span class="skill-pct">91%</span></div>
+            <div class="skill-track"><div class="skill-fill" id="sc5"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Certifications</div>
+        <div class="badge-grid">
+          <div class="badge earned">
+            <div class="badge-icon">🏆</div>
+            <div class="badge-name">Tremco Certified Applicator</div>
+            <div class="badge-date">Earned Nov 2025</div>
+          </div>
+          <div class="badge earned">
+            <div class="badge-icon">🔥</div>
+            <div class="badge-name">Hot Work Safety</div>
+            <div class="badge-date">Earned Sep 2024</div>
+          </div>
+          <div class="badge earned">
+            <div class="badge-icon">🦺</div>
+            <div class="badge-name">OSHA 30 — Construction</div>
+            <div class="badge-date">Earned Mar 2024</div>
+          </div>
+          <div class="badge locked">
+            <div class="badge-icon">⭐</div>
+            <div class="badge-name">Tremco Master Applicator</div>
+            <div class="badge-date">2 projects left</div>
+            <span class="badge-lock">🔒</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Next Milestone</div>
+        <div class="next-step">
+          Complete <strong>2 more Tremco warranted projects</strong> to earn Master Applicator — applicators with this credential are the first call for commercial jobs over 50,000 sqft and qualify for Tremco's elite installer network.
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Recent Recognition</div>
+        <div class="recognition-items">
+          <div class="recognition-item">
+            <div class="recognition-from">Project Manager Lisa N. · 1 week ago</div>
+            "Marcus ran the tightest seam documentation on any Tremco project this quarter. Dave K. signed off Zone D in under 10 minutes."
+          </div>
+          <div class="recognition-item">
+            <div class="recognition-from">Site Supervisor Jen R. · This morning</div>
+            "Zero safety incidents across 4 consecutive Phase 2 days. Marcus sets the standard for this crew."
+          </div>
+        </div>
+      </div>
+
+      <div class="growth-card">
+        <div class="growth-card-title">Ask Me Anything</div>
+        <div class="hint-grid">
+          <div class="hint" onclick="switchToChat(); qs('What is the primer flash time for TREMproof 200 MA at 55°F?')">
+            <span class="hint-cat">Product</span>
+            Primer flash time at 55°F?
+          </div>
+          <div class="hint" onclick="switchToChat(); qs('What are the fall protection requirements on this roof?')">
+            <span class="hint-cat">Safety</span>
+            Fall protection rules?
+          </div>
+          <div class="hint" onclick="switchToChat(); qs('How do I seal a pipe penetration with TREMseal?')">
+            <span class="hint-cat">Application</span>
+            TREMseal at penetrations?
+          </div>
+          <div class="hint" onclick="switchToChat(); qs('What does Dave K. check at the QC inspection?')">
+            <span class="hint-cat">Warranty</span>
+            What Dave K. checks?
+          </div>
+        </div>
+      </div>
+
+    </div><!-- tab-certs -->
+
+  </div><!-- phone -->
+</div><!-- phone-wrap -->
+
+<script>
+// ── Zone data ───────────────────────────────────────────────────
+const ZONE_DATA = {
+  'A': {
+    title: 'Zone A · Complete',
+    items: [
+      { l: 'Area', v: '6,200 sqft' },
+      { l: 'Status', v: '✓ TREMproof 200 MA fully installed and warranted' },
+      { l: 'Seams', v: '42 of 42 logged — all ≥3" overlap' },
+      { l: 'Primer', v: 'TREMCO VOC applied 6:50 AM, full flash confirmed 7:38 AM' },
+      { l: 'Moisture', v: '9.1% pre-application — within spec' },
+    ],
+    actions: [
+      { label: '→ Check Zone A seam log', q: 'Show me the Zone A seam documentation summary' },
+    ]
+  },
+  'B1': {
+    title: 'Zone B-1 · Seaming In Progress',
+    items: [
+      { l: 'Area', v: '3,100 sqft' },
+      { l: 'Status', v: 'Membrane down, Rosa seaming and logging' },
+      { l: 'Seams', v: '18 of 26 logged so far' },
+      { l: 'Crew', v: 'Marcus (membrane), Rosa (seam probe + ITP)' },
+      { l: 'Target', v: 'Complete by 11:30 AM for noon checkpoint' },
+    ],
+    actions: [
+      { label: '→ What seam count do we need by noon?', q: 'How many Zone B seams do we need logged before the QC checkpoint at noon?' },
+    ]
+  },
+  'B2': {
+    title: 'Zone B-2 · Priming',
+    items: [
+      { l: 'Area', v: '3,000 sqft' },
+      { l: 'Status', v: 'Devon applying TREMCO VOC primer now' },
+      { l: 'Earliest membrane', v: 'After 9:45 AM (flash time from 9:00 AM application)' },
+      { l: 'Sequence', v: 'Membrane after B-1 complete — Marcus moves here' },
+    ],
+    actions: [
+      { label: '→ When can we start B-2 membrane?', q: 'When is Zone B-2 ready for membrane application?' },
+    ]
+  },
+  'C': {
+    title: 'Zone C · HOLD — Moisture Alert',
+    items: [
+      { l: 'Area', v: '5,600 sqft' },
+      { l: 'Status', v: '🚫 Work stopped — moisture above limit' },
+      { l: 'Moisture', v: '14.2% at Grid C4 (limit: 12%)' },
+      { l: 'CA open', v: 'CA-0088 · Assigned Jen R. · Due 10:00 AM' },
+      { l: 'Next step', v: 'Apply heat, re-test. Resume only if reading drops below 12%' },
+    ],
+    actions: [
+      { label: '→ What caused the moisture in Zone C?', q: 'What would cause the substrate moisture in Zone C to be this high?' },
+      { label: '→ How long to dry and re-test?', q: 'How long will it take to dry Zone C and pass a re-test?' },
+    ]
+  },
+  'EW': {
+    title: 'Edge West · Parapet',
+    items: [
+      { l: 'Status', v: 'Not yet started' },
+      { l: 'Scope', v: 'TREMseal at all penetrations + termination bars' },
+      { l: 'Scheduled', v: 'Day 5 — after field membrane complete' },
+    ],
+    actions: [
+      { label: '→ How do I install termination bars?', q: 'What is the installation process for termination bars on the parapet wall?' },
+    ]
+  },
+  'EE': {
+    title: 'Edge East · Parapet',
+    items: [
+      { l: 'Status', v: 'Not yet started' },
+      { l: 'Scope', v: 'TREMseal at all penetrations + termination bars' },
+      { l: 'Scheduled', v: 'Day 5 — after field membrane complete' },
+    ],
+    actions: [
+      { label: '→ How do I install termination bars?', q: 'What is the installation process for termination bars on the parapet wall?' },
+    ]
+  }
+};
+
+// ── Zone panel ──────────────────────────────────────────────────
+function openZone(id) {
+  const d = ZONE_DATA[id];
+  if (!d) return;
+  document.getElementById('zd-title').textContent = d.title;
+  document.getElementById('zd-items').innerHTML = d.items.map(r =>
+    `<div class="zd-row"><span class="zd-lbl">${r.l}</span><span class="zd-val">${r.v}</span></div>`
+  ).join('');
+  document.getElementById('zd-actions').innerHTML = d.actions.map(a =>
+    `<button class="zd-action" onclick="inject(${JSON.stringify(a.q)}); closeZone()">${a.label}</button>`
+  ).join('');
+  document.getElementById('zone-detail').classList.add('open');
+}
+
+function closeZone() {
+  document.getElementById('zone-detail').classList.remove('open');
+}
+
+// ── Tab switching ───────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.chat-view, .roof-view, .certs-view').forEach(v => v.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'certs') {
+    setTimeout(() => {
+      const bars = [['sc1',97],['sc2',88],['sc3',100],['sc4',79],['sc5',91]];
+      bars.forEach(([id,pct]) => { document.getElementById(id).style.width = pct + '%'; });
+    }, 200);
+  }
+}
+
+function switchToChat() {
+  const chatBtn = document.querySelector('.tab');
+  switchTab('chat', chatBtn);
+}
+
+// ── Notification system ─────────────────────────────────────────
+function showNotif() {
+  // Expand dynamic island
+  const island = document.getElementById('dynamic-island');
+  const content = document.getElementById('island-content');
+  island.style.width = '280px';
+  island.style.borderRadius = '28px';
+  content.style.display = 'flex';
+  setTimeout(() => {
+    island.style.width = '120px';
+    island.style.borderRadius = '20px';
+    content.style.display = 'none';
+    setTimeout(() => {
+      document.getElementById('notif-banner').classList.add('visible');
+    }, 400);
+  }, 2500);
+}
+
+function dismissNotif() {
+  document.getElementById('notif-banner').classList.remove('visible');
+  setTimeout(() => {
+    const chatArea = document.getElementById('chat-area');
+    const nowDiv = document.createElement('div');
+    nowDiv.className = 'time-div';
+    nowDiv.innerHTML = '<span>9:47 AM · Now</span>';
+    chatArea.appendChild(nowDiv);
+    const msg = document.createElement('div');
+    msg.className = 'ai-msg';
+    msg.innerHTML = `
+      <div class="ai-orb">✦</div>
+      <div class="ai-content">
+        <div class="ai-meta">Co-Pilot <em>· Now</em></div>
+        <div class="alert-card urgent">
+          <div class="alert-label">💧 Zone C Moisture · CA-0088 Still Open</div>
+          Zone C is still reading 14.2%. Keep the crew on Zone B seaming. Rosa should prioritize getting the Zone A ITP sheet signed — Dave K. needs that at noon regardless of Zone C status.
+          <button class="card-action" onclick="inject('What do I say to Dave K. about Zone C not being ready?')">→ What to tell Dave K.</button>
+        </div>
+      </div>`;
+    chatArea.appendChild(msg);
+    scrollBottom();
+  }, 500);
+}
+
+// ── Chat engine ─────────────────────────────────────────────────
+function scrollBottom() {
+  const area = document.getElementById('chat-area');
+  area.scrollTop = area.scrollHeight;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+
+function qs(q) { inject(q); }
+
+function inject(text) {
+  switchToChat();
+  const input = document.getElementById('chat-input');
+  input.value = text;
+  sendMsg();
+}
+
+function sendMsg() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+
+  const area = document.getElementById('chat-area');
+  const userEl = document.createElement('div');
+  userEl.className = 'user-msg';
+  userEl.innerHTML = `<div class="user-bubble">${text}</div>`;
+  area.appendChild(userEl);
+  scrollBottom();
+
+  setTimeout(() => {
+    const aiEl = document.createElement('div');
+    aiEl.className = 'ai-msg';
+    const reply = getReply(text);
+    aiEl.innerHTML = `
+      <div class="ai-orb">✦</div>
+      <div class="ai-content">
+        <div class="ai-meta">Co-Pilot <em>· Now</em></div>
+        <div class="ai-bubble">${reply}</div>
+      </div>`;
+    area.appendChild(aiEl);
+    scrollBottom();
+  }, 600);
+}
+
+function getReply(msg) {
+  const t = msg.toLowerCase();
+
+  if (t.includes('tremproof') || t.includes('200 ma') || t.includes('membrane') || t.includes('application range')) {
+    return `<p><strong>TREMproof 200 MA — Key Specs:</strong></p>
+<p>→ Application temp: <span class="hl-b">40°F–120°F (substrate surface)</span><br>
+→ Seam overlap: <span class="hl-b">3" minimum</span>, probe every 12"<br>
+→ Primer flash: 30–45 min at 50–70°F, 20–30 min above 80°F<br>
+→ Max moisture: <span class="hl-r">12% substrate</span> — above this, stop work</p>
+<p>Self-adhered modified bitumen. No torch required. At temps below 50°F, warm membrane surface with heat gun before seaming — cold membrane won't bond.</p>`;
+  }
+
+  if (t.includes('primer') || t.includes('flash time') || t.includes('flash') || t.includes('tack') || t.includes('voc') || t.includes('confirm') && t.includes('ready')) {
+    return `<p><strong>TREMCO VOC-compliant primer flash time:</strong></p>
+<p>→ <span class="hl-b">30–45 min at 50–70°F</span><br>→ 20–30 min above 80°F<br>→ At 40–50°F: up to 60 min</p>
+<p><strong>How to confirm it's ready:</strong> Touch the primed surface lightly with a gloved knuckle. If it feels tacky but doesn't transfer to the glove — it's ready. If it strings or sticks to the glove — wait 10 more minutes and re-test.</p>
+<p>Never apply membrane if primer is still wet or films over. Wet primer = delamination.</p>`;
+  }
+
+  if (t.includes('seam') || t.includes('overlap') || t.includes('delamination') || t.includes('probe') || t.includes('itp')) {
+    return `<p><strong>Seam requirements for Tremco warranty:</strong></p>
+<p>→ Minimum overlap: <span class="hl-b">3 inches</span> — no exceptions<br>
+→ Seam probe: every 12" along the seam, log each one<br>
+→ Rosa documents all readings on the ITP sheet — Dave K. reviews that first</p>
+<p>If a seam fails the probe test: heat with heat gun, re-press with roller, probe again. If it still fails: cut out and patch with a 6" minimum patch piece.</p>
+<p>Never seam over a wrinkle or lifted section — that's a warranty void point.</p>`;
+  }
+
+  if (t.includes('moisture') || t.includes('wet') || t.includes('substrate') || t.includes('tramex') || t.includes('12%') || t.includes('ca-0088') || t.includes('zone c') || t.includes('dry')) {
+    return `<p><strong>Moisture limit: 12%</strong> for TREMproof 200 MA to adhere correctly.</p>
+<p><strong>To dry Zone C:</strong><br>→ Use portable propane roofing heater across the area<br>→ Re-test after 2 hours with the Tramex CME5<br>→ Take 3 readings — all must be below 12%<br>→ Log every reading in SafetyCulture for CA-0088</p>
+<p>If Zone C can't get below 12% before noon: it gets excluded from Dave K.'s warranty sign-off. Zones A and B will still be warrantied. Jen R. handles the timeline adjustment.</p>`;
+  }
+
+  if (t.includes('fall') || t.includes('edge') || t.includes('perimeter') || t.includes('safety') || t.includes('ppe') || t.includes('anchor')) {
+    return `<p><strong>OSHA 1926.502 — Fall protection on this roof:</strong></p>
+<p>→ Required within <span class="hl-b">6 ft of any edge</span><br>
+→ Options: guardrail, safety net, or personal fall arrest system (PFAS)<br>
+→ Warning line system (6 ft from edge) + safety monitor = compliant for field work away from edge<br>
+→ <strong>Kwame</strong> is the designated safety monitor today — flag him for any edge work</p>
+<p>Hot work permit is active through 4:30 PM — reissued by Jen R. at 6:30 AM. If you use the torch for any flashing work, fire watch required for <strong>30 min post-work</strong> with extinguisher within 10 ft.</p>`;
+  }
+
+  if (t.includes('hot work') || t.includes('torch') || t.includes('permit') || t.includes('fire watch')) {
+    return `<p><strong>Hot work permit on this site:</strong></p>
+<p>→ Permit issued daily by Jen R. at 6:30 AM — today's is active until 4:30 PM<br>
+→ Required for any torch application (modified bitumen flashing, detail work)<br>
+→ Keep a 10 lb ABC extinguisher within 10 ft of all hot work<br>
+→ <strong>Fire watch: 30 minutes</strong> minimum after torch is off — Kwame can cover this</p>
+<p>TREMproof 200 MA field membrane is self-adhered — no torch. Only detail flashing at penetrations and parapets may require torch. Check with Jen before any torch work.</p>`;
+  }
+
+  if (t.includes('ponding') || t.includes('drain') || t.includes('slope') || t.includes('low spot') || t.includes('water') || t.includes('fcr') || t.includes('field condition')) {
+    return `<p><strong>Do not membrane over an undocumented low spot.</strong> Ponding water is a Tremco warranty exclusion unless it's addressed in writing before membrane is installed.</p>
+<p><strong>Right now:</strong><br>→ FCR-0031 is saved as a draft<br>→ Notify Jen R. (supervisor) immediately<br>→ She'll notify project manager Lisa N. who loops in the structural engineer and owner</p>
+<p>Options the owner can choose from: tapered insulation, cricket, or deck correction — all require owner approval before you proceed. Mark the area with chalk and work around it today.</p>`;
+  }
+
+  if (t.includes('who to notify') || t.includes('who do i notify') || t.includes('notify')) {
+    return `<p><strong>For FCR-0031 (ponding area):</strong><br>→ Jen R. (Site Supervisor) — right now<br>→ Lisa N. (Project Manager) — Jen will call her</p>
+<p><strong>For CA-0088 (Zone C moisture):</strong><br>→ Already assigned to Jen R. — she's aware<br>→ Update her on the 10:00 AM re-test result</p>
+<p>For the noon QC checkpoint — Dave K. is Tremco's rep, Jen handles the communication with him. Your job is to have Zone B ITP complete and Zone A termination bars installed before noon.</p>`;
+  }
+
+  if (t.includes('dave k') || t.includes('zone c') && t.includes('noon') || t.includes('what to tell') || t.includes('what do i say') && t.includes('dave')) {
+    return `<p><strong>What to tell Dave K. about Zone C:</strong></p>
+<p>"Zone C had a substrate moisture reading of 14.2% this morning — above the 12% spec. We stopped work immediately, created a corrective action (CA-0088), and are drying the section now. We'll re-test at 10:00 AM."</p>
+<p>Dave will appreciate that you caught it and documented it properly — that's exactly what protects the warranty on Zones A and B. <span class="hl-g">Zone A is fully warrantied.</span> He may schedule a separate sign-off for Zone C once CA-0088 closes.</p>`;
+  }
+
+  if (t.includes('tremseal') || t.includes('sealant') || t.includes('penetration') || t.includes('termination') || t.includes('flashing') || t.includes('pipe') || t.includes('curb')) {
+    return `<p><strong>TREMseal at penetrations:</strong></p>
+<p>→ Apply a minimum <span class="hl-b">1/4" bead</span> at all pipe penetrations, HVAC curbs, and termination bars<br>
+→ Tool flat immediately after application — don't let it skin over<br>
+→ Allow <strong>24-hour cure</strong> before water exposure<br>
+→ At HVAC curbs: flash TREMproof 200 MA membrane a minimum <strong>6" up the vertical</strong></p>
+<p>At termination bars: mechanical fastener every 6", TREMseal bead over the bar, and membrane lapped over the bar by 1". This is the most common warranty inspection point — Dave K. checks every termination bar.</p>`;
+  }
+
+  if (t.includes('break') || t.includes('schedule') || t.includes('lunch') || t.includes('time') || t.includes('noon')) {
+    return `<p><strong>Today's schedule:</strong></p>
+<p>→ 10:30 AM — 15 min break<br>
+→ 12:00 PM — QC checkpoint with Dave K. (lunch after)<br>
+→ 12:30 PM — Lunch<br>
+→ 1:00 PM — Zone B-2 membrane + Zone C re-test (if CA-0088 closes)</p>
+<p>To hit noon checkpoint: Zone B-1 seaming must finish by 11:30 AM. Rosa needs the full ITP log submitted by 11:45 AM. Termination bars for Zone A by 11:30 AM.</p>`;
+  }
+
+  if (t.includes('overwhelm') || t.includes('behind') || t.includes('too much') || t.includes('stress')) {
+    return `<p>You're good — Zone A is done and warrantied. That's the hard part. Here's what actually matters before noon:</p>
+<p>1. <strong>Zone B-1 seaming</strong> — you and Rosa, finish the remaining 8 seams<br>
+2. <strong>ITP sheet</strong> — Rosa submits before 11:45 AM<br>
+3. <strong>Zone A termination bars</strong> — Devon can handle these<br>
+4. <strong>CA-0088 re-test</strong> — Jen is managing this</p>
+<p>Zone C can wait — it's a separate sign-off with Dave K. later. You're on track. 💪</p>`;
+  }
+
+  if (t.includes('warranty') || t.includes('qc') || t.includes('inspection') || t.includes('checkpoint') || t.includes('what does dave')) {
+    return `<p><strong>Tremco warranty requires all of the following for sign-off:</strong></p>
+<p>→ Signed ITP sheets for every zone (seam probe log at 12" intervals)<br>
+→ Substrate moisture log showing <12% pre-application<br>
+→ Tremco rep (Dave K.) signature at each QC checkpoint<br>
+→ Primer type and flash time recorded<br>
+→ Termination bars installed and TREMseal applied</p>
+<p>Missing any element = that zone is excluded from warranty. Zone A is fully compliant. Zone B will be if we finish the ITP log by 11:45 AM.</p>`;
+  }
+
+  return `<p>Right now the priority is Zone B-1 seaming — <span class="hl-b">8 seams left</span> before noon. Rosa needs the ITP log submitted by 11:45 AM.</p>
+<p>CA-0088 (Zone C moisture) is Jen's to manage — you don't need to touch Zone C until she clears it. Zone A is done and fully warrantied.</p>
+<p>What specifically do you need? Product spec, site status, or safety question?</p>`;
+}
+
+// ── Init ────────────────────────────────────────────────────────
+scrollBottom();
+setTimeout(showNotif, 7000);
+
+setInterval(() => {
+  const el = document.getElementById('roof-clock');
+  if (el) el.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+}, 30000);
+</script>
+</body>
+</html>
