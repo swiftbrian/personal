@@ -57,36 +57,92 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(12,12,12,0.94);
+    background: rgba(12,12,12,0.96);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
-    padding: 0 56px;
+    padding: 0 60px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     height: 52px;
+    gap: 32px;
   }
   .nav-brand {
     font-family: 'GT Alpina', Georgia, serif;
     font-size: 13px;
     font-style: italic;
     color: var(--orange);
-    letter-spacing: 0.01em;
+    flex-shrink: 0;
+    margin-right: 8px;
   }
+  .nav-sep { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+  .nav-title { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; flex: 1; }
   .nav-links {
     display: flex;
-    gap: 28px;
+    gap: 24px;
     list-style: none;
   }
   .nav-links a {
     font-size: 10px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--muted);
     text-decoration: none;
     transition: color 0.15s;
   }
   .nav-links a:hover { color: var(--text); }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 6px; margin-right: 12px;
+  }
+  .hamburger span {
+    display: block; width: 18px; height: 1.5px;
+    background: var(--muted); border-radius: 1px;
+    transition: all 0.25s ease;
+  }
+  .hamburger:hover span { background: var(--text); }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  .site-menu {
+    position: fixed; top: 52px; left: 0;
+    background: rgba(22,23,25,0.97); backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+    padding: 16px 0; min-width: 220px;
+    z-index: 99;
+    transform: translateY(-8px); opacity: 0;
+    pointer-events: none;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .site-menu.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .site-menu a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 24px; font-size: 12px;
+    letter-spacing: 0.06em; color: var(--dim);
+    text-decoration: none; transition: color 0.15s, background 0.15s;
+  }
+  .site-menu a:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .site-menu a.current { color: var(--orange); }
+  .site-menu a.current::before {
+    content: ''; display: inline-block;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--orange);
+  }
+
+  .nav-links .nav-arch a {
+    color: var(--orange);
+    border: 1px solid var(--orange);
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-weight: 400;
+  }
+  .nav-links .nav-arch a:hover {
+    background: var(--orange);
+    color: #fff;
+  }
 
   /* ── HERO ── */
   .hero {
@@ -522,6 +578,22 @@
   .dl::before { content: '●'; color: var(--border); margin-right: 5px; font-size: 9px; }
 
   /* ── FOOTER ── */
+  .arch-callout {
+    padding: 20px 56px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--dim);
+    text-align: center;
+    line-height: 1.8;
+  }
+  .arch-callout a {
+    color: var(--orange);
+    text-decoration: none;
+    font-weight: 400;
+  }
+  .arch-callout a:hover { text-decoration: underline; }
+
   .foot {
     padding: 28px 56px;
     display: flex;
@@ -552,7 +624,12 @@
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand">SafetyCulture × AI Agents</div>
+  <button class="hamburger" aria-label="Site navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-brand">SafetyCulture</div>
+  <div class="nav-sep"></div>
+  <div class="nav-title">Vision</div>
   <ul class="nav-links">
     <li><a href="#threats">Threats</a></li>
     <li><a href="#opportunities">Opportunities</a></li>
@@ -561,6 +638,7 @@
     <li><a href="#tech">Tech</a></li>
     <li><a href="#verticals">Verticals</a></li>
     <li><a href="#bets">Bets</a></li>
+    <li class="nav-arch"><a href="./architecture.html" target="_blank">Architecture →</a></li>
   </ul>
 </nav>
 
@@ -570,24 +648,6 @@
     <div class="hero-kicker">Strategic Vision — 2026–2030</div>
     <h1 class="serif">The <em>Agentic</em><br>Inflection Point</h1>
     <p class="hero-deck serif">AI agents are reshaping how the physical world operates. SafetyCulture sits at the exact intersection where this transformation will be most disruptive — and most valuable.</p>
-  </div>
-  <div class="hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num serif">76,000+</div>
-      <div class="hero-stat-label">Organizations on platform</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num serif">1B+</div>
-      <div class="hero-stat-label">Checks completed / year</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num serif">10 yrs</div>
-      <div class="hero-stat-label">Physical-world operational data</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num serif" style="color: var(--star);">Five Star Rating</div>
-      <div class="hero-stat-label">"How are we improving today?"</div>
-    </div>
   </div>
 </section>
 
@@ -1054,11 +1114,41 @@
   </div>
 </section>
 
+<!-- ARCHITECTURE CALLOUT -->
+<div class="arch-callout">
+  This document is the strategic vision. For the platform architecture and technical layer breakdown, see the <a href="./architecture.html" target="_blank">Architecture Overview →</a>
+</div>
+
 <!-- FOOTER -->
 <footer class="foot">
   <div class="foot-l"><span class="pdot"></span>SafetyCulture Strategic Vision · AI-First · 2026–2030</div>
   <div class="foot-r serif">The future of work is already here.</div>
 </footer>
+
+<!-- SITE MENU -->
+<div class="site-menu" id="siteMenu">
+  <a href="./index.html" class="current">Strategic Vision</a>
+  <a href="./architecture.html">Architecture Overview</a>
+  <a href="./proto/index.html">Prototypes</a>
+</div>
+
+<script>
+(function(){
+  const btn = document.querySelector('.hamburger');
+  const menu = document.getElementById('siteMenu');
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('open', open);
+  });
+  document.addEventListener('click', function(e) {
+    if (!menu.contains(e.target)) { menu.classList.remove('open'); btn.classList.remove('open'); }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { menu.classList.remove('open'); btn.classList.remove('open'); }
+  });
+})();
+</script>
 
 </body>
 </html>

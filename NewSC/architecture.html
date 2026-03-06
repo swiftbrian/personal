@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafetyCulture — Agentic Architecture Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.cdnfonts.com/css/gt-alpina');
+
+:root {
+  --bg:       #0C0C0C;
+  --mid:      #111214;
+  --surface:  #161719;
+  --border:   #222428;
+  --border2:  #2a2d32;
+  --muted:    #484c52;
+  --subtle:   #6b7280;
+  --text:     #E2DED8;
+  --dim:      #9a9690;
+
+  --orange:   #FF5C35;
+  --green:    #00C97A;
+  --blue:     #4A9EFF;
+  --yellow:   #FFD166;
+  --purple:   #A78BFA;
+  --pink:     #F472B6;
+
+  /* Layer colours */
+  --l-data:   #2a6496;
+  --l-know:   #4A9EFF;
+  --l-intel:  #FFD166;
+  --l-agent:  #FF5C35;
+  --l-surf:   #00C97A;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN ── */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none; z-index:9999;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky; top:0; z-index:100;
+  background: rgba(12,12,12,0.96);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+  gap: 32px;
+}
+.nav-brand {
+  font-family: 'GT Alpina', Georgia, serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--orange);
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+.nav-sep { width:1px; height:16px; background: var(--border); flex-shrink:0; }
+.nav-title { font-size:11px; color: var(--muted); letter-spacing:0.12em; text-transform:uppercase; flex:1; }
+.nav-links { display:flex; gap:24px; list-style:none; }
+.nav-links a { font-size:10px; color:var(--muted); text-decoration:none; letter-spacing:0.15em; text-transform:uppercase; transition:color 0.15s; }
+.nav-links a:hover { color:var(--text); }
+
+/* ── HAMBURGER ── */
+.hamburger {
+  background: none; border: none; cursor: pointer;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 6px; margin-right: 12px; flex-shrink: 0;
+}
+.hamburger span {
+  display: block; width: 18px; height: 1.5px;
+  background: var(--muted); border-radius: 1px;
+  transition: all 0.25s ease;
+}
+.hamburger:hover span { background: var(--text); }
+.hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+.site-menu {
+  position: fixed; top: 52px; left: 0;
+  background: rgba(22,23,25,0.97); backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+  padding: 16px 0; min-width: 220px;
+  z-index: 99;
+  transform: translateY(-8px); opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.site-menu.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+.site-menu a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 24px; font-size: 12px;
+  letter-spacing: 0.06em; color: var(--dim);
+  text-decoration: none; transition: color 0.15s, background 0.15s;
+}
+.site-menu a:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.site-menu a.current { color: var(--orange); }
+.site-menu a.current::before {
+  content: ''; display: inline-block;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--orange);
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 60px 72px;
+  border-bottom: 1px solid var(--border);
+  max-width: 760px;
+}
+.hero-kicker {
+  font-size:10px; letter-spacing:0.28em; text-transform:uppercase;
+  color: var(--orange); margin-bottom:20px;
+  display:flex; align-items:center; gap:12px;
+}
+.hero-kicker::before { content:''; width:28px; height:1px; background:var(--orange); display:block; }
+.hero h1 {
+  font-family: 'GT Alpina', Georgia, serif;
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin-bottom: 24px;
+}
+.hero h1 em { font-style:italic; color:var(--orange); }
+.hero-deck {
+  font-family:'GT Alpina', Georgia, serif;
+  font-style:italic;
+  font-size:16px;
+  color:var(--subtle);
+  line-height:1.7;
+  max-width: 560px;
+}
+.hero-meta {
+  display:flex; flex-direction:column; gap:1px;
+}
+.hero-meta-item {
+  background:var(--mid);
+  padding:16px 20px;
+}
+.hmi-label { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.hmi-val { font-family:'GT Alpina',Georgia,serif; font-size:15px; color:var(--text); }
+.hmi-val.orange { color:var(--orange); }
+
+/* ── SECTION ── */
+.section {
+  padding: 72px 60px;
+  border-bottom: 1px solid var(--border);
+}
+.section-num { font-size:10px; color:var(--muted); letter-spacing:0.15em; }
+.section-title {
+  font-family:'GT Alpina',Georgia,serif;
+  font-size:28px; font-weight:400;
+  letter-spacing:-0.01em; line-height:1.15;
+  margin-bottom:12px;
+}
+.section-title em { font-style:italic; }
+.section-intro { font-size:13px; color:var(--subtle); line-height:1.8; max-width:680px; margin-bottom:48px; }
+.section-intro strong { color:var(--dim); font-weight:400; }
+
+/* ── SHIFT — BEFORE/AFTER ── */
+.shift-grid {
+  display:grid;
+  grid-template-columns:1fr 64px 1fr;
+  gap:0;
+  align-items:stretch;
+  margin-bottom:1px;
+}
+.shift-col {
+  background:var(--mid);
+  padding:36px 32px;
+}
+.shift-col.shift-after { background:var(--surface); }
+.shift-divider {
+  display:flex; align-items:center; justify-content:center;
+  background:var(--bg);
+  font-size:18px; color:var(--muted);
+  position:relative;
+}
+.shift-divider::before, .shift-divider::after {
+  content:''; position:absolute; left:50%; width:1px; background:var(--border);
+}
+.shift-divider::before { top:0; bottom:50%; transform:translateX(-50%); }
+.shift-divider::after  { top:50%; bottom:0; transform:translateX(-50%); }
+.shift-label {
+  font-size:9px; letter-spacing:0.22em; text-transform:uppercase;
+  margin-bottom:16px; display:flex; align-items:center; gap:8px;
+}
+.shift-label::before { content:''; width:14px; height:1px; background:currentColor; display:block; }
+.lbl-before { color:#FF5C35; }
+.lbl-after  { color:#00C97A; }
+.shift-title { font-family:'GT Alpina',Georgia,serif; font-size:18px; margin-bottom:20px; line-height:1.3; }
+.shift-point {
+  display:flex; gap:12px; margin-bottom:14px; align-items:flex-start;
+}
+.sp-icon { width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; margin-top:1px; }
+.sp-before { background:rgba(255,92,53,0.08); }
+.sp-after  { background:rgba(0,201,122,0.08); }
+.sp-text { font-size:12px; color:var(--subtle); line-height:1.65; }
+.sp-text strong { color:var(--dim); font-weight:400; }
+
+/* ── ARCHITECTURE STACK ── */
+.arch-wrap {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1px;
+  align-items:start;
+}
+.arch-stack { display:flex; flex-direction:column; gap:1px; }
+
+.arch-layer {
+  display:grid;
+  grid-template-columns:200px 1fr;
+  gap:0;
+  cursor:pointer;
+  transition:opacity 0.2s;
+}
+.arch-layer:hover { opacity:0.92; }
+.arch-layer.selected .al-label { opacity:1; }
+
+.al-label {
+  padding:24px 24px;
+  display:flex; flex-direction:column; justify-content:center;
+  border-right:1px solid var(--border);
+}
+.al-tag {
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  margin-bottom:8px;
+}
+.al-name {
+  font-family:'GT Alpina',Georgia,serif;
+  font-size:16px; font-weight:400; line-height:1.25;
+}
+.al-sub { font-size:10px; color:var(--muted); margin-top:4px; }
+
+.al-content {
+  padding:24px 28px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.al-chip {
+  font-size:10px; letter-spacing:0.1em;
+  padding:5px 12px; border-radius:4px;
+  border:1px solid; white-space:nowrap;
+  transition: all 0.2s;
+}
+
+/* Layer colour theming */
+.layer-data   { background:rgba(42,100,150,0.08); }
+.layer-know   { background:rgba(74,158,255,0.06); }
+.layer-intel  { background:rgba(255,209,102,0.06); }
+.layer-agent  { background:rgba(255,92,53,0.07); }
+.layer-surf   { background:rgba(0,201,122,0.06); }
+
+.tag-data  { color:var(--l-data);  } .chip-data  { color:var(--l-data);  border-color:rgba(42,100,150,0.3);  background:rgba(42,100,150,0.08); }
+.tag-know  { color:var(--l-know);  } .chip-know  { color:var(--l-know);  border-color:rgba(74,158,255,0.3);  background:rgba(74,158,255,0.06); }
+.tag-intel { color:var(--l-intel); } .chip-intel { color:var(--l-intel); border-color:rgba(255,209,102,0.3); background:rgba(255,209,102,0.06); }
+.tag-agent { color:var(--l-agent); } .chip-agent { color:var(--l-agent); border-color:rgba(255,92,53,0.3);   background:rgba(255,92,53,0.07); }
+.tag-surf  { color:var(--l-surf);  } .chip-surf  { color:var(--l-surf);  border-color:rgba(0,201,122,0.3);   background:rgba(0,201,122,0.06); }
+
+.arch-label-bar {
+  display:flex; align-items:center; justify-content:flex-end;
+  padding:0 12px 8px 0;
+}
+.arch-legend {
+  display:flex; flex-direction:column; gap:1px;
+  align-self:start;
+  position:sticky; top:68px;
+}
+
+/* LAYER DETAIL PANEL */
+.layer-detail {
+  background:var(--mid);
+  padding:32px 28px;
+  border:1px solid var(--border);
+  display:none;
+  position:sticky;
+  top:68px;
+  height:fit-content;
+}
+.layer-detail.visible { display:block; }
+.ld-inner { display:flex; flex-direction:column; gap:16px; }
+.ld-tag { font-size:9px; letter-spacing:0.22em; text-transform:uppercase; margin-bottom:12px; }
+.ld-name { font-family:'GT Alpina',Georgia,serif; font-size:26px; font-weight:400; margin-bottom:14px; line-height:1.2; }
+.ld-desc { font-size:12px; color:var(--subtle); line-height:1.8; margin-bottom:16px; }
+.ld-desc strong { color:var(--dim); font-weight:400; }
+.ld-who {
+  padding:10px 14px;
+  background:var(--surface);
+  font-size:10px; color:var(--muted); letter-spacing:0.08em;
+  border-radius:4px;
+}
+.ld-who strong { color:var(--dim); font-weight:400; }
+.ld-items {
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+.ld-item {
+  background:var(--surface);
+  padding:14px 16px;
+  display:flex; gap:12px; align-items:flex-start;
+}
+.ld-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+.ld-item-text { font-size:12px; color:var(--subtle); line-height:1.65; }
+.ld-item-text strong { color:var(--dim); font-weight:400; display:block; margin-bottom:3px; }
+
+/* ── DATA FLOW ── */
+.flow-wrap {
+  background:var(--mid);
+  padding:1px;
+  display:flex; flex-direction:column; gap:1px;
+}
+.flow-step {
+  display:grid;
+  grid-template-columns:180px 40px 1fr;
+  gap:0;
+  background:var(--bg);
+  align-items:stretch;
+  cursor:default;
+}
+.fs-layer {
+  padding:20px 20px;
+  display:flex; align-items:center;
+  border-right:1px solid var(--border);
+}
+.fs-layer-tag {
+  font-size:9px; letter-spacing:0.16em; text-transform:uppercase;
+  padding:3px 8px; border-radius:3px;
+}
+.fs-arrow {
+  display:flex; align-items:center; justify-content:center;
+  color:var(--border2); font-size:16px;
+  border-right:1px solid var(--border);
+  flex-shrink:0;
+}
+.fs-content { padding:20px 24px; }
+.fs-event {
+  font-size:12px; color:var(--text);
+  margin-bottom:6px;
+}
+.fs-detail { font-size:11px; color:var(--subtle); line-height:1.6; }
+.fs-detail em { font-style:italic; color:var(--muted); }
+.fs-time {
+  display:inline-block;
+  font-size:9px; color:var(--muted);
+  background:var(--surface); padding:2px 7px; border-radius:3px;
+  margin-top:6px;
+}
+
+.flow-scenario {
+  background:var(--surface);
+  padding:16px 24px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:16px;
+}
+.flow-scenario-label { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); }
+.flow-scenario-title { font-family:'GT Alpina',Georgia,serif; font-size:15px; }
+
+/* ── AGENT ANATOMY ── */
+.agent-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin-bottom:1px; }
+.agent-card {
+  background:var(--mid); padding:28px 26px;
+  border-top:2px solid transparent;
+  transition:background 0.15s;
+}
+.agent-card:hover { background:var(--surface); }
+.ac-icon { font-size:24px; margin-bottom:14px; }
+.ac-tag { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--orange); margin-bottom:8px; }
+.ac-name { font-family:'GT Alpina',Georgia,serif; font-size:16px; margin-bottom:10px; line-height:1.3; }
+.ac-desc { font-size:11px; color:var(--subtle); line-height:1.7; margin-bottom:14px; }
+.ac-triggers { display:flex; flex-direction:column; gap:4px; }
+.ac-trigger { font-size:10px; color:var(--muted); display:flex; align-items:flex-start; gap:6px; line-height:1.4; }
+.ac-trigger::before { content:'→'; color:var(--orange); flex-shrink:0; }
+
+.orchestration-card {
+  background:var(--mid); padding:32px 36px;
+  display:grid; grid-template-columns:1fr 1fr; gap:40px;
+  align-items:start;
+}
+.oc-title { font-family:'GT Alpina',Georgia,serif; font-size:20px; margin-bottom:10px; }
+.oc-title em { font-style:italic; color:var(--orange); }
+.oc-desc { font-size:12px; color:var(--subtle); line-height:1.75; }
+.oc-desc strong { color:var(--dim); font-weight:400; }
+.oc-flow { display:flex; flex-direction:column; gap:4px; }
+.oc-step {
+  display:flex; gap:12px; align-items:flex-start; padding:10px 14px;
+  background:var(--surface); border-radius:4px; position:relative;
+}
+.oc-step:not(:last-child)::after {
+  content:''; position:absolute; left:27px; top:100%; width:1px; height:4px;
+  background:var(--border2);
+}
+.oc-n {
+  width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; flex-shrink:0;
+  background:rgba(255,92,53,0.1); color:var(--orange);
+  border:1px solid rgba(255,92,53,0.2);
+}
+.oc-text { font-size:11px; color:var(--subtle); line-height:1.5; padding-top:2px; }
+.oc-text strong { color:var(--dim); font-weight:400; }
+
+/* ── WHAT STAYS / WHAT'S NEW ── */
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; }
+.compare-col { background:var(--mid); padding:32px 28px; }
+.compare-col-title { font-family:'GT Alpina',Georgia,serif; font-size:16px; margin-bottom:8px; }
+.compare-col-sub { font-size:11px; color:var(--muted); margin-bottom:24px; line-height:1.6; }
+.compare-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:12px 0;
+  border-bottom:1px solid var(--border);
+}
+.compare-item:last-child { border-bottom:none; }
+.ci-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+.ci-body { flex:1; }
+.ci-title { font-size:12px; color:var(--dim); margin-bottom:2px; }
+.ci-sub { font-size:11px; color:var(--muted); line-height:1.5; }
+.ci-badge {
+  font-size:9px; letter-spacing:0.1em; text-transform:uppercase;
+  padding:2px 7px; border-radius:3px; flex-shrink:0; align-self:flex-start;
+}
+
+/* ── TEAM MAP ── */
+.team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; }
+.team-card { background:var(--mid); padding:24px 22px; }
+.tc-team { font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--orange); margin-bottom:8px; }
+.tc-name { font-family:'GT Alpina',Georgia,serif; font-size:15px; margin-bottom:10px; }
+.tc-owns { font-size:10px; color:var(--muted); margin-bottom:10px; line-height:1.6; }
+.tc-items { display:flex; flex-direction:column; gap:4px; }
+.tc-item { font-size:10px; color:var(--subtle); display:flex; gap:6px; align-items:flex-start; }
+.tc-item::before { content:'·'; color:var(--orange); flex-shrink:0; }
+
+/* ── PRINCIPLES ── */
+.principles-grid { display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(2,auto); gap:1px; }
+.principle-card { background:var(--mid); padding:28px 26px; }
+.pc-num {
+  font-family:'GT Alpina',Georgia,serif; font-size:40px;
+  color:var(--orange); opacity:0.15; line-height:1; margin-bottom:12px;
+}
+.pc-title { font-family:'GT Alpina',Georgia,serif; font-size:16px; margin-bottom:8px; }
+.pc-desc { font-size:11px; color:var(--subtle); line-height:1.7; }
+
+/* ── MANIFESTO ── */
+.manifesto {
+  padding:72px 60px;
+  background:var(--mid);
+  border-bottom:1px solid var(--border);
+}
+.manifesto-q {
+  font-family:'GT Alpina',Georgia,serif;
+  font-style:italic;
+  font-size:clamp(18px,2.4vw,28px);
+  line-height:1.6; max-width:740px;
+  color:var(--text);
+  padding-left:32px; position:relative;
+}
+.manifesto-q::before {
+  content:''; position:absolute;
+  left:0; top:4px; width:2px; height:calc(100% - 8px);
+  background:var(--orange);
+}
+.manifesto-by {
+  margin-top:20px; padding-left:32px;
+  font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted);
+}
+
+/* ── FOOTER ── */
+.footer {
+  padding:24px 60px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.footer-l { font-size:10px; color:var(--muted); letter-spacing:0.1em; }
+.footer-r { font-family:'GT Alpina',Georgia,serif; font-style:italic; font-size:13px; color:var(--orange); }
+.pdot { display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--orange); margin-right:8px; animation:pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.6)} }
+
+/* ── UTILITIES ── */
+.g1 { gap:1px; }
+.mt1 { margin-top:1px; }
+.mt2 { margin-top:2px; }
+.label {
+  font-size:9px; letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:14px;
+}
+
+/* ── PERSONALISATION ── */
+.pers-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  margin-bottom: 1px;
+}
+.pers-level {
+  background: var(--mid);
+  padding: 28px 26px;
+  position: relative;
+  overflow: hidden;
+}
+.pers-level::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.pl-1::before { background: var(--l-data); }
+.pl-2::before { background: var(--l-know); }
+.pl-3::before { background: var(--orange); }
+
+.pl-num {
+  font-family: 'GT Alpina', Georgia, serif;
+  font-size: 48px; font-weight: 400;
+  line-height: 1; margin-bottom: 12px;
+  opacity: 0.12;
+}
+.pl-tag { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 8px; }
+.pl-title { font-family: 'GT Alpina', Georgia, serif; font-size: 17px; margin-bottom: 10px; line-height: 1.25; }
+.pl-desc { font-size: 11px; color: var(--subtle); line-height: 1.7; margin-bottom: 16px; }
+.pl-desc strong { color: var(--dim); font-weight: 400; }
+.pl-examples { display: flex; flex-direction: column; gap: 4px; }
+.pl-ex {
+  font-size: 10px; color: var(--muted);
+  display: flex; gap: 6px; align-items: flex-start;
+  line-height: 1.5;
+}
+.pl-ex::before { content: '→'; flex-shrink: 0; }
+
+/* VERTICAL CARDS */
+.verticals-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  margin-bottom: 1px;
+}
+.vertical-card {
+  background: var(--mid);
+  padding: 22px 18px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-top: 2px solid transparent;
+  position: relative;
+}
+.vertical-card:hover { background: var(--surface); }
+.vertical-card.active { background: var(--surface); }
+.vc-icon { font-size: 22px; margin-bottom: 10px; }
+.vc-name { font-family: 'GT Alpina', Georgia, serif; font-size: 14px; margin-bottom: 6px; }
+.vc-tag { font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
+
+/* VERTICAL DETAIL */
+.vertical-detail {
+  background: var(--surface);
+  display: none;
+  margin-bottom: 1px;
+}
+.vertical-detail.active { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; }
+.vd-col { background: var(--mid); padding: 24px 26px; }
+.vd-label { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.vd-title { font-family: 'GT Alpina', Georgia, serif; font-size: 15px; margin-bottom: 14px; }
+.vd-item {
+  font-size: 11px; color: var(--subtle);
+  display: flex; gap: 8px; align-items: flex-start;
+  margin-bottom: 8px; line-height: 1.5;
+}
+.vd-item::before { content: '·'; color: var(--orange); flex-shrink: 0; }
+.vd-chip {
+  display: inline-block;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 3px; margin-bottom: 6px;
+  border: 1px solid;
+}
+
+/* CONTEXT LAYER DIAGRAM */
+.context-diagram {
+  background: var(--mid);
+  padding: 32px 36px;
+  display: grid;
+  grid-template-columns: 1fr 200px 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.cd-stack { display: flex; flex-direction: column; gap: 2px; }
+.cd-layer {
+  background: var(--surface);
+  padding: 10px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 11px;
+}
+.cd-layer-name { color: var(--dim); }
+.cd-layer-badge {
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 3px;
+}
+.cd-arrow {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; color: var(--muted); font-size: 11px; text-align: center;
+}
+.cd-arrow-line {
+  width: 1px; height: 40px; background: linear-gradient(var(--border), var(--orange));
+}
+.cd-arrow-head { color: var(--orange); font-size: 18px; line-height: 1; }
+.cd-context {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cd-ctx-item {
+  background: var(--surface);
+  border-left: 2px solid var(--orange);
+  padding: 8px 12px;
+  font-size: 11px; color: var(--subtle); line-height: 1.5;
+}
+.cd-ctx-item strong { color: var(--dim); display: block; font-weight: 400; font-size: 10px; margin-bottom: 2px; }
+
+@media(max-width:900px){
+  .pers-intro-grid,.verticals-grid,.vertical-detail { grid-template-columns:1fr; }
+  .context-diagram { grid-template-columns:1fr; }
+  .nav,.hero,.section,.manifesto,.footer { padding-left:24px; padding-right:24px; }
+  .hero { grid-template-columns:1fr; gap:32px; }
+  .shift-grid { grid-template-columns:1fr; }
+  .arch-wrap,.compare-grid,.orchestration-card { grid-template-columns:1fr; }
+  .shift-divider { height:48px; }
+  .shift-divider::before,.shift-divider::after { display:none; }
+  .arch-legend { display:none; }
+  .agent-grid,.team-grid,.principles-grid { grid-template-columns:1fr; }
+  .flow-step { grid-template-columns:120px 32px 1fr; }
+  .nav-links { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="hamburger" aria-label="Site navigation">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-brand">SafetyCulture</div>
+  <div class="nav-sep"></div>
+  <div class="nav-title">Architecture</div>
+  <ul class="nav-links">
+    <li><a href="#shift">The Shift</a></li>
+    <li><a href="#layers">Architecture</a></li>
+    <li><a href="#flow">Data Flow</a></li>
+    <li><a href="#agents">Agents</a></li>
+    <li><a href="#personalisation">Personalisation</a></li>
+    <li><a href="#delta">What Changes</a></li>
+    <li><a href="#principles">Principles</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-kicker">Product Architecture — Internal</div>
+    <h1>The <em>Agentic</em><br>Platform Model</h1>
+    <p class="hero-deck">A shared mental model for how SafetyCulture's platform evolves — from a tool that humans use to gather data, to an intelligence layer that agents use to guide humans.</p>
+  </div>
+</section>
+
+<!-- ── 01 THE SHIFT ── -->
+<section class="section" id="shift">
+  <div class="label">01</div>
+  <div class="section-title">The Fundamental Shift</div>
+  <p class="section-intro">The agentic era doesn't just add new features to our existing model — it <strong>inverts the relationship</strong> between humans and software. Understanding this inversion is the starting point for everything else in this document.</p>
+
+  <div class="shift-grid">
+    <div class="shift-col">
+      <div class="shift-label lbl-before">Today — Human-driven</div>
+      <div class="shift-title">Humans use software<br>to collect data</div>
+      <div class="shift-point">
+        <div class="sp-icon sp-before">👤</div>
+        <div class="sp-text"><strong>Workers initiate every interaction.</strong> An inspection happens because a person opens the app, selects a template, and fills it in. The platform is passive — it waits.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-before">📋</div>
+        <div class="sp-text"><strong>Templates are the product.</strong> The 10,000-template library is the primary value — structured forms that capture what humans observe.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-before">📊</div>
+        <div class="sp-text"><strong>Data flows up.</strong> Information moves from worker → form → database → report → manager. It's slow, and a lot is lost in translation.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-before">⚡</div>
+        <div class="sp-text"><strong>Insights are retrospective.</strong> By the time a manager sees a pattern, the window to prevent an incident has usually passed.</div>
+      </div>
+    </div>
+    <div class="shift-divider">→</div>
+    <div class="shift-col shift-after">
+      <div class="shift-label lbl-after">Tomorrow — Agent-driven</div>
+      <div class="shift-title">Agents use our data<br>to guide humans</div>
+      <div class="shift-point">
+        <div class="sp-icon sp-after">🤖</div>
+        <div class="sp-text"><strong>Agents initiate most interactions.</strong> The platform continuously monitors, detects, and acts. Humans confirm, decide, and resolve — not collect and report.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-after">🧠</div>
+        <div class="sp-text"><strong>Operational intelligence is the product.</strong> The value is what we know — 10 years of physical-world data that no competitor can replicate — not the templates that capture it.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-after">🔄</div>
+        <div class="sp-text"><strong>Intelligence flows both directions.</strong> Agents surface the right information to the right person at the right moment. Context moves to the worker, not just the manager.</div>
+      </div>
+      <div class="shift-point">
+        <div class="sp-icon sp-after">🎯</div>
+        <div class="sp-text"><strong>Insights are predictive.</strong> The Five Star Rating drops before an incident occurs. The agent intervenes. The cycle of reactive response is broken.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 02 ARCHITECTURE LAYERS ── -->
+<section class="section" id="layers">
+  <div class="label">02</div>
+  <div class="section-title">The Platform Architecture</div>
+  <p class="section-intro">Five layers, each building on the one below. The bottom two layers are where our data advantage lives. The middle layer is where intelligence is created. The top two are where that intelligence reaches people. <strong>Click any layer to explore it.</strong></p>
+
+  <div class="arch-wrap">
+    <div class="arch-stack" id="archStack">
+
+        <!-- LAYER 5: SURFACES -->
+        <div class="arch-layer layer-surf" onclick="selectLayer('surf')" id="layer-surf">
+          <div class="al-label">
+            <div class="al-tag tag-surf">Layer 5</div>
+            <div class="al-name">Surfaces &amp; Experiences</div>
+            <div class="al-sub">What people see and use</div>
+          </div>
+          <div class="al-content">
+            <div class="al-chip chip-surf">Frontline Co-Pilot</div>
+            <div class="al-chip chip-surf">Manager Dashboard</div>
+            <div class="al-chip chip-surf">Five Star Rating</div>
+            <div class="al-chip chip-surf">Agent Marketplace</div>
+            <div class="al-chip chip-surf">Partner API</div>
+            <div class="al-chip chip-surf">Insurance Portal</div>
+          </div>
+        </div>
+
+        <!-- LAYER 4: AGENTS -->
+        <div class="arch-layer layer-agent" onclick="selectLayer('agent')" id="layer-agent">
+          <div class="al-label">
+            <div class="al-tag tag-agent">Layer 4</div>
+            <div class="al-name">Agent Orchestration</div>
+            <div class="al-sub">Autonomous reasoning &amp; action</div>
+          </div>
+          <div class="al-content">
+            <div class="al-chip chip-agent">Site Safety Agent</div>
+            <div class="al-chip chip-agent">Compliance Agent</div>
+            <div class="al-chip chip-agent">Corrective Loop Agent</div>
+            <div class="al-chip chip-agent">Risk Prediction Agent</div>
+            <div class="al-chip chip-agent">Handover Agent</div>
+            <div class="al-chip chip-agent">Custom Agents (SDK)</div>
+          </div>
+        </div>
+
+        <!-- LAYER 3: INTELLIGENCE -->
+        <div class="arch-layer layer-intel" onclick="selectLayer('intel')" id="layer-intel">
+          <div class="al-label">
+            <div class="al-tag tag-intel">Layer 3</div>
+            <div class="al-name">Intelligence &amp; Scoring</div>
+            <div class="al-sub">Models, predictions, ratings</div>
+          </div>
+          <div class="al-content">
+            <div class="al-chip chip-intel">Five Star Rating Engine</div>
+            <div class="al-chip chip-intel">Predictive Risk Models</div>
+            <div class="al-chip chip-intel">Industry Benchmarks</div>
+            <div class="al-chip chip-intel">Anomaly Detection</div>
+            <div class="al-chip chip-intel">NLP Classification</div>
+          </div>
+        </div>
+
+        <!-- LAYER 2: KNOWLEDGE GRAPH -->
+        <div class="arch-layer layer-know" onclick="selectLayer('know')" id="layer-know">
+          <div class="al-label">
+            <div class="al-tag tag-know">Layer 2</div>
+            <div class="al-name">Operational Knowledge Graph</div>
+            <div class="al-sub">Context, memory, relationships</div>
+          </div>
+          <div class="al-content">
+            <div class="al-chip chip-know">Site Profiles</div>
+            <div class="al-chip chip-know">Worker Context</div>
+            <div class="al-chip chip-know">Asset History</div>
+            <div class="al-chip chip-know">Regulatory Mapping</div>
+            <div class="al-chip chip-know">Incident Relationships</div>
+            <div class="al-chip chip-know">LLM Context Store</div>
+          </div>
+        </div>
+
+        <!-- LAYER 1: DATA PLATFORM -->
+        <div class="arch-layer layer-data" onclick="selectLayer('data')" id="layer-data">
+          <div class="al-label">
+            <div class="al-tag tag-data">Layer 1</div>
+            <div class="al-name">Data Platform</div>
+            <div class="al-sub">The moat. 10 years of ground truth.</div>
+          </div>
+          <div class="al-content">
+            <div class="al-chip chip-data">1B+ Inspections</div>
+            <div class="al-chip chip-data">Asset Records</div>
+            <div class="al-chip chip-data">Training Completions</div>
+            <div class="al-chip chip-data">Incident History</div>
+            <div class="al-chip chip-data">IoT &amp; Sensor Streams</div>
+            <div class="al-chip chip-data">Corrective Actions</div>
+            <div class="al-chip chip-data">76k+ Org Profiles</div>
+          </div>
+        </div>
+
+    </div>
+
+    <!-- DETAIL PANEL — full width below stack -->
+    <div class="layer-detail" id="layerDetail">
+      <div class="ld-inner">
+        <div class="ld-left">
+          <div class="ld-tag" id="ldTag"></div>
+          <div class="ld-name" id="ldName"></div>
+          <div class="ld-desc" id="ldDesc"></div>
+          <div class="ld-who" id="ldWho"></div>
+        </div>
+        <div class="ld-items" id="ldItems"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 03 DATA FLOW ── -->
+<section class="section" id="flow">
+  <div class="label">03</div>
+  <div class="section-title">How Data Flows</div>
+  <p class="section-intro">A single real-world event — a temperature excursion in a cold store at 2am — travels through every layer of the platform. This trace shows exactly what happens, which layer handles it, and how long it takes.</p>
+
+  <div class="flow-wrap">
+    <div class="flow-scenario">
+      <div class="flow-scenario-label">Scenario</div>
+      <div class="flow-scenario-title">Cold store temperature breach — 2:14am, Melbourne Site B</div>
+    </div>
+
+    <div class="flow-step">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(42,100,150,0.12);color:var(--l-data);border:1px solid rgba(42,100,150,0.2);">Data Platform</div></div>
+      <div class="fs-arrow">↓</div>
+      <div class="fs-content">
+        <div class="fs-event">IoT temperature sensor records 6.2°C — above the 4°C threshold</div>
+        <div class="fs-detail">Sensor reading is timestamped and written to the data platform. This is the only human-free trigger in the old model — and historically, it would sit in a log until someone checked it in the morning.</div>
+        <div class="fs-time">t = 0s</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(74,158,255,0.08);color:var(--l-know);border:1px solid rgba(74,158,255,0.2);">Knowledge Graph</div></div>
+      <div class="fs-arrow">↓</div>
+      <div class="fs-content">
+        <div class="fs-event">Event is enriched with operational context</div>
+        <div class="fs-detail">The Knowledge Graph attaches context: this is Cold Store 2, last inspected 18 hours ago, used for dairy products with a regulatory limit of 4°C. Site manager is Jamie M. The on-call inspector is Tom Chen. Previous breach at this asset: 4 months ago.</div>
+        <div class="fs-time">t &lt; 2s</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(255,209,102,0.08);color:var(--l-intel);border:1px solid rgba(255,209,102,0.2);">Intelligence</div></div>
+      <div class="fs-arrow">↓</div>
+      <div class="fs-content">
+        <div class="fs-event">Risk models classify severity and update the Five Star Rating</div>
+        <div class="fs-detail">The anomaly detection model flags this as a high-risk event. The Five Star Rating engine recalculates Site B's score — it drops from 4.1 to 3.8. The predictive model checks: is this a one-off or a trend? Previous breach + maintenance record suggests equipment fault, not procedural failure.</div>
+        <div class="fs-time">t &lt; 5s</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(255,92,53,0.1);color:var(--l-agent);border:1px solid rgba(255,92,53,0.2);">Agent Layer</div></div>
+      <div class="fs-arrow">↓</div>
+      <div class="fs-content">
+        <div class="fs-event">Site Safety Agent reasons, plans, and acts</div>
+        <div class="fs-detail">The agent determines: this requires immediate inspection at shift start. It pre-fills an inspection template for Cold Store 2 (seal check, compressor status, temperature log review). It drafts a shift brief for Jamie M. It checks if the breach duration requires regulatory notification — it does not yet, but will if unresolved by 6am. It queues an escalation trigger.</div>
+        <div class="fs-time">t &lt; 8s</div>
+      </div>
+    </div>
+
+    <div class="flow-step">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(0,201,122,0.08);color:var(--l-surf);border:1px solid rgba(0,201,122,0.2);">Surfaces</div></div>
+      <div class="fs-arrow">↓</div>
+      <div class="fs-content">
+        <div class="fs-event">Jamie opens Co-Pilot at 7:02am — brief is already waiting</div>
+        <div class="fs-detail">"Your site's Five Star Rating dropped to 3.8 overnight. Cold Store 2 had a temperature excursion at 2:14am — inspection pre-filled and ready." Jamie approves with one tap. Tom Chen receives the assignment. By 7:48am, the seal is replaced, temperature is stable, score recovers to 4.1.</div>
+        <div class="fs-time">Resolution: 94 min</div>
+      </div>
+    </div>
+
+    <div class="flow-step" style="background:rgba(0,201,122,0.03);border-top:1px solid rgba(0,201,122,0.1);">
+      <div class="fs-layer"><div class="fs-layer-tag" style="background:rgba(0,201,122,0.08);color:var(--l-surf);border:1px solid rgba(0,201,122,0.15);">Feedback Loop</div></div>
+      <div class="fs-arrow" style="color:var(--green);">↺</div>
+      <div class="fs-content">
+        <div class="fs-event" style="color:var(--green);">Resolution data flows back — the system learns</div>
+        <div class="fs-detail">The corrective action (seal replacement) is written back to the Knowledge Graph. The asset's maintenance history is updated. The Intelligence layer notes: seal failure follows temperature excursion at this asset type after ~18 months. It flags other assets of the same type for proactive inspection. <em>The next breach is prevented before it happens.</em></div>
+        <div class="fs-time" style="background:rgba(0,201,122,0.1);color:var(--green);">Continuous learning</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 04 AGENT ANATOMY ── -->
+<section class="section" id="agents">
+  <div class="label">04</div>
+  <div class="section-title">The Agent Layer, <em>Unpacked</em></div>
+  <p class="section-intro">Agents are not chatbots or search tools. They are <strong>autonomous reasoning loops</strong> — they observe, plan, act, and verify, without waiting for a human to initiate. Each agent has a defined scope, a set of triggers, and a set of permissible actions.</p>
+
+  <div class="agent-grid">
+    <div class="agent-card" style="border-top-color:var(--orange);">
+      <div class="ac-icon">🏗️</div>
+      <div class="ac-tag">Core Agent</div>
+      <div class="ac-name">Site Safety Agent</div>
+      <div class="ac-desc">Monitors a single site continuously. Owns the Five Star Rating for that site and takes action when it drops. The primary interface between the platform and the frontline.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Rating drops below threshold → brief site manager</div>
+        <div class="ac-trigger">Inspection overdue → assign nearest qualified worker</div>
+        <div class="ac-trigger">Shift start → generate personalised brief</div>
+        <div class="ac-trigger">Incident filed → begin corrective action loop</div>
+      </div>
+    </div>
+    <div class="agent-card" style="border-top-color:var(--blue);">
+      <div class="ac-icon">📋</div>
+      <div class="ac-tag">Core Agent</div>
+      <div class="ac-name">Compliance Agent</div>
+      <div class="ac-desc">Maintains continuous audit-readiness. Monitors documentation gaps, overdue corrective actions, and regulatory deadlines. Assembles evidence packs on demand.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Corrective action overdue → escalate with 48hr notice</div>
+        <div class="ac-trigger">Audit announced → assemble evidence pack</div>
+        <div class="ac-trigger">Regulatory change → flag affected workflows</div>
+        <div class="ac-trigger">Documentation gap → notify responsible owner</div>
+      </div>
+    </div>
+    <div class="agent-card" style="border-top-color:var(--green);">
+      <div class="ac-icon">🔄</div>
+      <div class="ac-tag">Core Agent</div>
+      <div class="ac-name">Corrective Loop Agent</div>
+      <div class="ac-desc">Closes the gap between issue detection and resolution. Owns the corrective action lifecycle — from creation through assignment, verification, and sign-off.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Issue detected → create action, assign owner</div>
+        <div class="ac-trigger">Action unstarted after 24hrs → send reminder</div>
+        <div class="ac-trigger">Action completed → trigger verification inspection</div>
+        <div class="ac-trigger">Verification passed → close and update rating</div>
+      </div>
+    </div>
+    <div class="agent-card" style="border-top-color:var(--yellow);">
+      <div class="ac-icon">📈</div>
+      <div class="ac-tag">Core Agent</div>
+      <div class="ac-name">Risk Prediction Agent</div>
+      <div class="ac-desc">Surfaces risk before it becomes an incident. Analyses trends across inspections, assets, and team behaviour to generate proactive alerts and recommended interventions.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Site trending downward → alert portfolio manager</div>
+        <div class="ac-trigger">Asset approaching failure pattern → schedule maintenance</div>
+        <div class="ac-trigger">Near-miss spike → identify root cause</div>
+        <div class="ac-trigger">Weekly → generate portfolio risk brief</div>
+      </div>
+    </div>
+    <div class="agent-card" style="border-top-color:var(--purple);">
+      <div class="ac-icon">🤝</div>
+      <div class="ac-tag">Core Agent</div>
+      <div class="ac-name">Handover Agent</div>
+      <div class="ac-desc">Eliminates shift handover as a failure point. Automatically assembles end-of-shift summaries, outstanding items, and next-shift priorities from the day's activity.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Shift ending → compile activity summary</div>
+        <div class="ac-trigger">Open items → prioritise and assign to next shift</div>
+        <div class="ac-trigger">Handover approved → notify incoming shift lead</div>
+        <div class="ac-trigger">Critical item unresolved → escalate immediately</div>
+      </div>
+    </div>
+    <div class="agent-card" style="border-top-color:var(--muted);">
+      <div class="ac-icon">🔧</div>
+      <div class="ac-tag">Partner / Custom</div>
+      <div class="ac-name">Custom Agents (SDK)</div>
+      <div class="ac-desc">Built by customers, FDEs, or partners using the Agent SDK. Compose with SafetyCulture's data layer. Examples: Confined Space Entry Agent, Supplier Audit Agent, Brand Standards Agent.</div>
+      <div class="ac-triggers">
+        <div class="ac-trigger">Customer-defined triggers and actions</div>
+        <div class="ac-trigger">Access to full Knowledge Graph context</div>
+        <div class="ac-trigger">Can invoke core agents as sub-agents</div>
+        <div class="ac-trigger">Revenue-sharing model via Marketplace</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORCHESTRATION -->
+  <div class="orchestration-card mt1">
+    <div>
+      <div class="oc-title">How agents <em>orchestrate</em> each other</div>
+      <div class="oc-desc">Agents don't operate in isolation. They form a <strong>multi-agent system</strong> — the Site Safety Agent can invoke the Corrective Loop Agent, which can invoke the Compliance Agent to check regulatory requirements, which feeds back to the Risk Prediction Agent. The platform becomes a nervous system, not just a sensor.</div>
+      <br>
+      <div class="oc-desc">Each agent operates within a defined <strong>trust boundary</strong>: they can read any data they're permitted to access, propose any action within their scope, and execute only after human approval thresholds are met. The human is always in the loop — but for exceptions, not every step.</div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:12px;">Example: End-to-end corrective loop</div>
+      <div class="oc-flow">
+        <div class="oc-step"><div class="oc-n">1</div><div class="oc-text"><strong>Site Safety Agent</strong> detects Five Star Rating drop. Identifies fire door inspection as the cause.</div></div>
+        <div class="oc-step"><div class="oc-n">2</div><div class="oc-text"><strong>Compliance Agent</strong> checks: is this a regulatory breach? Confirms 48hr notification window applies.</div></div>
+        <div class="oc-step"><div class="oc-n">3</div><div class="oc-text"><strong>Corrective Loop Agent</strong> creates action, identifies nearest certified inspector, assigns with deadline.</div></div>
+        <div class="oc-step"><div class="oc-n">4</div><div class="oc-text"><strong>Frontline Co-Pilot</strong> notifies the assigned inspector with context, pre-filled checklist, and permit.</div></div>
+        <div class="oc-step"><div class="oc-n">5</div><div class="oc-text"><strong>Corrective Loop Agent</strong> verifies completion. Compliance Agent confirms documentation. Rating updates.</div></div>
+        <div class="oc-step"><div class="oc-n">6</div><div class="oc-text"><strong>Risk Prediction Agent</strong> logs pattern. Flags similar assets for proactive review. Closes the loop.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 05 PERSONALISATION ── -->
+<section class="section" id="personalisation">
+  <div class="label">05</div>
+  <div class="section-title">Personalisation &amp; <em>Context</em></div>
+  <p class="section-intro">A generic platform is a commodity. The intelligence layer only becomes irreplaceable when it knows <strong>who you are, what industry you're in, and what your organisation specifically needs.</strong> Personalisation is not a feature — it's a cross-cutting architectural concern that shapes every agent, every surface, and every rating calculation.</p>
+
+  <!-- THREE LEVELS -->
+  <div class="pers-intro-grid">
+    <div class="pers-level pl-1">
+      <div class="pl-num">1</div>
+      <div class="pl-tag" style="color:var(--l-data);">Level 1 · SafetyCulture configures</div>
+      <div class="pl-title">Industry Vertical</div>
+      <div class="pl-desc">The platform arrives knowing your industry. Pre-loaded standards, regulations, agent sets, and Five Star Rating weightings — all specific to your sector. <strong>You don't configure what matters. We already know.</strong></div>
+      <div class="pl-examples">
+        <div class="pl-ex">Construction: machinery guarding, permit-to-work, scaffold inspection weighted highest</div>
+        <div class="pl-ex">Food manufacturing: HACCP, temperature control, allergen management agents active by default</div>
+        <div class="pl-ex">Hospitality: fire safety, food hygiene, public liability drives the rating</div>
+        <div class="pl-ex">Mining: fatigue management, blast safety, isolation procedures pre-loaded</div>
+      </div>
+    </div>
+    <div class="pers-level pl-2">
+      <div class="pl-num">2</div>
+      <div class="pl-tag" style="color:var(--l-know);">Level 2 · Customer configures</div>
+      <div class="pl-title">Company Configuration</div>
+      <div class="pl-desc">Your specific SOPs, org structure, risk thresholds, escalation paths, and vocabulary. The agent speaks your language — it says <strong>"notify your Area Manager"</strong> not "contact a supervisor", because it knows your org chart.</div>
+      <div class="pl-examples">
+        <div class="pl-ex">Custom escalation chains mapped to org hierarchy</div>
+        <div class="pl-ex">Proprietary SOP library ingested and indexed in Knowledge Graph</div>
+        <div class="pl-ex">Company-specific risk thresholds override vertical defaults</div>
+        <div class="pl-ex">Brand voice and terminology reflected in agent communication</div>
+      </div>
+    </div>
+    <div class="pers-level pl-3">
+      <div class="pl-num">3</div>
+      <div class="pl-tag" style="color:var(--orange);">Level 3 · Platform learns</div>
+      <div class="pl-title">Individual Context</div>
+      <div class="pl-desc">Role, certifications, shift history, site assignment, past behaviour. <strong>The Co-Pilot brief for a first-week worker looks completely different from the one for a five-year site manager.</strong> Context is earned, not configured.</div>
+      <div class="pl-examples">
+        <div class="pl-ex">Certified vs uncertified workers receive different procedure guidance</div>
+        <div class="pl-ex">Shift history informs handover detail and urgency</div>
+        <div class="pl-ex">Past behaviour patterns surface relevant proactive alerts</div>
+        <div class="pl-ex">Language preference, role scope, site familiarity all shape the brief</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW CONTEXT FLOWS -->
+  <div class="context-diagram mt1">
+    <div>
+      <div class="label" style="margin-bottom:14px;">How context shapes every layer</div>
+      <div class="cd-stack">
+        <div class="cd-layer">
+          <div class="cd-layer-name">Surfaces &amp; Co-Pilot</div>
+          <div class="cd-layer-badge" style="background:rgba(0,201,122,0.08);color:var(--green);border:1px solid rgba(0,201,122,0.2);">Rendered per person</div>
+        </div>
+        <div class="cd-layer">
+          <div class="cd-layer-name">Agent Orchestration</div>
+          <div class="cd-layer-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">Prompted with context</div>
+        </div>
+        <div class="cd-layer">
+          <div class="cd-layer-name">Intelligence &amp; Rating</div>
+          <div class="cd-layer-badge" style="background:rgba(255,209,102,0.08);color:var(--yellow);border:1px solid rgba(255,209,102,0.2);">Weighted per vertical</div>
+        </div>
+        <div class="cd-layer">
+          <div class="cd-layer-name">Knowledge Graph</div>
+          <div class="cd-layer-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Indexed per customer</div>
+        </div>
+        <div class="cd-layer">
+          <div class="cd-layer-name">Data Platform</div>
+          <div class="cd-layer-badge" style="background:rgba(42,100,150,0.12);color:var(--l-data);border:1px solid rgba(42,100,150,0.2);">Universal foundation</div>
+        </div>
+      </div>
+    </div>
+    <div class="cd-arrow">
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);">Context flows up through every layer</div>
+      <div class="cd-arrow-line"></div>
+      <div class="cd-arrow-head">↑</div>
+      <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--orange);">Personalisation layer</div>
+    </div>
+    <div>
+      <div class="label" style="margin-bottom:14px;">What changes per customer</div>
+      <div class="cd-context">
+        <div class="cd-ctx-item"><strong>Agent prompts</strong>Every agent call includes industry vertical, company SOPs, org hierarchy, and individual worker profile as context. Same agent — completely different behaviour.</div>
+        <div class="cd-ctx-item"><strong>Five Star Rating weights</strong>The five dimensions (safety, quality, compliance, training, assets) are weighted differently per vertical. A restaurant's rating prioritises food hygiene; a mine prioritises fatigue and isolation.</div>
+        <div class="cd-ctx-item"><strong>Surface rendering</strong>The Co-Pilot shows different agents, different checklists, different escalation options. The manager dashboard shows vertical-specific benchmarks and industry-relevant KPIs.</div>
+        <div class="cd-ctx-item"><strong>Benchmark cohort</strong>You are only ever compared to your industry peers — not the global average. A construction site is benchmarked against construction sites, not hospitality.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERTICAL SELECTOR -->
+  <div class="label" style="margin-top:32px;margin-bottom:0;">Explore by industry vertical</div>
+  <div class="verticals-grid mt1">
+    <div class="vertical-card active" style="border-top-color:var(--orange);" onclick="selectVertical('construction', this)">
+      <div class="vc-icon">🏗️</div>
+      <div class="vc-name">Construction</div>
+      <div class="vc-tag">High-risk · Permit-heavy</div>
+    </div>
+    <div class="vertical-card" onclick="selectVertical('food', this)">
+      <div class="vc-icon">🏭</div>
+      <div class="vc-name">Food Manufacturing</div>
+      <div class="vc-tag">HACCP · Temperature critical</div>
+    </div>
+    <div class="vertical-card" onclick="selectVertical('hospitality', this)">
+      <div class="vc-icon">🏨</div>
+      <div class="vc-name">Hospitality</div>
+      <div class="vc-tag">Public-facing · Brand standards</div>
+    </div>
+    <div class="vertical-card" onclick="selectVertical('logistics', this)">
+      <div class="vc-icon">🚚</div>
+      <div class="vc-name">Logistics</div>
+      <div class="vc-tag">Fleet · Warehouse · Last mile</div>
+    </div>
+    <div class="vertical-card" onclick="selectVertical('mining', this)">
+      <div class="vc-icon">⛏️</div>
+      <div class="vc-name">Mining</div>
+      <div class="vc-tag">Fatigue · Isolation · Blast</div>
+    </div>
+  </div>
+
+  <div class="vertical-detail active" id="vd-construction">
+    <div class="vd-col">
+      <div class="vd-label">Active Agents</div>
+      <div class="vd-title">Construction Agent Set</div>
+      <div class="vd-item">Permit-to-Work Agent — manages confined space, hot work, electrical isolation permits end-to-end</div>
+      <div class="vd-item">Scaffold Inspection Agent — weekly inspection scheduling, load rating checks, handover tags</div>
+      <div class="vd-item">Plant Pre-Start Agent — daily machinery checks, defect flagging, take-out-of-service triggers</div>
+      <div class="vd-item">Induction Agent — site-specific inductions, certification verification, visitor management</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Five Star Rating Weighting</div>
+      <div class="vd-title">What drives the score</div>
+      <div class="vd-item">Permit-to-work compliance — 25% (highest weight)</div>
+      <div class="vd-item">Plant &amp; machinery pre-starts — 22%</div>
+      <div class="vd-item">Incident &amp; near-miss reporting — 20%</div>
+      <div class="vd-item">Induction &amp; certification currency — 18%</div>
+      <div class="vd-item">Housekeeping &amp; access control — 15%</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Pre-loaded Standards</div>
+      <div class="vd-title">Regulatory baseline</div>
+      <div class="vd-item">AS/NZS 4600 — Cold-formed steel structures</div>
+      <div class="vd-item">Work Health and Safety Act 2011 (AU)</div>
+      <div class="vd-item">Construction Design &amp; Management Regs (UK)</div>
+      <div class="vd-item">OSHA 1926 — Construction standards (US)</div>
+      <div class="vd-item">ISO 45001 — Occupational health &amp; safety</div>
+    </div>
+  </div>
+
+  <div class="vertical-detail" id="vd-food">
+    <div class="vd-col">
+      <div class="vd-label">Active Agents</div>
+      <div class="vd-title">Food Manufacturing Agent Set</div>
+      <div class="vd-item">HACCP Monitoring Agent — critical control point checks, temperature logging, corrective action loops</div>
+      <div class="vd-item">Allergen Management Agent — changeover verification, labelling checks, supplier alerts</div>
+      <div class="vd-item">Cold Chain Agent — continuous temperature monitoring, excursion response, product hold decisions</div>
+      <div class="vd-item">Supplier Audit Agent — incoming goods inspection, supplier scorecard, hold &amp; release</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Five Star Rating Weighting</div>
+      <div class="vd-title">What drives the score</div>
+      <div class="vd-item">CCP compliance &amp; temperature control — 30%</div>
+      <div class="vd-item">Allergen &amp; contamination controls — 25%</div>
+      <div class="vd-item">Cleaning &amp; sanitation verification — 20%</div>
+      <div class="vd-item">Supplier &amp; incoming goods — 15%</div>
+      <div class="vd-item">Staff hygiene &amp; training — 10%</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Pre-loaded Standards</div>
+      <div class="vd-title">Regulatory baseline</div>
+      <div class="vd-item">HACCP — Codex Alimentarius Commission</div>
+      <div class="vd-item">Food Standards Australia New Zealand (FSANZ)</div>
+      <div class="vd-item">FDA Food Safety Modernization Act (FSMA)</div>
+      <div class="vd-item">EU General Food Law Regulation 178/2002</div>
+      <div class="vd-item">BRC Global Standard for Food Safety</div>
+    </div>
+  </div>
+
+  <div class="vertical-detail" id="vd-hospitality">
+    <div class="vd-col">
+      <div class="vd-label">Active Agents</div>
+      <div class="vd-title">Hospitality Agent Set</div>
+      <div class="vd-item">Brand Standards Agent — daily opening checks, uniform standards, guest area presentation scoring</div>
+      <div class="vd-item">Food Safety Agent — kitchen temperature logs, hygiene audits, allergen menu compliance</div>
+      <div class="vd-item">Fire Safety Agent — weekly fire door checks, extinguisher inspections, evacuation drill scheduling</div>
+      <div class="vd-item">Guest Experience Agent — links operational scores to review data, surfaces correlation insights</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Five Star Rating Weighting</div>
+      <div class="vd-title">What drives the score</div>
+      <div class="vd-item">Food hygiene &amp; safety compliance — 28%</div>
+      <div class="vd-item">Fire &amp; life safety — 25%</div>
+      <div class="vd-item">Brand standards &amp; presentation — 22%</div>
+      <div class="vd-item">Staff training currency — 15%</div>
+      <div class="vd-item">Asset &amp; equipment condition — 10%</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Pre-loaded Standards</div>
+      <div class="vd-title">Regulatory baseline</div>
+      <div class="vd-item">Food Act 2014 (NZ) / Food Standards Code (AU)</div>
+      <div class="vd-item">Regulatory Reform (Fire Safety) Order 2005 (UK)</div>
+      <div class="vd-item">FDA Food Code (US)</div>
+      <div class="vd-item">ISO 22000 — Food safety management</div>
+      <div class="vd-item">Local liquor licensing compliance frameworks</div>
+    </div>
+  </div>
+
+  <div class="vertical-detail" id="vd-logistics">
+    <div class="vd-col">
+      <div class="vd-label">Active Agents</div>
+      <div class="vd-title">Logistics Agent Set</div>
+      <div class="vd-item">Fleet Pre-Start Agent — daily vehicle checks, defect reporting, take-off-road decisions</div>
+      <div class="vd-item">Warehouse Safety Agent — forklift pre-starts, racking inspection, loading bay checks</div>
+      <div class="vd-item">Fatigue Management Agent — hours-of-service monitoring, rest break alerts, roster review</div>
+      <div class="vd-item">Dangerous Goods Agent — load documentation, segregation checks, spill response</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Five Star Rating Weighting</div>
+      <div class="vd-title">What drives the score</div>
+      <div class="vd-item">Vehicle &amp; equipment pre-starts — 28%</div>
+      <div class="vd-item">Fatigue &amp; hours compliance — 25%</div>
+      <div class="vd-item">Warehouse &amp; racking safety — 20%</div>
+      <div class="vd-item">Dangerous goods handling — 15%</div>
+      <div class="vd-item">Driver training &amp; licensing — 12%</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Pre-loaded Standards</div>
+      <div class="vd-title">Regulatory baseline</div>
+      <div class="vd-item">Heavy Vehicle National Law (AU)</div>
+      <div class="vd-item">ADG Code — Dangerous Goods (AU/NZ)</div>
+      <div class="vd-item">FMCSA Hours of Service Regulations (US)</div>
+      <div class="vd-item">EU Drivers' Hours Regulation (EC) 561/2006</div>
+      <div class="vd-item">AS 4084 — Steel storage racking</div>
+    </div>
+  </div>
+
+  <div class="vertical-detail" id="vd-mining">
+    <div class="vd-col">
+      <div class="vd-label">Active Agents</div>
+      <div class="vd-title">Mining Agent Set</div>
+      <div class="vd-item">Fatigue &amp; Fitness Agent — shift-based monitoring, impairment checks, FIFO roster compliance</div>
+      <div class="vd-item">Isolation &amp; LOTO Agent — lockout/tagout verification, energy isolation permits, re-energisation checks</div>
+      <div class="vd-item">Blast Safety Agent — exclusion zone verification, misfire protocols, post-blast re-entry clearance</div>
+      <div class="vd-item">Ground Control Agent — geotechnical inspection scheduling, support installation verification</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Five Star Rating Weighting</div>
+      <div class="vd-title">What drives the score</div>
+      <div class="vd-item">Isolation &amp; energy control compliance — 28%</div>
+      <div class="vd-item">Fatigue &amp; fitness for duty — 25%</div>
+      <div class="vd-item">Ground control &amp; geotechnical — 20%</div>
+      <div class="vd-item">Blast management &amp; exclusion zones — 17%</div>
+      <div class="vd-item">Emergency response readiness — 10%</div>
+    </div>
+    <div class="vd-col">
+      <div class="vd-label">Pre-loaded Standards</div>
+      <div class="vd-title">Regulatory baseline</div>
+      <div class="vd-item">Mining Operations Act (various AU states)</div>
+      <div class="vd-item">Resources Safety Act 1997 (WA)</div>
+      <div class="vd-item">Mine Safety and Inspection Act 1994</div>
+      <div class="vd-item">MSHA — Mine Safety and Health Administration (US)</div>
+      <div class="vd-item">ISO 45001 — Occupational health &amp; safety</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── 06 WHAT CHANGES ── -->
+<section class="section" id="delta">
+  <div class="label">06</div>
+  <div class="section-title">What Changes. What Stays.</div>
+  <p class="section-intro">The agentic architecture is built <em>around</em> the existing platform — not replacing it. The Strangler Fig approach means existing customers are never disrupted, while new capabilities are delivered on a modern foundation. Here's exactly what that means for each part of the system.</p>
+
+  <div class="compare-grid">
+    <div class="compare-col">
+      <div class="compare-col-title">What stays — and why</div>
+      <div class="compare-col-sub">These are stable, proven, and serve 76,000 organisations. They form the foundation layer — maintained, not extended.</div>
+
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--l-data);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Inspection engine &amp; template library</div>
+          <div class="ci-sub">The core workflow remains. Agents pre-fill and assign, but the execution model is intact.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Maintained</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--l-data);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Actions &amp; corrective workflow</div>
+          <div class="ci-sub">Agents orchestrate through existing Actions infrastructure. No rebuild needed.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Maintained</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--l-data);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Training &amp; asset management</div>
+          <div class="ci-sub">Agents read from and write to these systems. The data model is preserved.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Maintained</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--l-data);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Existing customer integrations</div>
+          <div class="ci-sub">All current API contracts and integrations remain stable. The agent layer sits above them.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Maintained</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--l-data);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Mobile app — worker surfaces</div>
+          <div class="ci-sub">The Co-Pilot is a new layer on the existing mobile app. Existing flows remain untouched for current users.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(74,158,255,0.08);color:var(--blue);border:1px solid rgba(74,158,255,0.2);">Extended</div>
+      </div>
+    </div>
+
+    <div class="compare-col" style="background:var(--surface);">
+      <div class="compare-col-title">What's new — and why it can't be retrofitted</div>
+      <div class="compare-col-sub">These capabilities require a modern, event-driven, LLM-native foundation. They are built as new services on top of the existing platform.</div>
+
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--orange);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Agent Platform (new service)</div>
+          <div class="ci-sub">Event-driven, streaming, LLM-native. Sits above the existing platform. Ships independently.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">New build</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--orange);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Operational Knowledge Graph (new service)</div>
+          <div class="ci-sub">Indexes and enriches SafetyCulture data optimised for agent reasoning and LLM context.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">New build</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--orange);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Five Star Rating Engine (new service)</div>
+          <div class="ci-sub">Real-time scoring across 5 dimensions. Feeds agent triggers and manager dashboards.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">New build</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--orange);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Frontline Co-Pilot (new surface)</div>
+          <div class="ci-sub">Voice-first, proactive, context-aware. Delivered as a new mode within the mobile app.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">New build</div>
+      </div>
+      <div class="compare-item">
+        <div class="ci-dot" style="background:var(--orange);"></div>
+        <div class="ci-body">
+          <div class="ci-title">Manager Dashboard (new surface)</div>
+          <div class="ci-sub">Portfolio-level intelligence with live ratings, trend prediction, and agent-generated briefs.</div>
+        </div>
+        <div class="ci-badge" style="background:rgba(255,92,53,0.08);color:var(--orange);border:1px solid rgba(255,92,53,0.2);">New build</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── 07 DESIGN PRINCIPLES ── -->
+<section class="section" id="principles">
+  <div class="label">07</div>
+  <div class="section-title">Architecture Principles</div>
+  <p class="section-intro">Six principles that constrain every design decision in the agentic platform. These are the tests every team should apply before building.</p>
+
+  <div class="principles-grid">
+    <div class="principle-card">
+      <div class="pc-num">01</div>
+      <div class="pc-title">Agents propose. Humans decide.</div>
+      <div class="pc-desc">Agents can observe, reason, draft, assign, and escalate. They cannot permanently delete, submit to regulators, or act outside defined trust boundaries without human approval. The loop always closes with a person.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">02</div>
+      <div class="pc-title">Data is the moat. Protect it.</div>
+      <div class="pc-desc">Every architectural decision is evaluated against one question: does this compound our data advantage, or does it commoditise it? We share intelligence, not raw data. We open APIs, not databases.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">03</div>
+      <div class="pc-title">New above, stable below.</div>
+      <div class="pc-desc">The new agent platform is built above the existing system, not through it. Existing customers are never the guinea pigs for architectural change. Stability is a feature, not a constraint.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">04</div>
+      <div class="pc-title">Context makes agents useful.</div>
+      <div class="pc-desc">A generic AI agent is a commodity. An agent that knows this worker, this site, this asset's history, and the regulations for this jurisdiction is irreplaceable. The Knowledge Graph is what makes our agents worth building.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">05</div>
+      <div class="pc-title">The rating is the interface.</div>
+      <div class="pc-desc">The Five Star Rating is not just a metric — it's the primary trigger, the primary feedback loop, and the primary interface between the agent layer and both workers and managers. Every agent read from it and writes to it.</div>
+    </div>
+    <div class="principle-card">
+      <div class="pc-num">06</div>
+      <div class="pc-title">Build for the ecosystem.</div>
+      <div class="pc-desc">Every component of the agent platform — the SDK, the Knowledge Graph API, the Marketplace — is designed to be used by others, not just us. Platform economics require that others can build on top of what we build.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MANIFESTO -->
+<div class="manifesto">
+  <div class="manifesto-q">The architecture described here is not a roadmap for adding AI features. It is a blueprint for becoming a fundamentally different kind of company — one whose primary product is operational intelligence, and whose primary interface is an agent that knows more about your physical world than any human team ever could.</div>
+  <div class="manifesto-by">SafetyCulture · Agentic Architecture · 2026</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-l"><span class="pdot"></span>SafetyCulture · Product Architecture · Internal · 2026–2030</div>
+  <div class="footer-r">Agents above. Foundation below.</div>
+</footer>
+
+<script>
+const layerData = {
+  surf: {
+    tag: 'Layer 5 · Surfaces',
+    tagColor: 'var(--l-surf)',
+    name: 'Surfaces & Experiences',
+    desc: 'The interfaces through which workers, managers, partners, and insurers interact with the platform. Built on top of the agent layer — they present intelligence, not raw data. <strong>New surfaces are built on a modern stack; existing mobile and web surfaces are extended, not replaced.</strong>',
+    items: [
+      { title: 'Frontline Co-Pilot', body: 'Voice-first mobile experience. Proactive shift briefs, hazard capture, and procedure guidance.' },
+      { title: 'Manager Dashboard', body: 'Portfolio view with live Five Star Ratings, trend prediction, and agent-generated weekly briefs.' },
+      { title: 'Five Star Rating Display', body: 'The universal score visible at every level — worker, site, portfolio, and industry benchmark.' },
+      { title: 'Partner API & Marketplace', body: 'External developers and customers build on our agent infrastructure. Platform economics.' },
+    ],
+    who: 'Owners: <strong>Product, Design, Mobile Engineering</strong>'
+  },
+  agent: {
+    tag: 'Layer 4 · Agents',
+    tagColor: 'var(--l-agent)',
+    name: 'Agent Orchestration',
+    desc: 'The reasoning layer. Agents observe events from the intelligence layer, reason using context from the Knowledge Graph, and take permissible actions — assigning tasks, generating briefs, escalating issues, and invoking other agents. <strong>This is the new capability that changes everything.</strong>',
+    items: [
+      { title: 'Site Safety Agent', body: 'Owns the Five Star Rating for one site. Acts on drops. Briefs workers. Triggers inspections.' },
+      { title: 'Compliance Agent', body: 'Maintains continuous audit-readiness. Monitors docs and regulatory deadlines.' },
+      { title: 'Corrective Loop Agent', body: 'Manages the full lifecycle from issue detection to verified resolution.' },
+      { title: 'Agent SDK', body: 'Framework for customers and partners to build custom agents on our data infrastructure.' },
+    ],
+    who: 'Owners: <strong>Platform Engineering, AI/ML, Product</strong>'
+  },
+  intel: {
+    tag: 'Layer 3 · Intelligence',
+    tagColor: 'var(--l-intel)',
+    name: 'Intelligence & Scoring',
+    desc: 'Where raw data becomes operational intelligence. ML models trained on 1B+ inspections generate predictions, classifications, and the Five Star Rating. <strong>This is where SafetyCulture\'s data moat becomes a product moat.</strong>',
+    items: [
+      { title: 'Five Star Rating Engine', body: 'Real-time scoring across 5 dimensions. Triggers agent actions. Updates in seconds.' },
+      { title: 'Predictive Risk Models', body: 'Predict asset failure, incident likelihood, and team performance degradation before they happen.' },
+      { title: 'Industry Benchmarks', body: 'Anonymised cross-org intelligence. "Your sites are in the bottom quartile — here\'s what top performers do."' },
+      { title: 'Anomaly Detection', body: 'Flags deviations from baseline behaviour — the first signal before a trend becomes a problem.' },
+    ],
+    who: 'Owners: <strong>Data Science, ML Engineering, Product</strong>'
+  },
+  know: {
+    tag: 'Layer 2 · Knowledge Graph',
+    tagColor: 'var(--l-know)',
+    name: 'Operational Knowledge Graph',
+    desc: 'The memory and context layer. Indexes SafetyCulture data in a format optimised for agent reasoning — rich relationships between sites, workers, assets, regulations, and history. <strong>Context is what makes our agents better than generic AI.</strong>',
+    items: [
+      { title: 'Site & Asset Profiles', body: 'Everything known about a site: layout, risk profile, asset inventory, inspection history, regulatory obligations.' },
+      { title: 'Worker Context', body: 'Certifications, shift history, assigned tasks, performance patterns. Agents know who to assign.' },
+      { title: 'Regulatory Mapping', body: 'Regulations indexed by jurisdiction, industry, asset type. Agents know what applies where.' },
+      { title: 'LLM Context Store', body: 'Structured data formatted for inclusion in agent prompts. The bridge between database and reasoning.' },
+    ],
+    who: 'Owners: <strong>Platform Engineering, Data Engineering</strong>'
+  },
+  data: {
+    tag: 'Layer 1 · Data Platform',
+    tagColor: 'var(--l-data)',
+    name: 'Data Platform',
+    desc: 'The foundation. 10 years of physical-world operational data — inspections, incidents, corrective actions, asset records, training completions — across 76,000+ organisations. <strong>This is the moat. No competitor has it. It compounds with every customer added.</strong>',
+    items: [
+      { title: '1B+ inspection records', body: 'The largest ground-truth dataset of physical workplace operations in existence.' },
+      { title: 'IoT & sensor streams (new)', body: 'Real-time data from connected devices — temperature sensors, wearables, access control, CMMS.' },
+      { title: 'Corrective action history', body: 'What failed, what was done about it, how long it took, whether it recurred. Gold for ML.' },
+      { title: 'Existing platform APIs', body: 'The agent layer reads from and writes to the existing platform via stable APIs. No migration required.' },
+    ],
+    who: 'Owners: <strong>Data Engineering, Infrastructure, Existing Platform Teams</strong>'
+  }
+};
+
+function selectLayer(id) {
+  const data = layerData[id];
+  const panel = document.getElementById('layerDetail');
+
+  document.getElementById('ldTag').innerHTML = data.tag;
+  document.getElementById('ldTag').style.color = data.tagColor;
+  document.getElementById('ldName').innerHTML = data.name;
+  document.getElementById('ldDesc').innerHTML = data.desc;
+  document.getElementById('ldWho').innerHTML = data.who;
+  document.getElementById('ldItems').innerHTML = data.items.map(item => `
+    <div class="ld-item">
+      <div class="ld-dot" style="background:${data.tagColor}"></div>
+      <div class="ld-item-text"><strong>${item.title}</strong>${item.body}</div>
+    </div>
+  `).join('');
+
+  panel.classList.add('visible');
+
+  // Highlight selected layer
+  document.querySelectorAll('.arch-layer').forEach(l => {
+    l.style.outline = 'none';
+    l.style.opacity = '0.6';
+  });
+  document.getElementById('layer-' + id).style.outline = `1px solid ${data.tagColor}`;
+  document.getElementById('layer-' + id).style.opacity = '1';
+
+  // Scroll panel into view smoothly — not needed, panel is sticky alongside
+}
+
+// Select layer 5 by default on load
+window.addEventListener('DOMContentLoaded', () => selectLayer('surf'));
+
+function selectVertical(id, btn) {
+  document.querySelectorAll('.vertical-card').forEach(c => {
+    c.classList.remove('active');
+    c.style.borderTopColor = 'transparent';
+  });
+  document.querySelectorAll('.vertical-detail').forEach(d => d.classList.remove('active'));
+  btn.classList.add('active');
+  btn.style.borderTopColor = 'var(--orange)';
+  document.getElementById('vd-' + id).classList.add('active');
+}
+</script>
+
+<!-- SITE MENU -->
+<div class="site-menu" id="siteMenu">
+  <a href="./index.html">Strategic Vision</a>
+  <a href="./architecture.html" class="current">Architecture Overview</a>
+  <a href="./proto/index.html">Prototypes</a>
+</div>
+
+<script>
+(function(){
+  const btn = document.querySelector('.hamburger');
+  const menu = document.getElementById('siteMenu');
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const open = menu.classList.toggle('open');
+    btn.classList.toggle('open', open);
+  });
+  document.addEventListener('click', function(e) {
+    if (!menu.contains(e.target)) { menu.classList.remove('open'); btn.classList.remove('open'); }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { menu.classList.remove('open'); btn.classList.remove('open'); }
+  });
+})();
+</script>
+</body>
+</html>
